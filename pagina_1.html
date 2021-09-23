@@ -4,56 +4,26 @@
 <link rel = "stylesheet" type = "text/css" href = "estilo.css">
 </head>
 
-<style>
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  margin-top: 7%;
-}
-
-ul.pagination {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-}
-
-ul.pagination li {display: inline;}
-
-ul.pagination li a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    transition: background-color .3s;
-    border: 1px solid #ddd;
-}
-
-.pagination li:first-child a {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-.pagination li:last-child a {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-ul.pagination li a.active {
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
-}
-
-ul.pagination li a:hover:not(.active) {background-color: #ddd;}
-
-</style>
-
 <body>
 
 <div id = "container"> </div>
 
-<h1> Video Club César y Pedro</h1>
+<div id = "header">
+  <div id = "logo">
+    <img src  = "imgs/logo.jpg">
+  </div>
+  <div id = title_busq>
+    <div id = "title">
+      <h1> Video Club César y Pedro</h1>
+    </div>
+    <div id = "busq">
+      <input type = "text" placeholder = "Busca una película..." value = "" size = "20">
+    </div>
+  </div>
+  <div id = "logo">
+    <img src  = "imgs/logo.jpg">
+  </div>
+</div>
 
 <div id = "menu">
 <p> <b>MENÚ</b> </p>
@@ -63,102 +33,114 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 <p> Filtrar </p>
 </div>
 
+<div id = "searcher"></div>
+
 <div id = "content">
-  <table class = "center" width = 100%>
-    <tr>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/The_Fate_of_the_Furious">  <img src = "imgs/fast_furious_8.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> Fast & Furious 8 </p>
-          </tr>
-        </table>
-      </td>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/Los_Incre%C3%ADbles_2"> <img src  = "imgs/increibles.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> Los Increíbles II </p>
-          </tr>
-        </table>
-      </td>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/Iron_Man_3"> <img src  = "imgs/iron_man.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> Iron Man 3 </p>
-          </tr>
-        </table>
-      </td>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/La_bella_y_la_bestia_(pel%C3%ADcula_de_2017)"> <img src = "imgs/bella_bestia.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> La Bella y la Bestia </p>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/Furious_7">  <img src = "imgs/fast_furious.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> Fast & Furious 7 </p>
-          </tr>
-        </table>
-      </td>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/Frozen_II"> <img src  = "imgs/frozen.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> Frozen II </p>
-          </tr>
-        </table>
-      </td>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/Harry_Potter_y_las_reliquias_de_la_Muerte:_parte_2"> <img src  = "imgs/harry_2.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> Harry Potter y las reliquias
-              <br>
-              de la Muerte (Parte 2)
-             </br> </p>
-          </tr>
-        </table>
-      </td>
-      <td>
-        <table class = "center" width = 25%>
-          <tr>
-            <a href = "https://es.wikipedia.org/wiki/El_rey_le%C3%B3n"> <img src = "imgs/rey_leon.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
-          </tr>
-          <tr>
-            <p> El rey león </p>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+  <div id = "movie_container">
+    <div id = "movie_picture">
+      <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+    </div>
+    <div id = "movie_title">
+      <p> Avatar </p>
+    </div>
+  </div>
+</div>
+
+
 </div>
 
 <div id = pagination_div>
   <ul class = "pagination">
-    <li> <a href="file:///Users/cesar/Documents/Cuarto/Cuatri%201/SI1/P1/inicio.html">«</a></li>
-      <li><a href="file:///Users/cesar/Documents/Cuarto/Cuatri%201/SI1/P1/inicio.html">1</a></li>
+    <li> <a href="inicio.html">«</a></li>
+      <li><a href="inicio.html">1</a></li>
       <li><a class="active" href="#">2</a></li>
       <li><a href="#">»</a></li>
   </ul>
