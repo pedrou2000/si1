@@ -1,0 +1,167 @@
+<html>
+
+<head>
+<link rel = "stylesheet" type = "text/css" href = "estilo.css">
+</head>
+
+<style>
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 7%;
+}
+
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+.pagination li:first-child a {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.pagination li:last-child a {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+
+</style>
+
+<body>
+
+<div id = "container"> </div>
+
+<h1> Video Club César y Pedro</h1>
+
+<div id = "menu">
+<p> <b>MENÚ</b> </p>
+<p> Buscar película </p>
+<p> Cesta </p>
+<p> Ordenar por categoría </p>
+<p> Filtrar </p>
+</div>
+
+<div id = "content">
+  <table class = "center" width = 100%>
+    <tr>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img src  = "imgs/avatar.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Avatar </p>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Star_Wars:_Episodio_VII_-_El_despertar_de_la_Fuerza"> <img src  = "imgs/star_wars.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Star Wars: Episodio VII </p>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Jurassic_World:_El_reino_ca%C3%ADdo"> <img src = "imgs/jurassic_world.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Jurassic World </p>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Avengers:_Endgame"> <img src  = "imgs/avengers_endgame.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Avengers: Endgame</p>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Titanic_(pel%C3%ADcula_de_1997)"> <img src  = "imgs/titanic.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Titanic </p>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Avengers:_Infinity_War">   <img src = "imgs/avengers_infinity.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Avengers: Infinity War </p>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Avengers:_Age_of_Ultron"> <img src  = "imgs/avengers_era.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Avengers: Age of Ultron </p>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class = "center" width = 25%>
+          <tr>
+            <a href = "https://es.wikipedia.org/wiki/Pantera_Negra_(pel%C3%ADcula)"> <img src  = "imgs/black_panther.jpg" alt = "" class = "center" height = "250" width = "200"> </a>
+          </tr>
+          <tr>
+            <p> Black Panther </p>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div id = pagination_div>
+  <ul class = "pagination">
+    <li> <a href="#">«</a></li>
+      <li><a class="active" href="#">1</a></li>
+      <li><a href="file:///Users/cesar/Documents/Cuarto/Cuatri%201/SI1/P1/pagina_1.html">2</a></li>
+      <li><a href="file:///Users/cesar/Documents/Cuarto/Cuatri%201/SI1/P1/pagina_1.html">»</a></li>
+  </ul>
+</div>
+
+<footer> Copyright © 2011 W3Schools.com </footer>
+
+</body>
+</html>
