@@ -1,46 +1,70 @@
 <html>
 
+
 <head>
-  <link rel = "stylesheet" type = "text/css" href = "estilo.css">
-  <script src="codigo.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "estilo.css">
+    <script src="codigo.js"></script>
 </head>
 
 
 <body>
+    <div id = "container"> </div>
 
-<div id = "container"> </div>
+    <!-- Header -->
+    <div id = "header">
+        <div id = "logo">
+            <img src  = "imgs/logo.jpg">
+        </div>
+        <div id = title_busq>
+            <div id = "title">
+            <h1> Video Club César y Pedro</h1>
+            </div>
+            <div id = "busq">
+            <h2> Register and Login </h2>
+            </div>
+        </div>
+        <div id = "logo">
+            <img src  = "imgs/logo.jpg">
+        </div>
+    </div>
 
-<h1> Register and Login </h1>
+    
+    <!-- Side Menu -->
+    <div id = "menu"> 
+        <div>
+            <p> <b>MENÚ</b> </p>
+        </div>  
+        <div>
+            <p> Buscar película </p>
+        </div>  
+        <div>
+            <p> Cesta </p>
+        </div>  
+        <div>
+            <p> Ordenar por categoría </p>
+        </div>
+        <div>
+            <p> Filtrar </p>
+        </div>
+        <div>
+            <a href="inicio.html">Inicio</a>
+        </div>
+    </div>
 
-<div id = "menu">
-  <p> <b>MENÚ</b> </p>
-  <p> Buscar película </p>
-  <p> Cesta </p>
-  <p> Ordenar por categoría </p>
-  <p> Filtrar </p>
-  <a href="register_login.html">Register/Login</a>
-</div>
+    <!-- Login Menu -->
+    <div class="login_menu">
+            <div id = "campo">
+                <input id="user" type="text" placeholder="Usuario">
+            </div>
+            <div id = "campo">
+                <input id="pass" type="password" placeholder="Contraseña" required >
+            </div>
+            <div id = "campo">
+                <button onclick="login()">login</button>
+            </div>
+    </div>
 
-<div id = "login_menu">
-  <p> <b>LOGIN MENU</b> </p>
-  <p> username </p>
-  <p> pass </p>
-  <a href="inicio.html">return to homepage</a>
-  <INPUT type="button" value="login" onClick="login()">
-</div>
-
-
-<div class="formulario">
-        <h2> Login </h2>
-        <form action="#">
-            <input type="text" placeholder="Usuario"  id="a">
-            <input type="text" placeholder="Usuario"  id="user" required>
-            <input type="password" placeholder="Contraseña" id="pass" required >
-            <button onclick="login()">login</button>
-        </form>
-</div>
-
-<footer> Copyright © 2011 W3Schools.com </footer>
+    <footer> Copyright © 2011 W3Schools.com </footer>
 
 </body>
 </html>
