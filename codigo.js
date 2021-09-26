@@ -12,3 +12,24 @@ function login() {
 
   alert(mensaje);
 }
+
+function register() {
+  username = document.getElementById("new_user").value;
+  pass_1 = document.getElementById("new_pass").value;
+  pass_2 = document.getElementById("new_pass_repeat").value;
+  email = document.getElementById("new_email").value;
+  credit_card = document.getElementById("new_credit_card").value;
+
+  if (pass_1 != pass_2) {
+    alert("Las contraseñas introducidas no son iguales!");
+    return;
+  }
+
+  /* Comprobar si el usuario ya esta registrado */
+
+  mensaje = " El usuario \"" + username + "\" con email \""
+  + email + "\" y tajeta de crédito \"" + credit_card +
+  "\" ha sido registrado correctamente en el sistema!"
+
+  alert(mensaje);
+}

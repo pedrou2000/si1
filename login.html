@@ -8,8 +8,6 @@
 
 
 <body>
-    <div id = "container"> </div>
-
     <!-- Header -->
     <div id = "header">
         <div id = "logo">
@@ -20,7 +18,7 @@
             <h1> Video Club César y Pedro</h1>
             </div>
             <div id = "busq">
-            <h2> Register and Login </h2>
+            <h2> Inicie sesión </h2>
             </div>
         </div>
         <div id = "logo">
@@ -28,7 +26,7 @@
         </div>
     </div>
 
-    
+
     <!-- Side Menu -->
     <div id = "menu"> 
         <div>
@@ -52,19 +50,29 @@
     </div>
 
     <!-- Login Menu -->
-    <div class="login_menu">
-            <div id = "campo">
-                <input id="user" type="text" placeholder="Usuario">
-            </div>
-            <div id = "campo">
-                <input id="pass" type="password" placeholder="Contraseña" required >
-            </div>
-            <div id = "campo">
-                <button onclick="login()">login</button>
-            </div>
+    <div id="login_menu">
+        <div id = "campo">
+            <input id="user" class="textbox" type="text" placeholder=" Usuario">
+        </div>
+        <div id = "campo">
+            <input id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
+        </div>
+        <div id = "campo">
+            <button class="button" onclick="login()">login</button>
+        </div>
+        <div>
+            <a href="register.html">Si aún no tiene cuenta, haga click aquí.</a>
+        </div>
     </div>
 
-    <footer> Copyright © 2011 W3Schools.com </footer>
+    
+
+    <!-- Footer -->
+    <footer> 
+        <div class="center">
+            Copyright © Pedro Urbina & Cesar Ramirez
+        </div> 
+    </footer>
 
 </body>
 </html>
