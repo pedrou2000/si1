@@ -8,7 +8,7 @@ function login() {
     if (pass == "a") {
       mensaje = "Bienvenido " + user;
     }
-  } 
+  }
 
   alert(mensaje);
 }
@@ -31,5 +31,21 @@ function register() {
   + email + "\" y tajeta de crédito \"" + credit_card +
   "\" ha sido registrado correctamente en el sistema!"
 
+  alert(mensaje);
+}
+
+function search() {
+  film = document.getElementById("film_to_search").value;
+
+  /* Comprobar si la pelicula esta en la base de datos */
+
+  mensaje = "La película " + film + " no está disponible por el momento"
+
+  alert(mensaje);
+}
+
+function rent() {
+  mensaje = "Alquiler no disponible por el momento"
+  
   alert(mensaje);
 }
