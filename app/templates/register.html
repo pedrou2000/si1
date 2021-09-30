@@ -49,8 +49,8 @@
         </div>
     </div>
 
-    <!-- Login Menu -->
-    <div id="login_menu">
+    <!-- Register Menu -->
+    <form action="http://host/cgi-bin/logon" method="POST" id="login_menu">
         <div id = "campo">
             <input id="new_user" class="textbox" type="text" placeholder=" Nombre de usuario" required>
         </div>
@@ -68,11 +68,13 @@
         </div>
         <div id = "campo">
             <button class="button" onclick="register()">registrar</button>
+            <input type="submit" value="Submit">
+
         </div>
         <div>
             <a href="login.html"> Iniciar Sesión </a>
         </div>
-    </div>
+    </form>
 
 
 
