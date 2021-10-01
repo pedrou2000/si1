@@ -16,14 +16,29 @@ h1 {
 }
 
 footer {
-	background-color: rgb(46, 64, 83);
+	background-color: rgb(0, 0, 0);
 	color: white;
 	clear: both;
 	text-align: center;
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	height: 3%;
+	height: 2%;
+}
+
+#footer {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    clear: both;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#footer_iframe {
+  width:100%
 }
 
 .textbox {
@@ -97,7 +112,7 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 }
 
 #header {
-  height: 15%;
+  height: 10%;
   width: 100%;
   margin-top: 0;
   display: flex;
@@ -119,17 +134,15 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 }
 
 #search {
-  height: 50%;
+  height: 3%;
   width: 100%;
+  background-color: white;
   text-align: center;
 }
 
-#search input {
-  height: 30%;
-}
-
-#search button{
-  height:30%;
+#search input, #search button{
+  height: 60%;
+  margin-top: 0.2%;
 }
 
 #logo {
@@ -153,7 +166,7 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 #content {
 	background-color: white;
 	height: 95%;
-	width: 90%;
+	width: 89.86%;
 	float: right;
 	text-align: center;
 	background-attachment: fixed;
@@ -166,10 +179,10 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 }
 
 #menu {
-	background-color: rgb(46, 64, 83);
+	background-color: rgb(122, 2, 2);
 	color: white;
 	height: 100%;
-	width: 10%;
+	width: 100%;
 	float: left;
 	position: fixed;
   display: flex;
@@ -178,9 +191,9 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 }
 
 #menu_log_reg {
-	background-color: rgb(46, 64, 83);
+	background-color: rgb(79, 154, 233);
 	color: white;
-	height: 100%;
+	height: 10cm;
 	width: 10%;
 	float: left;
 	position: relative;
@@ -192,7 +205,7 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 #login_menu {
 	background-color: rgb(218, 230, 115);
 	color: rgb(0, 0, 0);
-	height: 83%;
+	height: 88%;
 	width: 80%;
 	float: center;
 	position: relative;

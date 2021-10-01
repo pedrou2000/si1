@@ -1,158 +1,139 @@
 <html>
 
 <head>
-  <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
-  <script src="../static/scripts/codigo.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
+    <script src="../static/scripts/codigo.js"></script>
 </head>
 
 <body>
 
-<div id = "container"> </div>
+    <!-- Header -->
+    <iframe src = "header.html" id="header"> </iframe>
 
-<div id = "header">
-  <div id = "logo">
-    <img src  = "../static/images/logo.jpg">
-  </div>
-  <div id = title_search>
-    <div id = "title">
-      <h1> Video Club César y Pedro</h1>
-    </div>
+    <!-- Side Menu -->
+    <iframe src = "menu.html" id="menu_log_reg"></iframe>
+
+    <!-- Search Bar -->
     <div id = "search">
-      <input id = "film_to_search" type = "text" placeholder = "Busca una película...">
-      <button onclick="search()"> Buscar </button>
+        <input id = "film_to_search" type = "text" placeholder = "Busca una película...">
+        <button onclick="search()"> Buscar </button>
     </div>
-  </div>
-  <div id = "logo">
-    <img src  = "../static/images/logo.jpg">
-  </div>
-</div>
 
-<div id = "menu">
-<p> <b>MENÚ</b> </p>
-<p>
-  <button class="button_cesar"> <a class="link" href="inicio.html">Inicio</a> </button>
-</p>
-<p>
-  <button class="button_cesar"> <a class="link" href="register.html">Registrar</a> </button>
-</p>
-<p>
-  <button class="button_cesar"> <a class="link" href="login.html">Iniciar Sesión</a> </button>
-</p>
-<p> <button class="button_cesar"> Cesta </button> </p>
-</div>
-
-<div id = "searcher"></div>
-
-<div id = "content">
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+    <!-- Films Displayed -->
+    <div id = "content">
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
+        <div id = "movie_container">
+            <div id = "movie_picture">
+            <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
+            </div>
+            <div id = "movie_title">
+            <p> Avatar </p>
+            </div>
+        </div>
     </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-  <div id = "movie_container">
-    <div id = "movie_picture">
-      <a href = "film.html"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-    </div>
-    <div id = "movie_title">
-      <p> Avatar </p>
-    </div>
-  </div>
-</div>
 
 
-<div id = pagination_div>
-  <ul class = "pagination">
-    <li> <a href="#">«</a></li>
-      <li><a class="active" href="#">1</a></li>
-      <li><a href="pagina_1.html">2</a></li>
-      <li><a href="pagina_1.html">»</a></li>
-  </ul>
-</div>
+    <!-- Pagination -->
+    <div id = pagination_div>
+        <ul class = "pagination">
+            <li> <a href="#">«</a></li>
+            <li><a class="active" href="#">1</a></li>
+            <li><a href="pagina_1.html">2</a></li>
+            <li><a href="pagina_1.html">»</a></li>
+        </ul>
+    </div>
 
-<footer> Copyright © Pedro Urbina & Cesar Ramirez </footer>
+    <!-- Footer -->
+    <footer>
+        <iframe src = "footer.html" id="footer_iframe"></iframe>
+    </footer>
 
 </body>
 </html>
