@@ -20,6 +20,11 @@ def inicio():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        return try_login()
+    else:
+        return render_template('login.html', title = "Sign In")
+
     """
     # doc sobre request object en http://flask.pocoo.org/docs/1.0/api/#incoming-request-data
     if 'username' in request.form:
@@ -39,11 +44,19 @@ def login():
         # print a error.log de Apache si se ejecuta bajo mod_wsgi
         print (request.referrer, file=sys.stderr)
     """
-    return render_template('login.html', title = "Sign In")
+
+def try_login():
+    return
 
 @app.route('/register')
 def register():
-    return render_template('register.html', title = "Register")
+    if request.method == 'POST':
+        return try_register()
+    else:
+        return render_template('register.html', title = "Register")
+
+def try_register():
+    return
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
