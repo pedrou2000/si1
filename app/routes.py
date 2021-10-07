@@ -56,6 +56,7 @@ def register():
         return render_template('register.html', title = "Register")
 
 def try_register():
+    print("Trying to register!")
     return
 
 @app.route('/logout', methods=['GET', 'POST'])
