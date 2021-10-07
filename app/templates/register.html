@@ -1,51 +1,31 @@
 <html>
-
-
-<head>
-    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
-    <script src="../static/scripts/codigo.js"></script>
-</head>
-
-
-<body>
-
-    <!-- Header -->
-    <iframe src = "header.html" id="header"> </iframe>
-
-    <!-- Side Menu -->
-    <iframe src = "menu.html" id="menu_log_reg"></iframe>
-
-    <!-- Register Menu -->
-    <form action="http://host/cgi-bin/logon" method="POST" id="login_menu">
-        <div id = "campo">
+   {% extends "base.html" %}
+   <body>
+      {% block content %}
+      <!-- Register Menu -->
+      <form action="http://host/cgi-bin/logon" method="POST" id="login_menu">
+         <div id = "campo">
             <input id="new_user" class="textbox" type="text" placeholder=" Nombre de usuario" required>
-        </div>
-        <div id = "campo">
+         </div>
+         <div id = "campo">
             <input id="new_pass" class="textbox" type="password" placeholder=" Contraseña" required >
-        </div>
-        <div id = "campo">
+         </div>
+         <div id = "campo">
             <input id="new_pass_repeat" class="textbox" type="password" placeholder=" Repita la contraseña" required >
-        </div>
-        <div id = "campo">
+         </div>
+         <div id = "campo">
             <input id="new_email" class="textbox" type="text" placeholder=" Email" required>
-        </div>
-        <div id = "campo">
+         </div>
+         <div id = "campo">
             <input id="new_credit_card" class="textbox" type="text" placeholder=" Tarjeta de crédito" required>
-        </div>
-        <div id = "campo">
-            <button class="button" onclick="register()">registrar</button>
-            <input type="submit" value="Submit">
-
-        </div>
-        <div>
-            <a href="login.html"> Iniciar Sesión </a>
-        </div>
-    </form>
-
-    <!-- Footer -->
-    <footer>
-        <iframe src = "footer.html" id="footer_iframe"></iframe>
-    </footer>
-
-</body>
+         </div>
+         <div id = "campo">
+            <button class="button" onclick="register()">Registrar</button>
+         </div>
+         <div>
+            <a href="{{ url_for('login') }}"> Iniciar Sesión </a>
+         </div>
+      </form>
+      {% endblock %}
+   </body>
 </html>

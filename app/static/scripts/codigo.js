@@ -20,7 +20,7 @@ function register() {
   email = document.getElementById("new_email").value;
   credit_card = document.getElementById("new_credit_card").value;
 
-  
+
 
   if (pass_1 != pass_2) {
     alert("Las contraseñas introducidas no son iguales!");
@@ -48,6 +48,10 @@ function search() {
 
 function rent() {
   mensaje = "Alquiler no disponible por el momento"
-  
+
   alert(mensaje);
+}
+
+function auto_submit() {
+  document.getElementById("film_action").submit(); 
 }

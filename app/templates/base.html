@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      {% block title %}
+      <title> Video Club </title>
+      {% endblock %}
+      <script src="../static/scripts/codigo.js"></script>
+      <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
+   </head>
+   <body>
+      <div id = "header">
+         <div id = "logo">
+            <img src  = "../static/images/logo.jpg">
+         </div>
+         <div id = title_search>
+            <div id = "title">
+               <h1> Video Club César y Pedro</h1>
+            </div>
+            <div id = "search">
+               <input id = "film_to_search" type = "text" placeholder = "Busca una película...">
+               <button onclick="search()"> Buscar </button>
+            </div>
+         </div>
+         <div id = "logo">
+            <img src  = "../static/images/logo.jpg">
+         </div>
+      </div>
+      <div id = "menu">
+         <p> <b>MENÚ</b> </p>
+         <p>
+            <button class="button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Inicio</a> </button>
+         </p>
+         <p>
+            <button class="button_cesar"> <a class="link" href="{{ url_for('register') }}">Registrar</a> </button>
+         </p>
+         <p>
+            <button class="button_cesar"> <a class="link" href="{{ url_for('login') }}">Iniciar Sesión</a> </button>
+         </p>
+         <p> <button class="button_cesar"> Cesta </button> </p>
+      </div>
+      <div id = "searcher"></div>
+      {% block content %}{% endblock %}
+      <footer> Copyright © Pedro Urbina & Cesar Ramirez </footer>
+   </body>
+</html>

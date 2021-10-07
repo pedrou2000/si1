@@ -1,57 +1,54 @@
 <html>
-
-<head>
-    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
-    <script src="../static/scripts/codigo.js"></script>
-</head>
-
-<body>
-
-    <!-- Header -->
-    <iframe src = "header.html" id="header"> </iframe>
-
-    <!-- Side Menu -->
-    <iframe src = "menu.html" id="menu_log_reg"></iframe>
-
-    <div id = "searcher"></div>
-
-    <div id = "content">
-    <div id="film_content">
-        <div id="film_title_cont">
-        <div id="return">
-            <p>
-            <button class = "button_cesar"> <a class="link" href="inicio.html">Volver</a> </button>
-            </p>
-        </div>
-        <div id="film_title">
-            <h2> Avatar </h2>
-        </div>
-        <div id="fake_div">
-        </div>
-        </div>
-        <div id = "film_picture">
-        <a href = "https://es.wikipedia.org/wiki/Avatar_(pel%C3%ADcula)"> <img id = "image" src  = "../static/images/avatar.jpg"> </a>
-        </div>
-        <div id = "film_synopsis">
-        <h3> Sinopsis </h3>
-        <p>
-            Año 2154. Jake Sully (Sam Worthington), un ex-marine condenado a vivir en una silla de ruedas, sigue siendo, a pesar de ello, un auténtico guerrero. Precisamente por ello ha sido designado para ir a Pandora, donde algunas empresas están extrayendo un mineral extraño que podría resolver la crisis energética de la Tierra. Para contrarrestar la toxicidad de la atmósfera de Pandora, se ha creado el programa Avatar, gracias al cual los seres humanos mantienen sus conciencias unidas a un avatar: un cuerpo biológico controlado de forma remota que puede sobrevivir en el aire letal. Esos cuerpos han sido creados con ADN humano, mezclado con ADN de los nativos de Pandora, los Na'vi. Convertido en avatar, Jake puede caminar otra vez. Su misión consiste en infiltrarse entre los Na'vi, que se han convertido en el mayor obstáculo para la extracción del mineral. Pero cuando Neytiri, una bella Na'vi (Zoe Saldana), salva la vida de Jake, todo cambia: Jake, tras superar ciertas pruebas, es admitido en su clan. Mientras tanto, los hombres esperan los resultados de la misión de Jake.
-        </p>
-        </div>
-        <div id="rent_price">
-        <div id="price">
-            <p> Precio del alquiler: 9.99€ </p>
-        </div>
-        <div id="rent">
-            <p> <button class = "button" onclick="rent()"> Alquilar </button> </p>
-        </div>
-    </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <iframe src = "footer.html" id="footer_iframe"></iframe>
-    </footer>
-
-</body>
+   {% extends "base.html" %}
+   <body>
+      {% block content %}
+      <div id = "content_for_film">
+      <div id="film_content">
+         <div id="film_title_cont">
+            <div id="return">
+               <p>
+                  <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
+               </p>
+            </div>
+            <div id="film_title">
+               <h2> {{movie.titulo}} </h2>
+            </div>
+            <div id="fake_div">
+            </div>
+         </div>
+         <div id = "film_picture">
+            <img id = "image" src = {{movie.poster}}>
+         </div>
+         <div id = "film_info">
+            <div id = "film_director">
+               <p>
+                  <b>Director</b>: <br> {{movie.director}}
+               </p>
+            </div>
+            <div id = "film_category">
+               <p>
+                  <b>Categoria</b>: <br> {{movie.categoria}}
+               </p>
+            </div>
+            <div id = "film_actors">
+               {% for actor in movie.actores %}
+               <div>
+                  <p>
+                     <b>Nombre</b>: {{actor.nombre}}. <b>Personaje</b>: {{actor.personaje}}. <br>
+                  </p>
+               </div>
+               {% endfor %}
+            </div>
+         </div>
+         <div id="rent_price">
+            <div id="price">
+               <p> <b>Precio del alquiler</b>: {{movie.precio}} € </p>
+            </div>
+            <div id="rent">
+               <p> <button class = "button" onclick="rent()"> Alquilar </button> </p>
+            </div>
+         </div>
+      </div>
+      {% endblock %}
+   </body>
 </html>

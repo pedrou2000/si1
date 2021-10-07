@@ -1,40 +1,22 @@
 <html>
-
-
-<head>
-    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
-    <script src="../static/scripts/codigo.js"></script>
-</head>
-
-
-<body>
-    <!-- Header -->
-    <iframe src = "header.html" id="header"> </iframe>
-
-
-    <!-- Side Menu -->
-    <iframe src = "menu.html" id="menu_log_reg"></iframe>
-
-    <!-- Login Menu -->
-    <div id="login_menu">
-        <div id = "campo">
+   {% extends "base.html" %}
+   <body>
+      {% block content %}
+      <!-- Login Menu -->
+      <div id="login_menu">
+         <div id = "campo">
             <input id="user" class="textbox" type="text" placeholder=" Usuario">
-        </div>
-        <div id = "campo">
+         </div>
+         <div id = "campo">
             <input id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
-        </div>
-        <div id = "campo">
-            <button class="button" onclick="login()">login</button>
-        </div>
-        <div>
-            <a href="register.html">Si aún no tiene cuenta, haga click aquí.</a>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <iframe src = "footer.html" id="footer_iframe"></iframe>
-    </footer>
-
-</body>
+         </div>
+         <div id = "campo">
+            <button class="button" onclick="login()">Log In</button>
+         </div>
+         <div>
+            <a href="{{ url_for('register') }}">Si aún no tiene cuenta, haga click aquí.</a>
+         </div>
+      </div>
+      {% endblock %}
+   </body>
 </html>
