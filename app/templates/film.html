@@ -22,15 +22,16 @@
          <div id = "film_info">
             <div id = "film_director">
                <p>
-                  <b>Director</b>: <br> {{movie.director}}
+                  <b>Director:</b> <br> {{movie.director}}
                </p>
             </div>
             <div id = "film_category">
                <p>
-                  <b>Categoria</b>: <br> {{movie.categoria}}
+                  <b>Categoria:</b> <br> {{movie.categoria}}
                </p>
             </div>
             <div id = "film_actors">
+              <p><b>Actores:</b> <br></p>
                {% for actor in movie.actores %}
                <div>
                   <p>
@@ -45,7 +46,9 @@
                <p> <b>Precio del alquiler</b>: {{movie.precio}} € </p>
             </div>
             <div id="rent">
-               <p> <button class = "button" onclick="rent()"> Alquilar </button> </p>
+              <form action="{{ url_for('anadir_cesta', id=movie.id) }}" method="post">
+                <button class = "cesta_button"> Añadir a la cesta </button>
+              </form>
             </div>
          </div>
       </div>

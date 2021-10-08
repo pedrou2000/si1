@@ -1,0 +1,24 @@
+<html>
+   {% extends "base.html" %}
+   <body>
+      {% block content %}
+      <div id = "content">
+      <div id="return">
+         <p>
+            <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
+         </p>
+      </div>
+      <div id = "movie_container">
+         <div id = "movie_picture">
+            <a href = "{{ url_for('film', id=movie.id) }}">
+            <img id = "image" src  = {{ movie.poster }}>
+            </a>
+         </div>
+         <div id = "movie_title">
+            <p> {{ movie.titulo }} </p>
+         </div>
+      </div>
+    </div>
+      {% endblock %}
+   </body>
+</html>

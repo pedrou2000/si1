@@ -17,8 +17,15 @@
                <h1> Video Club César y Pedro</h1>
             </div>
             <div id = "search">
-               <input id = "film_to_search" type = "text" placeholder = "Busca una película...">
-               <button onclick="search()"> Buscar </button>
+              <form action="{{ url_for('buscar') }}" method="post">
+                  <select name="busqueda">
+                    <option selected>Seleccione una película</option>
+                    {% for item in movies %}
+                      <option>{{item.titulo}}</option>
+                    {% endfor %}
+                  </select>
+                  <input type="submit" value="Buscar">
+              </form>
             </div>
          </div>
          <div id = "logo">
@@ -36,7 +43,9 @@
          <p>
             <button class="button_cesar"> <a class="link" href="{{ url_for('login') }}">Iniciar Sesión</a> </button>
          </p>
-         <p> <button class="button_cesar"> Cesta </button> </p>
+         <p>
+           <button class="button_cesar"> <a class="link" href="{{ url_for('cesta') }}">Cesta </button>
+         </p>
       </div>
       <div id = "searcher"></div>
       {% block content %}{% endblock %}

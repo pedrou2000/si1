@@ -1,0 +1,18 @@
+<html>
+   {% extends "base.html" %}
+   <body>
+      {% block content %}
+      <div id = "content">
+      <div id="return">
+         <p>
+            <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
+         </p>
+      </div>
+      <div id = "info_message">
+         <p> <b> Pelicula eliminada de la cesta con éxito. </b>
+         <p>
+      </div>
+    </div>
+      {% endblock %}
+   </body>
+</html>

@@ -1,0 +1,36 @@
+<html>
+   {% extends "base.html" %}
+   <body>
+      {% block content %}
+      <div id = "cesta_content">
+        <div id="return">
+           <p>
+              <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
+           </p>
+        </div>
+         {% for item in cesta %}
+         <div id = "cesta_container">
+            <div id = "cesta_picture">
+               <img id = "image" src  = {{ item.poster }}>
+            </div>
+            <div id = "cesta_info">
+               <p> <b>Título:</b>{{ item.titulo }} </p>
+               <p> <b>Categoría:</b>{{ item.categoria }} </p>
+            </div>
+            <div id = "cesta_price">
+               <p> <b>Precio:</b>{{ item.precio }} </p>
+               <button class = "button_cesar"> <a class="link" href="{{ url_for('eliminado_cesta', id=item.id) }}">Eliminar</a> </button>
+            </div>
+         </div>
+         {% endfor %}
+         <div id = "pagar_div">
+           <div id = "fake_div"></div>
+           <div id = "fake_div">
+           <button class = "button_cesar">Pagar</a> </button>
+           </div>
+           <div id = "fake_div"></div>
+         </div>
+      </div>
+      {% endblock %}
+   </body>
+</html>
