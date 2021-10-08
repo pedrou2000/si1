@@ -18,13 +18,8 @@
             </div>
             <div id = "search">
               <form action="{{ url_for('buscar') }}" method="post">
-                  <select name="busqueda">
-                    <option selected>Seleccione una película</option>
-                    {% for item in movies %}
-                      <option>{{item.titulo}}</option>
-                    {% endfor %}
-                  </select>
-                  <input type="submit" value="Buscar">
+                <input type="text" name="busqueda" placeholder = "Buscar una pelicula...">
+                <input type="submit" value="Buscar">
               </form>
             </div>
          </div>

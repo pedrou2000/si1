@@ -76,15 +76,17 @@ def film(id):
 @app.route('/busqueda', methods=['GET', 'POST'])
 def buscar():
     movie = None
-    title = request.form['busqueda']
-    if title == "Seleccione una película":
+    busq = request.form['busqueda']
+    if not busq:
         return render_template('error_busqueda.html', title = "Error Searched Film", movies=film_catalogue['peliculas'])
 
+    movie_list_result = []
     for pelicula in film_catalogue['peliculas']:
-        if pelicula.get("titulo") == title:
-            movie = pelicula
+        if busq.lower() in pelicula.get("titulo").lower():
+            movie_list_result.append(pelicula)
+
     render_template('base.html', title = "Base", movies=film_catalogue['peliculas'])
-    return render_template('resultado_busqueda.html', title = "Searched Film", movie = movie, movies=film_catalogue['peliculas'])
+    return render_template('resultado_busqueda.html', title = "Searched Film", movie_list = movie_list_result, movies=film_catalogue['peliculas'])
 
 @app.route('/anadido_cesta/<id>', methods=['GET', 'POST'])
 def anadir_cesta(id):

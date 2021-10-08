@@ -3,22 +3,19 @@
    <body>
       {% block content %}
       <div id = "content">
-      <div id="return">
-         <p>
-            <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
-         </p>
-      </div>
-      <div id = "movie_container">
-         <div id = "movie_picture">
-            <a href = "{{ url_for('film', id=movie.id) }}">
-            <img id = "image" src  = {{ movie.poster }}>
-            </a>
+         {% for item in movie_list %}
+         <div id = "movie_container">
+            <div id = "movie_picture">
+               <a href = "{{ url_for('film', id=item.id) }}">
+               <img id = "image" src  = {{ item.poster }}>
+               </a>
+            </div>
+            <div id = "movie_title">
+               <p> {{ item.titulo }} </p>
+            </div>
          </div>
-         <div id = "movie_title">
-            <p> {{ movie.titulo }} </p>
-         </div>
+         {% endfor %}
       </div>
-    </div>
       {% endblock %}
    </body>
 </html>
