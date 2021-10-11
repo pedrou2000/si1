@@ -3,12 +3,12 @@
    <body>
       {% block content %}
       <!-- Login Menu -->
-      <div id="login_menu">
+      <form action="" method="POST" id="login_menu">
          <div id = "campo">
-            <input id="user" class="textbox" type="text" placeholder=" Usuario">
+            <input name="username" id="user" class="textbox" type="text" placeholder=" Usuario">
          </div>
          <div id = "campo">
-            <input id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
+            <input name="password" id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
          </div>
          <div id = "campo">
             <button class="button" onclick="login()">Log In</button>
