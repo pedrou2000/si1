@@ -84,7 +84,7 @@ def register():
         else:    
             return render_template('register.html', title = "Register", logged_user = logged_user, username_already_exists=True)
 
-        salt = 
+        salt = 1111
         password = hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()
 
         file = open(directory + "data.dat", "w")
