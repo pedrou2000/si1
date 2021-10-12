@@ -7,7 +7,8 @@ from math import ceil
 import json
 import os
 import sys
-from flask import g
+import random
+import hashlib
 
 #Global variable
 film_catalogue = json.loads(open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read())
@@ -15,67 +16,53 @@ film_catalogue = json.loads(open(os.path.join(app.root_path,'catalogue/catalogue
 cesta_usuario = []
 
 class User:
-    def __init__(self, username, password, email, credit_card) -> None:
+    def __init__(self, username, password, email, credit_card, balance) -> None:
         self.username = username 
         self.password = password
         self.email = email 
         self.credit_card = credit_card
+        self.balance = balance
     
     def __repr__(self) -> str:
         return f'User: {self.username}'
 
-users = []
-logged_user = "stringgg"
+logged_user = None
 
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
-    logged_user = None
-    if 'username' in session:
-        logged_user = session['username']
+    global logged_user
+
     render_template('base.html', title = "Base", movies=film_catalogue['peliculas'], logged_user = logged_user)
     return render_template('inicio.html', title = "Home", movies=film_catalogue['peliculas'], logged_user = logged_user)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global logged_user
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        directory = os.getcwd() + "/users/" + username + "/"
 
-        for user in users:
-            if user.username == username:
-                if user.password == password:
-                    session['username'] = username
-                    session.modified=True
-                    logged_user = user
-                    g.user = user
-                    return render_template('inicio.html', title = "Home", movies=film_catalogue['peliculas'], logged_user = session['username'])
-        
-        return redirect(url_for('login'))
-                
-
-    else:
-        return render_template('login.html', title = "Sign In")
-
-    """
-    # doc sobre request object en http://flask.pocoo.org/docs/1.0/api/#incoming-request-data
-    if 'username' in request.form:
-        # aqui se deberia validar con fichero .dat del usuario
-        if request.form['username'] == 'pp':
-            session['usuario'] = request.form['username']
-            session.modified=True
-            # se puede usar request.referrer para volver a la pagina desde la que se hizo login
-            return redirect(url_for('index'))
+        if not os.path.exists(directory):
+            return render_template('login.html', title = "Sign In", logged_user = logged_user, username_not_exists=True)
         else:
-            # aqui se le puede pasar como argumento un mensaje de login invalido
-            return render_template('login.html', title = "Sign In")
+            file = open(directory + 'data.dat',"r")
+            lines = file.read().split('\n')
+
+            if lines[1] == password:
+                session['username'] = username
+                session.modified=True
+                logged_user = User(lines[0], lines[1], lines[2], lines[3], lines[4])
+                return redirect(url_for('inicio'))
+            else:
+                print(lines[1])
+                print(password)
+                return render_template('login.html', title = "Sign In", logged_user = logged_user, incorrect_password=True)
+                
     else:
-        # se puede guardar la pagina desde la que se invoca
-        session['url_origen']=request.referrer
-        session.modified=True
-        # print a error.log de Apache si se ejecuta bajo mod_wsgi
-        print (request.referrer, file=sys.stderr)
-    """
+        return render_template('login.html', title = "Sign In", logged_user = logged_user)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -89,36 +76,38 @@ def register():
         directory = os.getcwd() + "/users/" + username + "/"
 
         if not os.path.exists(directory):
+            # si el directorio users aun no esta creado lo creamos
             if not os.path.exists(os.getcwd() + "/users"):
                 os.mkdir(os.getcwd() + "/users")
+
             os.mkdir(directory)
-            print("Directory " , directory ,  " Created ")
         else:    
-            print("Directory " , directory ,  " already exists")
+            return render_template('register.html', title = "Register", logged_user = logged_user, username_already_exists=True)
 
-        fptr = open(directory + "data.dat", "w")
-        fptr.write(username + '\n')
-        fptr.write(password + '\n')
-        fptr.write(email + '\n')
-        fptr.write(credit_card + '\n')
+        salt = 
+        password = hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()
 
-        for user in users:
-            if user.email == email:
-                return redirect(url_for('register'))
+        file = open(directory + "data.dat", "w")
+        file.write(username + '\n')
+        file.write(password + '\n')
+        file.write(email + '\n')
+        file.write(credit_card + '\n')
 
-        user = User(username, password, email, credit_card)
-        users.append(user)
+        balance = random.random() * 100
+        file.write(balance + '\n')
 
-        
 
         return redirect(url_for('login'))
+    
     else:
-        return render_template('register.html', title = "Register")
+        return render_template('register.html', title = "Register", logged_user = logged_user)
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    global logged_user    
     if 'username' in session:
         session.pop('username', None)
+    logged_user = None
     return redirect(url_for('inicio'))
 
 @app.route('/film/<id>', methods=['GET', 'POST'])

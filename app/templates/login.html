@@ -16,6 +16,19 @@
          <div>
             <a href="{{ url_for('register') }}">Si aún no tiene cuenta, haga click aquí.</a>
          </div>
+
+         {% if username_not_exists %}
+         <div>
+            <p> User does not exist, try another username! </p>
+         </div>
+         {% endif %}
+
+         {% if incorrect_password %}
+         <div>
+            <p> Wrong password, try again! </p>
+         </div>
+         {% endif %}
+
       </div>
       {% endblock %}
    </body>

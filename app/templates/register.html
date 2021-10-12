@@ -25,6 +25,13 @@
          <div>
             <a href="{{ url_for('login') }}"> Iniciar Sesión </a>
          </div>
+
+         {% if username_already_exists %}
+         <div>
+            <p> User already exists, try another username! </p>
+         </div>
+         {% endif %}
+         
       </form>
       {% endblock %}
    </body>

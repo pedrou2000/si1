@@ -50,8 +50,10 @@
             <button class="button_cesar"> <a class="link" href="{{ url_for('logout') }}">Logout </a></button>
          </p>
          <p>
-            <p> User: {{logged_user}} </p>
+            User: {{logged_user.username}}
          </p>
+      {% else %}
+         <p> Not logged in </p>
       {% endif %}
    </div>
 
