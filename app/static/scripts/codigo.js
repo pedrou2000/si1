@@ -10,7 +10,6 @@ function login() {
     }
   }
 
-  alert(mensaje);
 }
 
 function register() {
@@ -33,7 +32,6 @@ function register() {
   + email + "\" y tajeta de crédito \"" + credit_card +
   "\" ha sido registrado correctamente en el sistema!"
 
-  alert(mensaje);
 }
 
 function search() {
