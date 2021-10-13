@@ -50,8 +50,10 @@ def login():
         else:
             file = open(directory + 'data.dat',"r")
             lines = file.read().split('\n')
+            hash = ""
+            hasehed_password = hashlib.blake2b((hash + password).encode('utf-8')).hexdigest()
 
-            if lines[1] == password:
+            if hasehed_password == lines[1]:
                 session['username'] = username
                 session.modified=True
                 logged_user = User(lines[0], lines[1], lines[2], lines[3], lines[4])
@@ -84,17 +86,23 @@ def register():
         else:    
             return render_template('register.html', title = "Register", logged_user = logged_user, username_already_exists=True)
 
-        salt = 1111
-        password = hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()
+        #salt = os.urandom(32).hexdigest()
+        #salt = str(bcrypt.gensalt())
+        salt = ""
+        hasehed_password = hashlib.blake2b((salt + password).encode('utf-8')).hexdigest()
 
         file = open(directory + "data.dat", "w")
         file.write(username + '\n')
-        file.write(password + '\n')
+
+        file.write(hasehed_password + '\n')
+
         file.write(email + '\n')
-        file.write(credit_card + '\n')
+        file.write(credit_card + '\n')        
 
         balance = random.random() * 100
-        file.write(balance + '\n')
+        file.write(str(balance) + '\n')
+
+        file.close()
 
 
         return redirect(url_for('login'))
