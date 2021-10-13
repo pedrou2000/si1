@@ -1,15 +1,6 @@
 function login() {
   user = document.getElementById("user").value;
   pass = document.getElementById("pass").value;
-
-  mensaje = user + " " + pass + " not registered!";
-
-  if (user == "pedro" | user == "cesar"){
-    if (pass == "a") {
-      mensaje = "Bienvenido " + user;
-    }
-  }
-
 }
 
 function register() {
@@ -22,15 +13,9 @@ function register() {
 
 
   if (pass_1 != pass_2) {
-    alert("Las contraseñas introducidas no son iguales!");
-    return;
+      alert("Las contraseñas introducidas no son iguales!");
+      return;
   }
-
-  /* Comprobar si el usuario ya esta registrado */
-
-  mensaje = " El usuario \"" + username + "\" con email \""
-  + email + "\" y tajeta de crédito \"" + credit_card +
-  "\" ha sido registrado correctamente en el sistema!"
 
 }
 
