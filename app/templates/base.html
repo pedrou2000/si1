@@ -51,6 +51,7 @@
          </p>
          <p>
             User: {{logged_user.username}}
+            balance: {{logged_user.balance}}
          </p>
       {% else %}
          <p> Not logged in </p>
@@ -59,7 +60,7 @@
 
    <!-- Searcher -->
    <div id = "searcher"></div>
-   
+
    <!-- Content -->
    {% block content %}{% endblock %}
 

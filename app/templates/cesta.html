@@ -11,15 +11,16 @@
          {% for item in cesta %}
          <div id = "cesta_container">
             <div id = "cesta_picture">
-               <img id = "image" src  = {{ item.poster }}>
+               <img id = "image" src  = {{ item[0].poster }}>
             </div>
             <div id = "cesta_info">
-               <p> <b>Título:</b>{{ item.titulo }} </p>
-               <p> <b>Categoría:</b>{{ item.categoria }} </p>
+               <p> <b>Título: </b>{{ item[0].titulo }} </p>
+               <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
+               <p> <b>Cantidad: </b>{{ item[1] }} </p>
             </div>
             <div id = "cesta_price">
-               <p> <b>Precio:</b>{{ item.precio }} </p>
-               <button class = "button_cesar"> <a class="link" href="{{ url_for('eliminado_cesta', id=item.id) }}">Eliminar</a> </button>
+               <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
+               <button class = "button_cesar"> <a class="link" href="{{ url_for('eliminado_cesta', id=item[0].id) }}">Eliminar</a> </button>
             </div>
          </div>
          {% endfor %}
