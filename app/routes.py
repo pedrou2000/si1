@@ -21,11 +21,20 @@ class User:
         self.password = password
         self.email = email
         self.credit_card = credit_card
-        self.balance = balance
-        #self.basket = dict()
+        self.balance = round(float(balance), 2)
 
     def __repr__(self) -> str:
         return f'User: {self.username}'
+
+    def create_user_dict(self):
+        user_dictionary = dict()
+        user_dictionary['username'] = self.username
+        user_dictionary['password'] = self.password
+        user_dictionary['email'] = self.email
+        user_dictionary['credit_card'] = self.credit_card
+        user_dictionary['balance'] = self.balance
+
+        return user_dictionary
 
 #logged_user = None
 
@@ -45,7 +54,6 @@ def get_cesta_sesion():
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
-
     render_template('base.html', title = "Base", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
     return render_template('inicio.html', title = "Home", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
@@ -66,9 +74,11 @@ def login():
             hasehed_password = hashlib.blake2b((hash + password).encode('utf-8')).hexdigest()
 
             if hasehed_password == lines[1]:
-                session['username'] = username
+                #session['username'] = username
+                #session.modified=True
+                logged_user = User(lines[0], lines[1], lines[2], lines[3], lines[4])
+                session['user'] = logged_user.create_user_dict()
                 session.modified=True
-                session['user'] = User(lines[0], lines[1], lines[2], lines[3], lines[4])
                 return redirect(url_for('inicio'))
             else:
                 return render_template('login.html', title = "Sign In", logged_user = get_actual_user(), incorrect_password=True)
@@ -158,17 +168,12 @@ def anadir_cesta(id):
         cesta = get_cesta_sesion()
 
     if id in cesta.keys():
-        print("mas pelis ")
-        print(cesta[id])
-        session['cesta'][id] += 1
+        cesta[id] += 1
 
     else:
-        print("nueva peli")
-        session['cesta'][id] =  1
-        print(cesta[id])
+        cesta[id] =  1
 
-    print("cestita:")
-    print(cesta)
+    session.modified=True
     return render_template('anadido_cesta.html', title = "Basket Add", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
 @app.route('/cesta', methods=['GET', 'POST'])
@@ -191,4 +196,5 @@ def eliminado_cesta(id):
         cesta.pop(id, None)
     else:
         cesta[id] -= 1
+    session.modified=True
     return render_template('eliminado_cesta.html', title = "Basket Removed", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
