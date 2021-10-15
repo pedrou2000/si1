@@ -4,8 +4,9 @@
    {% block title %}
    <title> Video Club </title>
    {% endblock %}
-   <script src="../static/scripts/codigo.js"></script>
+   <script src="../sta  tic/scripts/codigo.js"></script>
    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -59,10 +60,11 @@
                {% if key == 'username' %}
                   Username: {{value}} <br>
                {% endif %}
-            {% endfor %}
-            {% for key, value in logged_user.data.items() %}
                {% if key == 'balance' %}
-                  Balance: {{value}} €
+                  Balance: {{value}} € <br>
+               {% endif %}
+               {% if key == 'points' %}
+                  Points: {{value}}
                {% endif %}
             {% endfor %}
          {% endif %}

@@ -10,6 +10,8 @@ import sys
 import random
 import hashlib
 import string
+from datetime import datetime
+
 
 #Global variable
 film_catalogue = json.loads(open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read())
@@ -18,7 +20,7 @@ film_catalogue = json.loads(open(os.path.join(app.root_path,'catalogue/catalogue
 
 
 
-def create_user(username, salt, password, email, credit_card, balance) -> None:
+def create_user(username, salt, password, email, credit_card, direccion_envio, balance) -> None:
     user_dictionary = dict()
 
     data = dict()
@@ -27,10 +29,12 @@ def create_user(username, salt, password, email, credit_card, balance) -> None:
     data['password'] = password
     data['email'] = email
     data['credit_card'] = credit_card
+    data['direccion_envio'] = direccion_envio
     data['balance'] = balance 
+    data['points'] = 0
 
     user_dictionary['data'] = data
-    user_dictionary['shopping_history'] = dict()
+    user_dictionary['shopping_history'] = [dict()]
 
     return user_dictionary
 
@@ -124,6 +128,7 @@ def register():
         repeated_password = request.form['repeated_password']
         email = request.form['email']
         credit_card = request.form['credit_card']
+        direccion_envio = request.form['direccion_envio']
 
         # password hashed before stored
         salt = get_random_string(32)
@@ -133,7 +138,7 @@ def register():
         balance = random.random() * 100
         balance = round(balance, 2)
 
-        user = create_user(username, salt, password, email, credit_card, balance)
+        user = create_user(username, salt, password, email, credit_card, direccion_envio, balance)
 
         directory = os.getcwd() + "/users/" + user['data']['username'] + "/"
 
@@ -231,12 +236,17 @@ def historial_compra():
         return redirect(url_for('historial_compra'))
 
     else:
-        film_list = []
         shopping_history = session['user']['shopping_history']
-        for id in shopping_history.keys():
-            position = int(id) - 1
-            movie = film_catalogue['peliculas'][position]
-            film_list.append((movie, shopping_history[id]))
+        shopping_list = []
+        counter = 1
+        for pedido in shopping_history:    
+            film_list = []
+            for id in pedido.keys():
+                position = int(id) - 1
+                movie = pedido['peliculas'][position]
+                film_list.append((movie, pedido[id]))
+            shopping_list.append(("Pedido " + counter, datetime.now().strftime("%d/%m/%Y %H:%M:%S"), film_list))
+            counter += 1
         
         return render_template('historial_compra.html', title = "Basket", film_list = film_list, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
@@ -281,15 +291,14 @@ def compra_finalizada():
 
     user_data['balance'] -= pago 
     user_data['balance'] = round(user_data['balance'], 2) 
+
+    points = (pago * 100) * 0.05 
+    points = round(points) 
+    user_data['points'] += points
     
     # actualizar historial de compras
     shopping_history = user['shopping_history']
-    for movie, cantidad in lista_cesta:
-        id = movie['id']
-        if id in shopping_history.keys():
-            shopping_history[id] += cantidad
-        else:
-            shopping_history[id] = cantidad
+    shopping_history.append(session['cesta'])
 
     update_user_data(user)
     session['cesta'] = dict()

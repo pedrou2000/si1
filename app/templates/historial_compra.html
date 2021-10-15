@@ -18,18 +18,11 @@
          </div>
 
 
-         {% for item in film_list %}
+         {% for nombre, fecha, lista_pelis in shopping_history %}
          <div id = "cesta_container">
-            <div id = "cesta_picture">
-               <img id = "image" src  = {{ item[0].poster }}>
-            </div>
             <div id = "cesta_info">
-               <p> <b>Título: </b>{{ item[0].titulo }} </p>
-               <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
-               <p> <b>Cantidad: </b>{{ item[1] }} </p>
-            </div>
-            <div id = "cesta_price">
-               <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
+               <p> <b>Nombre pedido: </b>{{ nombre }} </p>
+               <p> <b>Fecha: </b>{{ fecha }} </p>
             </div>
          </div>
          {% endfor %}
