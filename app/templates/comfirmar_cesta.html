@@ -5,7 +5,7 @@
       <div id = "cesta_content">
         <div id="return">
            <p>
-              <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
+              <button class = "button_cesar"> <a class="link" href="{{ url_for('cesta') }}">Volver</a> </button>
            </p>
         </div>
          {% for item in cesta %}
@@ -27,7 +27,7 @@
          <div id = "pagar_div">
            <div id = "fake_div"></div>
            <div id = "fake_div">
-           <button class = "button_cesar"><a class="link" href="{{ url_for('comfirmar_cesta')}}">Pagar</a> </button>
+               <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada')}}">Pagar {{pago}}€</a> </button>
            </div>
            <div id = "fake_div"></div>
          </div>

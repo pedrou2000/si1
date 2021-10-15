@@ -9,34 +9,49 @@ import os
 import sys
 import random
 import hashlib
+import string
 
 #Global variable
 film_catalogue = json.loads(open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read())
 #LIST o SET????
 #cesta_usuario = []
 
-class User:
-    def __init__(self, username, password, email, credit_card, balance) -> None:
-        self.username = username
-        self.password = password
-        self.email = email
-        self.credit_card = credit_card
-        self.balance = round(float(balance), 2)
 
-    def __repr__(self) -> str:
-        return f'User: {self.username}'
 
-    def create_user_dict(self):
-        user_dictionary = dict()
-        user_dictionary['username'] = self.username
-        user_dictionary['password'] = self.password
-        user_dictionary['email'] = self.email
-        user_dictionary['credit_card'] = self.credit_card
-        user_dictionary['balance'] = self.balance
+def create_user_dict(username, salt, password, email, credit_card, balance) -> None:
+    user_dictionary = dict()
+    user_dictionary['username'] = username
+    user_dictionary['salt'] = salt
+    user_dictionary['password'] = password
+    user_dictionary['email'] = email
+    user_dictionary['credit_card'] = credit_card
+    user_dictionary['balance'] = balance
 
-        return user_dictionary
+    return user_dictionary
 
-#logged_user = None
+def update_user_data(user_dict):
+    directory = os.getcwd() + "/users/" + user_dict['username'] + "/"
+    if not os.path.exists(directory):
+        return False
+
+    file = open(directory + "data.json", "w") # erase its previous content  
+    json.dump(user_dict, file)
+    file.close()
+
+    return True
+
+def load_data_file(directory):
+    file = open(directory)
+    return json.load(file)
+
+def get_random_string(length):
+    alphabet = string.ascii_letters + string.digits + string.punctuation
+    random_string = ''.join(random.choice(alphabet) for i in range(length))
+    return random_string
+
+
+
+
 
 #Sustituir logged_user por get_actual_user()
 def get_actual_user():
@@ -68,17 +83,14 @@ def login():
         if not os.path.exists(directory):
             return render_template('login.html', title = "Sign In", logged_user = get_actual_user(), username_not_exists=True)
         else:
-            file = open(directory + 'data.dat',"r")
-            lines = file.read().split('\n')
-            hash = ""
-            hasehed_password = hashlib.blake2b((hash + password).encode('utf-8')).hexdigest()
+            directory += 'data.json'
+            user_dict = load_data_file(directory)
+            salt = user_dict['salt']
+            hasehed_password = hashlib.blake2b((salt + password).encode('utf-8')).hexdigest()
 
-            if hasehed_password == lines[1]:
-                #session['username'] = username
-                #session.modified=True
-                logged_user = User(lines[0], lines[1], lines[2], lines[3], lines[4])
-                session['user'] = logged_user.create_user_dict()
-                session.modified=True
+            if hasehed_password == user_dict['password']:
+                session['user'] = user_dict
+                session.modified = True
                 return redirect(url_for('inicio'))
             else:
                 return render_template('login.html', title = "Sign In", logged_user = get_actual_user(), incorrect_password=True)
@@ -95,35 +107,27 @@ def register():
         email = request.form['email']
         credit_card = request.form['credit_card']
 
-        directory = os.getcwd() + "/users/" + username + "/"
+        # password hashed before stored
+        salt = get_random_string(32)
+        password = hashlib.blake2b((salt + password).encode('utf-8')).hexdigest()
+        
+        # the balance is a random number
+        balance = random.random() * 100
+        balance = round(balance, 2)
+
+        user_dict = create_user_dict(username, salt, password, email, credit_card, balance)
+
+        directory = os.getcwd() + "/users/" + user_dict['username'] + "/"
 
         if not os.path.exists(directory):
             # si el directorio users aun no esta creado lo creamos
             if not os.path.exists(os.getcwd() + "/users"):
                 os.mkdir(os.getcwd() + "/users")
-
             os.mkdir(directory)
         else:
             return render_template('register.html', title = "Register", logged_user = get_actual_user(), username_already_exists=True)
 
-        #salt = os.urandom(32).hexdigest()
-        #salt = str(bcrypt.gensalt())
-        salt = ""
-        hasehed_password = hashlib.blake2b((salt + password).encode('utf-8')).hexdigest()
-
-        file = open(directory + "data.dat", "w")
-        file.write(username + '\n')
-
-        file.write(hasehed_password + '\n')
-
-        file.write(email + '\n')
-        file.write(credit_card + '\n')
-
-        balance = random.random() * 100
-        file.write(str(balance) + '\n')
-
-        file.close()
-
+        update_user_data(user_dict)
 
         return redirect(url_for('login'))
 
@@ -132,9 +136,8 @@ def register():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    if 'username' in session:
-        session.pop('username', None)
-    session['user'] = None
+    if 'user' in session:
+        session.pop('user', None)
     return redirect(url_for('inicio'))
 
 @app.route('/film/<id>', methods=['GET', 'POST'])
@@ -173,7 +176,7 @@ def anadir_cesta(id):
     else:
         cesta[id] =  1
 
-    session.modified=True
+    session.modified = True
     return render_template('anadido_cesta.html', title = "Basket Add", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
 @app.route('/cesta', methods=['GET', 'POST'])
@@ -188,6 +191,47 @@ def cesta():
             movie = film_catalogue['peliculas'][position]
             lista_cesta.append((movie, cesta[id]))
         return render_template('cesta.html', title = "Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+
+@app.route('/comfirmar_cesta', methods=['GET', 'POST'])
+def comfirmar_cesta():
+    if not get_cesta_sesion():
+        return render_template('cesta_vacia.html', title = "Empty Basket", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+    else:
+        cesta = get_cesta_sesion()
+        lista_cesta = []
+        pago = 0
+        for id in cesta.keys():
+            position = int(id) - 1
+            movie = film_catalogue['peliculas'][position]
+            pago += cesta[id] * movie['precio']
+            lista_cesta.append((movie, cesta[id]))
+        return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
+                                logged_user = get_actual_user(), pago=pago)
+
+
+@app.route('/compra_finalizada', methods=['GET', 'POST'])
+def compra_finalizada():
+    cesta = get_cesta_sesion()
+    lista_cesta = []
+    pago = 0
+    for id in cesta.keys():
+        position = int(id) - 1
+        movie = film_catalogue['peliculas'][position]
+        pago += cesta[id] * movie['precio']
+        lista_cesta.append((movie, cesta[id]))
+
+    user_dict = session['user']
+
+    if user_dict['balance'] - pago < 0:
+        return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
+                                logged_user = get_actual_user(), pago=pago)
+
+    user_dict['balance'] -= pago 
+    user_dict['balance'] = round(user_dict['balance'], 2) 
+    update_user_data(user_dict)
+    session['cesta'] = dict()
+    return render_template('compra_finalizada.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
+                            logged_user = get_actual_user(), pago=pago)
 
 @app.route('/eliminado_cesta/<id>', methods=['GET', 'POST'])
 def eliminado_cesta(id):

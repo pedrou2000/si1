@@ -3,11 +3,9 @@
    <body>
       {% block content %}
       <div id = "cesta_content">
-        <div id="return">
-           <p>
-              <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
-           </p>
-        </div>
+         <div id="exito_compra">
+            <p><b> Felicidades! Ha realizado su compra de {{pago}}€ con exito. </b></p>
+         </div>
          {% for item in cesta %}
          <div id = "cesta_container">
             <div id = "cesta_picture">
@@ -24,12 +22,10 @@
             </div>
          </div>
          {% endfor %}
-         <div id = "pagar_div">
-           <div id = "fake_div"></div>
-           <div id = "fake_div">
-           <button class = "button_cesar"><a class="link" href="{{ url_for('comfirmar_cesta')}}">Pagar</a> </button>
-           </div>
-           <div id = "fake_div"></div>
+         <div id="return">
+            <p>
+               <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Continuar Comprando</a> </button>
+            </p>
          </div>
       </div>
       {% endblock %}
