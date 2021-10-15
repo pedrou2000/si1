@@ -53,17 +53,20 @@
             <button class="button_cesar"> <a class="link" href="{{ url_for('historial_compra') }}">Historial de Compras </a></button>
          </p>
          <p>
-          {% for key, value in logged_user.data.items() %}
-            {% if key == 'username' %}
-              Username: {{value}} <br>
-            {% endif %}
-          {% endfor %}
-          {% for key, value in logged_user.data.items() %}
-            {% if key == 'balance' %}
-              Balance: {{value}} €
-            {% endif %}
-          {% endfor %}
-       </p>
+
+         {% if logged_user.data %}
+            {% for key, value in logged_user.data.items() %}
+               {% if key == 'username' %}
+                  Username: {{value}} <br>
+               {% endif %}
+            {% endfor %}
+            {% for key, value in logged_user.data.items() %}
+               {% if key == 'balance' %}
+                  Balance: {{value}} €
+               {% endif %}
+            {% endfor %}
+         {% endif %}
+         </p>
       {% else %}
          <p> Not logged in </p>
       {% endif %}

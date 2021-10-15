@@ -215,6 +215,15 @@ def historial_compra():
     if request.method == 'POST':
         extra_money = request.form['saldo']
         user_data = session['user']['data']
+
+        try:
+            extra_money = float(extra_money)
+        except ValueError:
+            return redirect(url_for('historial_compra'))
+        
+        if extra_money < 0:
+            return redirect(url_for('historial_compra'))
+
         user_data['balance'] += float(extra_money)
         user_data['balance'] = round(user_data['balance'], 2)
         update_user_data(session['user'])
