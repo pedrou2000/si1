@@ -3,31 +3,34 @@
    <body>
       {% block content %}
       <!-- Login Menu -->
-      <form action="" method="POST" id="login_menu">
-         <div id = "campo">
-            <input name="username" id="user" class="textbox" type="text" placeholder=" Usuario">
-         </div>
-         <div id = "campo">
-            <input name="password" id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
-         </div>
-         <div id = "campo">
-            <button class="button" onclick="login()">Log In</button>
-         </div>
-         <div>
-            <a href="{{ url_for('register') }}">Si aún no tiene cuenta, haga click aquí.</a>
-         </div>
+      <div id = "login_menu">
+        <form action="" method="POST" id="login_form">
+           <script src="../static/scripts/codigo.js"></script>
+           <div id = "campo_login">
+              <input name="username" id="user" class="textbox" type="text" placeholder=" Usuario">
+           </div>
+           <div id = "campo_login">
+              <input name="password" id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
+           </div>
+         </form>
+           <div id = "campo_button">
+              <button class="button" onclick="login()">Log In</button>
+           </div>
+           <div>
+              <a href="{{ url_for('register') }}">Si aún no tiene cuenta, haga click aquí.</a>
+           </div>
 
-         {% if username_not_exists %}
-         <div>
-            <p> User does not exist, try another username! </p>
-         </div>
-         {% endif %}
+           {% if username_not_exists %}
+           <div>
+              <p> El nombre de usuario no existe, inténtelo de nuevo. </p>
+           </div>
+           {% endif %}
 
-         {% if incorrect_password %}
-         <div>
-            <p> Wrong password, try again! </p>
-         </div>
-         {% endif %}
+           {% if incorrect_password %}
+           <div>
+              <p> Contraseña incorrecta, inténtelo de nuevo. </p>
+           </div>
+           {% endif %}
 
       </div>
       {% endblock %}

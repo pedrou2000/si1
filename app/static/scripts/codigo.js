@@ -5,13 +5,15 @@
      $("#new_user").keypress(function(){
        // alert("aaaaa");
      });
-  
-  
+
+
 });
 
 function login() {
     user = document.getElementById("user").value;
     pass = document.getElementById("pass").value;
+
+    document.getElementById("login_form").submit()
 }
 
 function register() {
@@ -27,7 +29,7 @@ function register() {
     if(!letras_o_numeros.test(username)){
         alert("El usuario debe ser una cadena de numeros y letras.");
         return;
-    }    
+    }
     if(username.length < 6){
         alert("El usuario debe tener al menos 6 caracteres.");
         return;
@@ -62,6 +64,8 @@ function register() {
         alert("La direccion de envio es demasiado larga.");
         return;
     }
+
+    document.getElementById("register_form").submit()
 }
 
 function search() {
@@ -81,5 +85,5 @@ function rent() {
 }
 
 function auto_submit() {
-    document.getElementById("film_action").submit(); 
+    document.getElementById("film_action").submit();
 }

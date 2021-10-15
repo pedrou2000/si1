@@ -26,10 +26,10 @@
          <div id = "pagar_div">
             <div id = "fake_div"></div>
                <div id = "fake_div">
-                     <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada')}}">Pagar {{pago}}€</a> </button>
+                     <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada', way='balance')}}">Pagar {{pago}}€</a> </button>
                </div>
                <div id = "fake_div">
-                     <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada')}}"> Usar puntos </a> </button>
+                     <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada', way='points')}}"> Usar puntos </a> </button>
                </div>
             <div id = "fake_div"></div>
          </div>

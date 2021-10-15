@@ -6,7 +6,7 @@
          <div id="title2">
             <p><b> HISTORIAL DE COMPRAS </b> </p>
          </div>
-         
+
 
          <div id = "search">
             <p><b> Añadir saldo </b> </p>
@@ -17,15 +17,17 @@
             </form>
          </div>
 
-
-         {% for nombre, fecha, lista_pelis in shopping_history %}
          <div id = "cesta_container">
+         {% for numero, lista_pelis in shopping_list %}
             <div id = "cesta_info">
-               <p> <b>Nombre pedido: </b>{{ nombre }} </p>
-               <p> <b>Fecha: </b>{{ fecha }} </p>
+               <p> <b>Numero de pedido: </b>{{ numero }} </p>
+               <p> <b>Peliculas del pedido: </b></p>
+               {% for item, cantidad in lista_pelis %}
+                  <p> {{ item.titulo }}, {{ item.precio }}€ (cantidad: {{ cantidad }}) </p>
+               {% endfor %}
             </div>
-         </div>
          {% endfor %}
+         </div>
       </div>
       {% endblock %}
    </body>

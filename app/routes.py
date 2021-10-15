@@ -30,7 +30,7 @@ def create_user(username, salt, password, email, credit_card, direccion_envio, b
     data['email'] = email
     data['credit_card'] = credit_card
     data['direccion_envio'] = direccion_envio
-    data['balance'] = balance 
+    data['balance'] = balance
     data['points'] = 0
 
     user_dictionary['data'] = data
@@ -43,11 +43,11 @@ def update_user_data(user):
     if not os.path.exists(directory):
         return False
 
-    file = open(directory + "data.dat", "w") # erase its previous content  
+    file = open(directory + "data.dat", "w") # erase its previous content
     json.dump(user['data'], file)
     file.close()
 
-    file = open(directory + "historial.json", "w") # erase its previous content  
+    file = open(directory + "historial.json", "w") # erase its previous content
     json.dump(user['shopping_history'], file)
     file.close()
 
@@ -75,7 +75,6 @@ def get_random_string(length):
 
 
 
-#Sustituir logged_user por get_actual_user()
 def get_actual_user():
     if 'user' not in session:
         return None
@@ -84,7 +83,7 @@ def get_actual_user():
 def get_cesta_sesion():
     if 'cesta' not in session:
         return None
-    #Plantear cesta como diccionario
+
     return session['cesta']
 
 
@@ -133,7 +132,7 @@ def register():
         # password hashed before stored
         salt = get_random_string(32)
         password = hashlib.blake2b((salt + password).encode('utf-8')).hexdigest()
-        
+
         # the balance is a random number
         balance = random.random() * 100
         balance = round(balance, 2)
@@ -225,7 +224,7 @@ def historial_compra():
             extra_money = float(extra_money)
         except ValueError:
             return redirect(url_for('historial_compra'))
-        
+
         if extra_money < 0:
             return redirect(url_for('historial_compra'))
 
@@ -239,16 +238,23 @@ def historial_compra():
         shopping_history = session['user']['shopping_history']
         shopping_list = []
         counter = 1
-        for pedido in shopping_history:    
-            film_list = []
-            for id in pedido.keys():
-                position = int(id) - 1
-                movie = pedido['peliculas'][position]
-                film_list.append((movie, pedido[id]))
-            shopping_list.append(("Pedido " + counter, datetime.now().strftime("%d/%m/%Y %H:%M:%S"), film_list))
-            counter += 1
-        
-        return render_template('historial_compra.html', title = "Basket", film_list = film_list, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+        #print(shopping_history)
+        for pedido in shopping_history:
+            if pedido:
+                film_list = []
+                for id in pedido.keys():
+                    position = int(id) - 1
+                    movie = film_catalogue['peliculas'][position]
+                    #film_list.append((movie, pedido[id]))
+                    film_list.append((movie, pedido[id]))
+
+
+                #shopping_list.append(("Pedido " + str(counter), datetime.now().strftime("%d/%m/%Y %H:%M:%S"), film_list))
+                shopping_list.append((str(counter), film_list))
+                print(shopping_list)
+                counter += 1
+
+        return render_template('historial_compra.html', title = "Basket", shopping_list = shopping_list, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
 @app.route('/comfirmar_cesta', methods=['GET', 'POST'])
 def comfirmar_cesta():
@@ -264,15 +270,17 @@ def comfirmar_cesta():
                 movie = film_catalogue['peliculas'][position]
                 pago += cesta[id] * movie['precio']
                 lista_cesta.append((movie, cesta[id]))
-            return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
+            return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'],
                                     logged_user = get_actual_user(), pago=pago)
         else:
             return redirect(url_for('login'))
 
 
 
-@app.route('/compra_finalizada', methods=['GET', 'POST'])
-def compra_finalizada():
+@app.route('/compra_finalizada/<way>', methods=['GET', 'POST'])
+def compra_finalizada(way):
+    buy = False
+
     cesta = get_cesta_sesion()
     lista_cesta = []
     pago = 0
@@ -284,29 +292,39 @@ def compra_finalizada():
 
     user = session['user']
     user_data = user['data']
+    aux = (user_data['balance'] - pago)
 
-    if user_data['balance'] - pago < 0:
-        return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
+    if way == 'balance':
+        if (user_data['balance'] - pago) >= 0:
+            user_data['balance'] -= pago
+            user_data['balance'] = round(user_data['balance'], 2)
+
+            points = (pago * 100) * 0.05
+            points = round(points)
+            user_data['points'] += points
+            buy = True
+
+    elif way == 'points':
+        pago_en_puntos = round(pago * 100)
+        if (user_data['points'] - pago_en_puntos) >= 0:
+            user_data['points'] -= pago_en_puntos
+            buy = True
+
+    if buy:
+        # actualizar historial de compras
+        shopping_history = user['shopping_history']
+        shopping_history.append(session['cesta'])
+
+        update_user_data(user)
+        session['cesta'] = dict()
+
+        session.modified=True
+
+        return render_template('compra_finalizada.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'],
                                 logged_user = get_actual_user(), pago=pago)
 
-    user_data['balance'] -= pago 
-    user_data['balance'] = round(user_data['balance'], 2) 
-
-    points = (pago * 100) * 0.05 
-    points = round(points) 
-    user_data['points'] += points
-    
-    # actualizar historial de compras
-    shopping_history = user['shopping_history']
-    shopping_history.append(session['cesta'])
-
-    update_user_data(user)
-    session['cesta'] = dict()
-
-    session.modified=True
-
-    return render_template('compra_finalizada.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
-                            logged_user = get_actual_user(), pago=pago)
+    return render_template('compra_fallida.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'],
+                                    logged_user = get_actual_user(), way=way)
 
 @app.route('/eliminado_cesta/<id>', methods=['GET', 'POST'])
 def eliminado_cesta(id):
