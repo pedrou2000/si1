@@ -20,7 +20,6 @@
             </div>
             <div id = "cesta_price">
                <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
-               <button class = "button_cesar"> <a class="link" href="{{ url_for('eliminado_cesta', id=item[0].id) }}">Eliminar</a> </button>
             </div>
          </div>
          {% endfor %}

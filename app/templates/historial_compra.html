@@ -3,10 +3,22 @@
    <body>
       {% block content %}
       <div id = "cesta_content">
-         <div id="exito_compra">
-            <p><b> Felicidades! Ha realizado su compra de {{pago}}€ con exito. </b></p>
+         <div id="title2">
+            <p><b> HISTORIAL DE COMPRAS </b> </p>
          </div>
-         {% for item in cesta %}
+         
+
+         <div id = "search">
+            <p><b> Añadir saldo </b> </p>
+
+            <form action="" method="post">
+               <input type="text" name="saldo" placeholder = " Dinero a añadir">
+               <input type="submit" value="Añadir">
+            </form>
+         </div>
+
+
+         {% for item in film_list %}
          <div id = "cesta_container">
             <div id = "cesta_picture">
                <img id = "image" src  = {{ item[0].poster }}>
@@ -21,11 +33,6 @@
             </div>
          </div>
          {% endfor %}
-         <div id="return">
-            <p>
-               <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Continuar Comprando</a> </button>
-            </p>
-         </div>
       </div>
       {% endblock %}
    </body>

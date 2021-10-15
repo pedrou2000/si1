@@ -18,31 +18,49 @@ film_catalogue = json.loads(open(os.path.join(app.root_path,'catalogue/catalogue
 
 
 
-def create_user_dict(username, salt, password, email, credit_card, balance) -> None:
+def create_user(username, salt, password, email, credit_card, balance) -> None:
     user_dictionary = dict()
-    user_dictionary['username'] = username
-    user_dictionary['salt'] = salt
-    user_dictionary['password'] = password
-    user_dictionary['email'] = email
-    user_dictionary['credit_card'] = credit_card
-    user_dictionary['balance'] = balance
+
+    data = dict()
+    data['username'] = username
+    data['salt'] = salt
+    data['password'] = password
+    data['email'] = email
+    data['credit_card'] = credit_card
+    data['balance'] = balance 
+
+    user_dictionary['data'] = data
+    user_dictionary['shopping_history'] = dict()
 
     return user_dictionary
 
-def update_user_data(user_dict):
-    directory = os.getcwd() + "/users/" + user_dict['username'] + "/"
+def update_user_data(user):
+    directory = os.getcwd() + "/users/" + user['data']['username'] + "/"
     if not os.path.exists(directory):
         return False
 
-    file = open(directory + "data.json", "w") # erase its previous content  
-    json.dump(user_dict, file)
+    file = open(directory + "data.dat", "w") # erase its previous content  
+    json.dump(user['data'], file)
+    file.close()
+
+    file = open(directory + "historial.json", "w") # erase its previous content  
+    json.dump(user['shopping_history'], file)
     file.close()
 
     return True
 
-def load_data_file(directory):
-    file = open(directory)
-    return json.load(file)
+def load_user(directory):
+    user = dict()
+
+    file = open(directory + 'data.dat')
+    user['data'] = json.load(file)
+    file.close()
+
+    file = open(directory + 'historial.json')
+    user['shopping_history'] = json.load(file)
+    file.close()
+
+    return user
 
 def get_random_string(length):
     alphabet = string.ascii_letters + string.digits + string.punctuation
@@ -83,13 +101,13 @@ def login():
         if not os.path.exists(directory):
             return render_template('login.html', title = "Sign In", logged_user = get_actual_user(), username_not_exists=True)
         else:
-            directory += 'data.json'
-            user_dict = load_data_file(directory)
-            salt = user_dict['salt']
+            user = load_user(directory)
+            user_data = user['data']
+            salt = user_data['salt']
             hasehed_password = hashlib.blake2b((salt + password).encode('utf-8')).hexdigest()
 
-            if hasehed_password == user_dict['password']:
-                session['user'] = user_dict
+            if hasehed_password == user_data['password']:
+                session['user'] = user
                 session.modified = True
                 return redirect(url_for('inicio'))
             else:
@@ -115,9 +133,9 @@ def register():
         balance = random.random() * 100
         balance = round(balance, 2)
 
-        user_dict = create_user_dict(username, salt, password, email, credit_card, balance)
+        user = create_user(username, salt, password, email, credit_card, balance)
 
-        directory = os.getcwd() + "/users/" + user_dict['username'] + "/"
+        directory = os.getcwd() + "/users/" + user['data']['username'] + "/"
 
         if not os.path.exists(directory):
             # si el directorio users aun no esta creado lo creamos
@@ -127,7 +145,7 @@ def register():
         else:
             return render_template('register.html', title = "Register", logged_user = get_actual_user(), username_already_exists=True)
 
-        update_user_data(user_dict)
+        update_user_data(user)
 
         return redirect(url_for('login'))
 
@@ -192,21 +210,46 @@ def cesta():
             lista_cesta.append((movie, cesta[id]))
         return render_template('cesta.html', title = "Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
+@app.route('/historial_compra', methods=['GET', 'POST'])
+def historial_compra():
+    if request.method == 'POST':
+        extra_money = request.form['saldo']
+        user_data = session['user']['data']
+        user_data['balance'] += float(extra_money)
+        user_data['balance'] = round(user_data['balance'], 2)
+        update_user_data(session['user'])
+        session.modified=True
+        return redirect(url_for('historial_compra'))
+
+    else:
+        film_list = []
+        shopping_history = session['user']['shopping_history']
+        for id in shopping_history.keys():
+            position = int(id) - 1
+            movie = film_catalogue['peliculas'][position]
+            film_list.append((movie, shopping_history[id]))
+        
+        return render_template('historial_compra.html', title = "Basket", film_list = film_list, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+
 @app.route('/comfirmar_cesta', methods=['GET', 'POST'])
 def comfirmar_cesta():
     if not get_cesta_sesion():
         return render_template('cesta_vacia.html', title = "Empty Basket", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
     else:
-        cesta = get_cesta_sesion()
-        lista_cesta = []
-        pago = 0
-        for id in cesta.keys():
-            position = int(id) - 1
-            movie = film_catalogue['peliculas'][position]
-            pago += cesta[id] * movie['precio']
-            lista_cesta.append((movie, cesta[id]))
-        return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
-                                logged_user = get_actual_user(), pago=pago)
+        if 'user' in session:
+            cesta = get_cesta_sesion()
+            lista_cesta = []
+            pago = 0
+            for id in cesta.keys():
+                position = int(id) - 1
+                movie = film_catalogue['peliculas'][position]
+                pago += cesta[id] * movie['precio']
+                lista_cesta.append((movie, cesta[id]))
+            return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
+                                    logged_user = get_actual_user(), pago=pago)
+        else:
+            return redirect(url_for('login'))
+
 
 
 @app.route('/compra_finalizada', methods=['GET', 'POST'])
@@ -220,16 +263,30 @@ def compra_finalizada():
         pago += cesta[id] * movie['precio']
         lista_cesta.append((movie, cesta[id]))
 
-    user_dict = session['user']
+    user = session['user']
+    user_data = user['data']
 
-    if user_dict['balance'] - pago < 0:
+    if user_data['balance'] - pago < 0:
         return render_template('comfirmar_cesta.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
                                 logged_user = get_actual_user(), pago=pago)
 
-    user_dict['balance'] -= pago 
-    user_dict['balance'] = round(user_dict['balance'], 2) 
-    update_user_data(user_dict)
+    user_data['balance'] -= pago 
+    user_data['balance'] = round(user_data['balance'], 2) 
+    
+    # actualizar historial de compras
+    shopping_history = user['shopping_history']
+    for movie, cantidad in lista_cesta:
+        id = movie['id']
+        if id in shopping_history.keys():
+            shopping_history[id] += cantidad
+        else:
+            shopping_history[id] = cantidad
+
+    update_user_data(user)
     session['cesta'] = dict()
+
+    session.modified=True
+
     return render_template('compra_finalizada.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'], 
                             logged_user = get_actual_user(), pago=pago)
 

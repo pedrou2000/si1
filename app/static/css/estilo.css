@@ -91,6 +91,27 @@ footer {
 	text-align: center;
 }
 
+#title2 {
+	margin-top: 10;
+	height: 50%;
+	width: 100%;
+	text-align: center;
+	font-size: 35; 
+}
+
+#title3 {
+	margin-top: 10;
+	height: 50%;
+	width: 100%;
+	text-align: center;
+	font-size: 30; 
+	flex-direction: row;
+}
+
+#aniadir_saldo {
+	flex-direction: row;
+}
+
 #search {
 	height: 50%;
 	width: 100%;
@@ -210,6 +231,15 @@ footer {
 	width: 20%;
 	height: 6%;
 	size: 15;
+	text-align: center;
+}
+
+#campo2 {
+	font-size: 35;
+	width: 20%;
+	height: 6%;
+	size: 15;
+	flex-direction: row;
 	text-align: center;
 }
 
