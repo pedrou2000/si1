@@ -242,15 +242,17 @@ def historial_compra():
         for pedido in shopping_history:
             if pedido:
                 film_list = []
+                dinero_pedido = 0
                 for id in pedido.keys():
                     position = int(id) - 1
                     movie = film_catalogue['peliculas'][position]
                     #film_list.append((movie, pedido[id]))
                     film_list.append((movie, pedido[id]))
+                    dinero_pedido += (movie['precio'] * pedido[id])
 
 
                 #shopping_list.append(("Pedido " + str(counter), datetime.now().strftime("%d/%m/%Y %H:%M:%S"), film_list))
-                shopping_list.append((str(counter), film_list))
+                shopping_list.append((str(counter), film_list, dinero_pedido))
                 print(shopping_list)
                 counter += 1
 

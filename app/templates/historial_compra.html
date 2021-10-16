@@ -18,13 +18,14 @@
          </div>
 
          <div id = "cesta_container">
-         {% for numero, lista_pelis in shopping_list %}
+         {% for numero, lista_pelis, dinero_pedido in shopping_list %}
             <div id = "cesta_info">
                <p> <b>Numero de pedido: </b>{{ numero }} </p>
                <p> <b>Peliculas del pedido: </b></p>
                {% for item, cantidad in lista_pelis %}
                   <p> {{ item.titulo }}, {{ item.precio }}€ (cantidad: {{ cantidad }}) </p>
                {% endfor %}
+               <p><b>Total: </b> {{ dinero_pedido }} € </p>
             </div>
          {% endfor %}
          </div>
