@@ -5,14 +5,14 @@ $(document).ready(function(){
     $(".hidden_info").hide()
     $(".less_info").hide()
     $(".more_info").on( "click", function() {
-        $('#hidden_info_'+this.id).show(); 
-        $('#' + this.id + '.less_info').show(); 
-        $('#' + this.id + '.more_info').hide(); 
+        $('#hidden_info_'+this.id).show();
+        $('#' + this.id + '.less_info').show();
+        $('#' + this.id + '.more_info').hide();
      });
      $(".less_info").on( "click", function() {
-        $('#hidden_info_'+this.id).hide(); 
-        $('#' + this.id + '.more_info').show(); 
-        $('#' + this.id + '.less_info').hide(); 
+        $('#hidden_info_'+this.id).hide();
+        $('#' + this.id + '.more_info').show();
+        $('#' + this.id + '.less_info').hide();
     });
 
 
@@ -45,7 +45,7 @@ window.onload = function(){
         var username = document.cookie.split("=")[1];
         document.getElementById('user').value = username;
     }
-    alert('window')
+    //alert('window')
 }
 
 function login() {

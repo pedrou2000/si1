@@ -228,7 +228,7 @@ footer {
 #login_form {
 	background-color: rgb(218, 230, 115);
 	color: rgb(0, 0, 0);
-	height: 10%;
+	height: 15%;
 	width: 80%;
 	float: right;
 	display: flex;
@@ -256,7 +256,7 @@ footer {
 #register_form {
 	background-color: rgb(218, 230, 115);
 	color: rgb(0, 0, 0);
-	height: 40%;
+	height: 50%;
 	width: 80%;
 	float: right;
 	display: flex;
@@ -267,18 +267,24 @@ footer {
 }
 
 #campo_register {
-	font-size: 35;
+	font-size: 30;
 	width: 25%;
-	height: 20%;
-	size: 15;
+	height: 15%;
 	text-align: center;
 }
 
-#campo_register_2 {
+#campo_passtrength {
+	color: red;
+	font-size: 22;
+	width: 25%;
+	height: 10%;
+	text-align: center;
+}
+
+#campo_register_login {
 	font-size: 25;
 	width: 25%;
-	height: 20%;
-	size: 15;
+	height: 10%;
 	text-align: center;
 }
 
