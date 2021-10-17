@@ -1,17 +1,46 @@
 
  $(document).ready(function(){
 
+    /* Comprobacion fortaleza contraseña en register */
+    $("#new_pass").keyup(function(){
+        let otros_caracteres = /^.*[^a-zA-Z0-9].*$/
+        let numeros = /^.*[0-9].*$/
+        let letras = /^.*[a-zA-Z].*$/
+        let longitud = /^.{0,7}$/
 
-     $("#new_user").keypress(function(){
-       // alert("aaaaa");
-     });
+        pass = document.getElementById("new_pass").value;
 
+        if(longitud.test(pass)){
+            $('#passstrength').html('Contraseña demasiado corta.');
+        } else if (otros_caracteres.test(pass) && letras.test(pass) && numeros.test(pass)) {
+            $('#passstrength').html('Fortaleza contraseña: fuerte');
+        } else if (letras.test(pass) && (numeros.test(pass) || otros_caracteres.test(pass))) {
+            $('#passstrength').html('Fortaleza contraseña: media');
+        } else if (letras.test(pass) || numeros.test(pass) || otros_caracteres.test(pass)) {
+            $('#passstrength').html('Fortaleza contraseña: débil');
+        }
+
+    });
 
 });
+
+window.onload = function(){
+    if(document.cookie) {
+        var username = document.cookie.split("=")[1];
+        document.getElementById('user').value = username;
+    }
+}
 
 function login() {
     user = document.getElementById("user").value;
     pass = document.getElementById("pass").value;
+
+    if (user == "") {
+        alert("Enter a username.")
+        return;
+    }
+
+    document.cookie = "username="+user
 
     document.getElementById("login_form").submit()
 }

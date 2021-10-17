@@ -4,41 +4,44 @@
       {% block content %}
       <!-- Register Menu -->
       <div id = "register_menu">
-        <form action="" method="POST" id="register_form">
-           <script src="../static/scripts/codigo.js"></script>
+      <form action="" method="POST" id="register_form">
+         <script src="../static/scripts/codigo.js"></script>
 
-           <div id = "campo_register">
-              <input id="new_user" name="username" class="textbox" type="text" placeholder=" Nombre de usuario" required>
-           </div>
-           <div id = "campo_register">
-              <input id="new_pass" name="password" class="textbox" type="password" placeholder=" Contraseña" required >
-           </div>
-           <div id = "campo_register">
-              <input id="new_pass_repeat" name="repeated_password"class="textbox" type="password" placeholder=" Repita la contraseña" required >
-           </div>
-           <div id = "campo_register">
-              <input id="new_email" name="email" class="textbox" type="text" placeholder=" Email" required>
-           </div>
-           <div id = "campo_register">
-              <input id="new_credit_card" name="credit_card" class="textbox" type="text" placeholder=" Nº tarjeta (sin espacios)" required>
-           </div>
-           <div id = "campo_register">
-              <input id="direccion_envio" name="direccion_envio" class="textbox" type="text" placeholder=" Dirección de envío" required>
-           </div>
-           <div>
-              <a href="{{ url_for('login') }}"> Iniciar Sesión </a>
-           </div>
-
-           {% if username_already_exists %}
-           <div>
-              <p> Ya existe un usuario con ese nombre, prueba con otro.  </p>
-           </div>
-           {% endif %}
-        </form>
-        <div id = "campo_button">
-           <button class="button" onclick="register()">Registrar</button>
+         <div id = "campo_register">
+            <input id="new_user" name="username" class="textbox" type="text" placeholder=" Nombre de usuario" required>
          </div>
-       </div>
+         <div id = "campo_register">
+            <input id="new_pass" name="password" class="textbox" type="password" placeholder=" Contraseña" required >
+         </div>
+         <div id = "campo_register">
+            <input id="new_pass_repeat" name="repeated_password"class="textbox" type="password" placeholder=" Repita la contraseña" required >
+         </div>
+         <div id = "campo_register">
+            <input id="new_email" name="email" class="textbox" type="text" placeholder=" Email" required>
+         </div>
+         <div id = "campo_register">
+            <input id="new_credit_card" name="credit_card" class="textbox" type="text" placeholder=" Nº tarjeta (sin espacios)" required>
+         </div>
+         <div id = "campo_register">
+            <input id="direccion_envio" name="direccion_envio" class="textbox" type="text" placeholder=" Dirección de envío" required>
+         </div>
+         <div id = "campo_register_2">
+            <a href="{{ url_for('login') }}"> Iniciar Sesión </a>
+         </div>
+         <div id="campo_register_2">
+            <span id="passstrength"></span>
+         </div>
+
+         {% if username_already_exists %}
+         <div>
+            <p> Ya existe un usuario con ese nombre, prueba con otro.  </p>
+         </div>
+         {% endif %}
+      </form>
+      <div id = "campo_button">
+         <button class="button" onclick="register()">Registrar</button>
+         </div>
+      </div>
       {% endblock %}
    </body>
 </html>
