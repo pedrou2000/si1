@@ -5,9 +5,9 @@
       <div id = "cesta_content">
          <div id="exito_compra">
            {% if way == 'points' %}
-              <p><b> No dispone de puntos suficientes para realizar esta compra. </b></p>
+              <p style="color:red"><b> No dispone de puntos suficientes para realizar esta compra. </b></p>
             {% else %}
-              <p><b> No dispone de balance suficiente para realizar esta compra. </b></p>
+              <p style="color:red"><b> No dispone de balance suficiente para realizar esta compra. </b></p>
             {% endif %}
          </div>
          {% for item in cesta %}

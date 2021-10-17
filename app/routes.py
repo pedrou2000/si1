@@ -7,6 +7,7 @@ from math import ceil
 import json
 import os
 import sys
+from random import *
 import random
 import hashlib
 import string
@@ -73,8 +74,6 @@ def get_random_string(length):
 
 
 
-
-
 def get_actual_user():
     if 'user' not in session:
         return None
@@ -90,7 +89,7 @@ def get_cesta_sesion():
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
-    render_template('base.html', title = "Base", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+    #render_template('base.html', title = "Base", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
     return render_template('inicio.html', title = "Home", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -160,9 +159,12 @@ def register():
 def logout():
     if 'user' in session:
         session.pop('user', None)
+
+    session['cesta'] = dict()
+    session.modified = True
     return redirect(url_for('inicio'))
 
-@app.route('/film/<id>', methods=['GET', 'POST'])
+@app.route('/film/<id>')
 def film(id):
     """suponiendo que los ids de las pelis se dan en orden"""
     position = int(id) - 1
@@ -185,7 +187,7 @@ def buscar():
     render_template('base.html', title = "Base", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
     return render_template('resultado_busqueda.html', title = "Searched Film", movie_list = movie_list_result, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
-@app.route('/anadido_cesta/<id>', methods=['GET', 'POST'])
+@app.route('/anadido_cesta/<id>', methods=['POST'])
 def anadir_cesta(id):
     cesta = get_cesta_sesion()
     if not cesta:
@@ -201,7 +203,7 @@ def anadir_cesta(id):
     session.modified = True
     return render_template('anadido_cesta.html', title = "Basket Add", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
-@app.route('/cesta', methods=['GET', 'POST'])
+@app.route('/cesta')
 def cesta():
     if not get_cesta_sesion():
         return render_template('cesta_vacia.html', title = "Empty Basket", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
@@ -254,7 +256,7 @@ def historial_compra():
 
         return render_template('historial_compra.html', title = "Basket", shopping_list = shopping_list, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
-@app.route('/comfirmar_cesta', methods=['GET', 'POST'])
+@app.route('/comfirmar_cesta')
 def comfirmar_cesta():
     if not get_cesta_sesion():
         return render_template('cesta_vacia.html', title = "Empty Basket", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
@@ -275,8 +277,11 @@ def comfirmar_cesta():
 
 
 
-@app.route('/compra_finalizada/<way>', methods=['GET', 'POST'])
+@app.route('/compra_finalizada/<way>', methods = ['GET', 'POST'])
 def compra_finalizada(way):
+    if way != 'points' and way != 'balance':
+        return
+
     buy = False
 
     cesta = get_cesta_sesion()
@@ -324,7 +329,7 @@ def compra_finalizada(way):
     return render_template('compra_fallida.html', title = "Buy Basket", cesta = lista_cesta, movies=film_catalogue['peliculas'],
                                     logged_user = get_actual_user(), way=way)
 
-@app.route('/eliminado_cesta/<id>', methods=['GET', 'POST'])
+@app.route('/eliminado_cesta/<id>')
 def eliminado_cesta(id):
     cesta = get_cesta_sesion()
     if cesta[id] == 1:
@@ -333,3 +338,7 @@ def eliminado_cesta(id):
         cesta[id] -= 1
     session.modified=True
     return render_template('eliminado_cesta.html', title = "Basket Removed", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+
+@app.route('/online_users', methods=['GET'])
+def get_random_number_of_users():
+    return str(randint(10, 500))

@@ -133,3 +133,23 @@ function rent() {
 function auto_submit() {
     document.getElementById("film_action").submit();
 }
+
+
+$(document).ready(function () {
+    function getOnlineUsers(){
+        $.ajax({
+            type: 'GET',
+            url: "./online_users",
+            success:
+                function(data){
+                    data = 'Usuarios en línea: ' + data;
+                    $('#users').html(data);
+                },
+            complete:
+                function(){
+                    setTimeout(getOnlineUsers, 3000);
+                }
+            });
+    };
+    setTimeout(getOnlineUsers, 0);
+});

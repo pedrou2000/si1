@@ -4,12 +4,12 @@
    {% block title %}
    <title> Video Club </title>
    {% endblock %}
-   <script src="../sta  tic/scripts/codigo.js"></script>
    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
+  <script src="../static/scripts/codigo.js"></script>
    <!-- Header -->
    <div id = "header">
       <div id = "logo">
@@ -45,6 +45,9 @@
       </p>
       <p>
          <button class="button_cesar"> <a class="link" href="{{ url_for('cesta') }}">Cesta </a></button>
+      </p>
+      <p>
+         <div id="users"> </div>
       </p>
       {% if logged_user %}
          <p>
