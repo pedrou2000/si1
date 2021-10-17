@@ -2,12 +2,10 @@
    {% extends "base.html" %}
    <body>
       {% block content %}
+      <script src="../static/scripts/codigo.js"></script>
+
       <div id = "cesta_content">
-         <div id="title2">
-            <p><b> HISTORIAL DE COMPRAS </b> </p>
-         </div>
-
-
+         <!-- Añadir saldo -->
          <div id = "search">
             <p><b> Añadir saldo </b> </p>
 
@@ -17,15 +15,37 @@
             </form>
          </div>
 
-         <div id = "cesta_container">
+         <!-- Historial de compras -->
+         <div id="title2">
+            <p><b> HISTORIAL DE COMPRAS </b> </p>
+         </div>
+
+         <div id = "historial_container">
          {% for numero, lista_pelis, dinero_pedido in shopping_list %}
-            <div id = "cesta_info">
-               <p> <b>Numero de pedido: </b>{{ numero }} </p>
-               <p> <b>Peliculas del pedido: </b></p>
-               {% for item, cantidad in lista_pelis %}
-                  <p> {{ item.titulo }}, {{ item.precio }}€ (cantidad: {{ cantidad }}) </p>
-               {% endfor %}
-               <p><b>Total: </b> {{ dinero_pedido }} € </p>
+            <div id = "title3">
+               <p> <b>PEDIDO {{ numero }}: </b> {{ dinero_pedido }} € </p>
+               <input type="button" class="more_info" id="{{numero}}" name="boton1" value="Mas información">
+               <input type="button" class="less_info" id="{{numero}}" name="boton1" value="Menos información">
+            </div>
+            <div class="hidden_info" id="hidden_info_{{numero}}">
+               <p>
+                  <p> <b>PELÍCULAS DEL PEDIDO: </b></p>
+                  {% for item in lista_pelis %}
+                  <div id = "cesta_container">
+                     <div id = "cesta_picture">
+                        <img id = "image" src  = {{ item[0].poster }}>
+                     </div>
+                     <div id = "cesta_info">
+                        <p> <b>Título: </b>{{ item[0].titulo }} </p>
+                        <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
+                        <p> <b>Cantidad: </b>{{ item[1] }} </p>
+                     </div>
+                     <div id = "cesta_price">
+                        <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </p>
             </div>
          {% endfor %}
          </div>

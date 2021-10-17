@@ -1,5 +1,20 @@
 
- $(document).ready(function(){
+$(document).ready(function(){
+
+    /* Historial de compras */
+    $(".hidden_info").hide()
+    $(".less_info").hide()
+    $(".more_info").on( "click", function() {
+        $('#hidden_info_'+this.id).show(); 
+        $('#' + this.id + '.less_info').show(); 
+        $('#' + this.id + '.more_info').hide(); 
+     });
+     $(".less_info").on( "click", function() {
+        $('#hidden_info_'+this.id).hide(); 
+        $('#' + this.id + '.more_info').show(); 
+        $('#' + this.id + '.less_info').hide(); 
+    });
+
 
     /* Comprobacion fortaleza contraseña en register */
     $("#new_pass").keyup(function(){
@@ -11,16 +26,17 @@
         pass = document.getElementById("new_pass").value;
 
         if(longitud.test(pass)){
-            $('#passstrength').html('Contraseña demasiado corta.');
+            $('#passtrength').html('Contraseña demasiado corta.');
         } else if (otros_caracteres.test(pass) && letras.test(pass) && numeros.test(pass)) {
-            $('#passstrength').html('Fortaleza contraseña: fuerte');
+            $('#passtrength').html('Fortaleza contraseña: fuerte');
         } else if (letras.test(pass) && (numeros.test(pass) || otros_caracteres.test(pass))) {
-            $('#passstrength').html('Fortaleza contraseña: media');
+            $('#passtrength').html('Fortaleza contraseña: media');
         } else if (letras.test(pass) || numeros.test(pass) || otros_caracteres.test(pass)) {
-            $('#passstrength').html('Fortaleza contraseña: débil');
+            $('#passtrength').html('Fortaleza contraseña: débil');
         }
 
     });
+
 
 });
 
@@ -29,6 +45,7 @@ window.onload = function(){
         var username = document.cookie.split("=")[1];
         document.getElementById('user').value = username;
     }
+    alert('window')
 }
 
 function login() {
