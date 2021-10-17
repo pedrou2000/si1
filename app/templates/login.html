@@ -1,14 +1,18 @@
-<html>
+<!DOCTYPE html>
+   <head>
+      <meta charset="utf-8" />
+      <title> LOGIN</title>
+   </head>
    {% extends "base.html" %}
    <body>
       {% block content %}
       <!-- Login Menu -->
       <div id = "login_menu">
-        <form action="" method="POST" id="login_form">
-           <div id = "campo_login">
+        <form method="POST" id="login_form">
+           <div class = "campo_login">
               <input name="username" id="user" class="textbox" type="text" placeholder=" Usuario" required>
            </div>
-           <div id = "campo_login">
+           <div class = "campo_login">
               <input name="password" id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
            </div>
          </form>

@@ -2,9 +2,14 @@
 	font-family: sans-serif;
 }
 
+html {
+	height:100%;
+}
+
 body {
 	background-color: rgb(247, 84, 84);
 	margin: 0;
+	height:100%;
 	padding: 0;
 }
 
@@ -266,7 +271,7 @@ footer {
 	align-items: center;
 }
 
-#campo_register {
+.campo_register {
 	font-size: 8mm;
 	width: 25%;
 	height: 15%;
@@ -288,7 +293,7 @@ footer {
 	text-align: center;
 }
 
-#campo_login {
+.campo_login {
 	font-size: 10mm;
 	width: 25%;
 	height: 80%;

@@ -1,4 +1,8 @@
-<html>
+<!DOCTYPE html>
+   <head>
+      <meta charset="utf-8" />
+      <title> REGISTER</title>
+   </head>
    {% extends "base.html" %}
    <body>
       {% block content %}
@@ -9,7 +13,7 @@
          <div id = "search">
             <p><b> Añadir saldo </b> </p>
 
-            <form action="" method="post">
+            <form method="post">
                <input type="text" name="saldo" placeholder = " Dinero a añadir">
                <input type="submit" value="Añadir">
             </form>
@@ -24,8 +28,8 @@
          {% for numero, lista_pelis, dinero_pedido in shopping_list %}
             <div id = "title3">
                <p> <b>PEDIDO {{ numero }}: </b> {{ dinero_pedido }} € </p>
-               <input type="button" class="more_info" id="{{numero}}" name="boton1" value="Mas información">
-               <input type="button" class="less_info" id="{{numero}}" name="boton1" value="Menos información">
+               <input type="button" class="more_info" id="more_{{numero}}" name="boton1" value="Mas informacion">
+               <input type="button" class="less_info" id="less_{{numero}}" name="boton1" value="Menos informacion">
             </div>
             <div class="hidden_info" id="hidden_info_{{numero}}">
                <p>

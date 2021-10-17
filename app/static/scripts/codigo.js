@@ -5,14 +5,16 @@ $(document).ready(function(){
     $(".hidden_info").hide()
     $(".less_info").hide()
     $(".more_info").on( "click", function() {
-        $('#hidden_info_'+this.id).show();
-        $('#' + this.id + '.less_info').show();
-        $('#' + this.id + '.more_info').hide();
+        id = this.id.split('_')[1]
+        $('#hidden_info_'+id).show();
+        $('#less_' + id + '.less_info').show();
+        $('#more_' + id + '.more_info').hide();
      });
      $(".less_info").on( "click", function() {
-        $('#hidden_info_'+this.id).hide();
-        $('#' + this.id + '.more_info').show();
-        $('#' + this.id + '.less_info').hide();
+        id = this.id.split('_')[1]
+        $('#hidden_info_'+id).hide();
+        $('#more_' + id + '.more_info').show();
+        $('#less_' + id + '.less_info').hide();
     });
 
 
