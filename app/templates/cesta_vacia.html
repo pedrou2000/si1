@@ -1,18 +1,15 @@
-<html>
    {% extends "base.html" %}
-   <body>
       {% block content %}
-      <div id = "content">
+      <div class="content">
       <div id="return">
-         <p>
-            <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
-         </p>
+        <br>
+         <form class="" action="{{ url_for('inicio') }}" method="get">
+           <button class = "button_cesar"> Volver </button>
+         </form>
       </div>
-      <div id = "info_message">
+      <div id="info_message">
          <p> <b> Su cesta está vacía, añada alguna película. </b>
          <p>
       </div>
     </div>
       {% endblock %}
-   </body>
-</html>

@@ -1,36 +1,34 @@
-<html>
-   {% extends "base.html" %}
-   <body>
+{% extends "base.html" %}
       {% block content %}
-      <div id = "content_for_film">
+      <div id="content_for_film">
       <div id="film_content">
          <div id="film_title_cont">
             <div id="return">
-               <p>
-                  <button class = "button_cesar"> <a class="link" href="{{ url_for('inicio') }}">Volver</a> </button>
-               </p>
+                 <form action="{{ url_for('inicio') }}" method="post">
+                   <button class = "button_cesar"> Volver </button>
+                 </form>
             </div>
             <div id="film_title">
                <h2> {{movie.titulo}} </h2>
             </div>
-            <div id="fake_div">
+            <div class="fake_div">
             </div>
          </div>
-         <div id = "film_picture">
-            <img id = "image" src = {{movie.poster}}>
+         <div id="film_picture">
+            <img alt="" class="image" src={{movie.poster}}>
          </div>
-         <div id = "film_info">
-            <div id = "film_director">
+         <div id="film_info">
+            <div id="film_director">
                <p>
                   <b>Director:</b> <br> {{movie.director}}
                </p>
             </div>
-            <div id = "film_category">
+            <div id="film_category">
                <p>
                   <b>Categoria:</b> <br> {{movie.categoria}}
                </p>
             </div>
-            <div id = "film_actors">
+            <div id="film_actors">
               <p><b>Actores:</b> <br></p>
                {% for actor in movie.actores %}
                <div>
@@ -54,5 +52,3 @@
       </div>
     </div>
       {% endblock %}
-   </body>
-</html>

@@ -184,7 +184,9 @@ def buscar():
         if busq.lower() in pelicula.get("titulo").lower():
             movie_list_result.append(pelicula)
 
-    render_template('base.html', title = "Base", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+    if not movie_list_result:
+        return render_template('error_busqueda.html', title = "Error Searched Film", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
+
     return render_template('resultado_busqueda.html', title = "Searched Film", movie_list = movie_list_result, movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
 @app.route('/anadido_cesta/<id>', methods=['POST'])
@@ -332,10 +334,11 @@ def compra_finalizada(way):
 @app.route('/eliminado_cesta/<id>')
 def eliminado_cesta(id):
     cesta = get_cesta_sesion()
-    if cesta[id] == 1:
-        cesta.pop(id, None)
-    else:
-        cesta[id] -= 1
+    if cesta[id]:
+        if cesta[id] == 1:
+            cesta.pop(id, 0)
+        else:
+            cesta[id] -= 1
     session.modified=True
     return render_template('eliminado_cesta.html', title = "Basket Removed", movies=film_catalogue['peliculas'], logged_user = get_actual_user())
 
