@@ -183,7 +183,7 @@ def logout():
     return redirect(url_for('inicio'))
 
 
-@app.route('/film/<id>')
+@app.route('/film/<id>', methods=['GET'])
 def film(id):
     """suponiendo que los ids de las pelis se dan en orden"""
     position = int(id) - 1
@@ -221,7 +221,7 @@ def buscar():
                            logged_user=get_actual_user())
 
 
-@app.route('/anadido_cesta/<id>', methods=['POST'])
+@app.route('/anadido_cesta/<id>', methods=['GET'])
 def anadir_cesta(id):
     cesta = get_cesta_sesion()
     if not cesta:
@@ -383,7 +383,7 @@ def compra_finalizada(way):
                            logged_user=get_actual_user(), way=way)
 
 
-@app.route('/eliminado_cesta/<id>')
+@app.route('/eliminado_cesta/<id>', methods=['GET'])
 def eliminado_cesta(id):
     cesta = get_cesta_sesion()
     if cesta[id]:

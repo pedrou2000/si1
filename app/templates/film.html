@@ -44,7 +44,7 @@
                <p> <b>Precio del alquiler</b>: {{movie.precio}} € </p>
             </div>
             <div id="rent">
-              <form action="{{ url_for('anadir_cesta', id=movie.id) }}" method="post">
+              <form action="{{ url_for('anadir_cesta', id=movie.id) }}" method="get">
                 <button class = "cesta_button"> Añadir a la cesta </button>
               </form>
             </div>
