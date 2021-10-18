@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
    {% block title %}
+   <meta charset="utf-8" />
    <title> Video Club </title>
    {% endblock %}
    <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
+<body>
   <script src="../static/scripts/codigo.js"></script>
    <!-- Header -->
    <div id = "header">
-      <div id = "logo">
-         <a href = "{{ url_for('inicio') }}"> <img src  = "../static/images/logo.jpg"> </a>
+      <div class = "logo">
+         <a href = "{{ url_for('inicio') }}"> <img alt = "anticuado" src  = "../static/images/logo.jpg"> </a>
       </div>
       <div id = title_search>
          <div id = "title">
@@ -25,8 +27,8 @@
             </form>
          </div>
       </div>
-      <div id = "logo">
-         <a href = "{{ url_for('inicio') }}"> <img src  = "../static/images/logo.jpg"> </a>
+      <div class = "logo">
+         <a href = "{{ url_for('inicio') }}"> <img alt = "anticuado" src  = "../static/images/logo.jpg"> </a>
       </div>
    </div>
 
@@ -45,9 +47,7 @@
       <p>
          <button class="button_cesar"> <a class="link" href="{{ url_for('cesta') }}">Cesta </a></button>
       </p>
-      <p>
-         <div id="users"> </div>
-      </p>
+      <div id="users"> </div>
       {% if logged_user %}
          <p>
             <button class="button_cesar"> <a class="link" href="{{ url_for('logout') }}">Logout </a></button>
@@ -84,4 +84,5 @@
 
    <!-- Footer -->
    <footer> Copyright © Pedro Urbina & Cesar Ramirez </footer>
+ </body>
 </html>

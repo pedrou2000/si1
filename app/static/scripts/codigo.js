@@ -141,7 +141,7 @@ $(document).ready(function () {
     function getOnlineUsers(){
         $.ajax({
             type: 'GET',
-            url: "./online_users",
+            url: "/online_users",
             success:
                 function(data){
                     data = 'Usuarios en línea: ' + data;

@@ -131,13 +131,13 @@ footer {
 	height: 30%;
 }
 
-#logo {
+.logo {
 	height: 100%;
 	width: 25%;
 	text-align: center;
 }
 
-#logo img {
+.logo img {
 	height: 25mm;
 	width: 43mm;
 	margin-top: 10mm;
