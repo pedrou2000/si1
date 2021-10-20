@@ -117,10 +117,26 @@ footer {
 	flex-direction: row;
 }
 
-.search {
+.general_search {
 	height: 50%;
 	width: 100%;
 	text-align: center;
+	display: flex;
+	flex-direction: row;
+}
+
+.search {
+	height: 50%;
+	width: 50%;
+	text-align: center;
+	float: left;
+}
+
+.filter_search {
+	height: 50%;
+	width: 50%;
+	text-align: center;
+	float: right;
 }
 
 #search input {
@@ -490,4 +506,20 @@ footer {
 	width: 100%;
 	height: 100%;
 	text-align: center;
+}
+
+#info_message_error {
+	font-size: 15pt;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	color: red;
+}
+
+#info_message_exito {
+	font-size: 15pt;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	color: green;
 }

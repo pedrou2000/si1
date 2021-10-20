@@ -1,11 +1,11 @@
 {% extends "base.html" %}
       {% block content %}
       <div id="cesta_content">
-         <div id="exito_compra">
+         <div id="info_message_error">
            {% if way == 'points' %}
-              <p style="color:red"><b> No dispone de puntos suficientes para realizar esta compra. </b></p>
+              <p><b> No dispone de puntos suficientes para realizar esta compra. </b></p>
             {% else %}
-              <p style="color:red"><b> No dispone de balance suficiente para realizar esta compra. </b></p>
+              <p><b> No dispone de balance suficiente para realizar esta compra. </b></p>
             {% endif %}
          </div>
          {% for item in cesta %}

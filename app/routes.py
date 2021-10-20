@@ -20,6 +20,7 @@ film_catalogue = json.loads(open(os.path.join(
 
 users_directory = os.getcwd() + "/app/users/"
 
+categorias = set()
 
 def create_user(username, salt, password, email, credit_card,
                 direccion_envio, balance) -> None:
@@ -90,12 +91,19 @@ def get_cesta_sesion():
 
     return session['cesta']
 
+def get_film_categories():
+    for pelicula in film_catalogue['peliculas']:
+        categorias.add(pelicula['categoria'])
+    return
+
 
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
+    get_film_categories()
     return render_template('inicio.html', title="Home",
                            movies=film_catalogue['peliculas'],
+                           categorias=categorias,
                            logged_user=get_actual_user())
 
 
@@ -193,6 +201,7 @@ def film(id):
 
     return render_template('film.html', title="Film", movie=movie,
                            movies=film_catalogue['peliculas'],
+                           categorias=categorias,
                            logged_user=get_actual_user())
 
 
@@ -204,6 +213,7 @@ def buscar():
         return render_template('error_busqueda.html',
                                title="Error Searched Film",
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user())
 
     movie_list_result = []
@@ -215,11 +225,30 @@ def buscar():
         return render_template('error_busqueda.html',
                                title="Error Searched Film",
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user())
 
     return render_template('resultado_busqueda.html', title="Searched Film",
                            movie_list=movie_list_result,
                            movies=film_catalogue['peliculas'],
+                           categorias=categorias,
+                           logged_user=get_actual_user())
+
+@app.route('/filtrado', methods=['GET', 'POST'])
+def filtrar():
+    movie_list_result = []
+    categoria = request.form['filter']
+    if categoria == "Filtrar por categoría" :
+        return redirect(url_for('inicio'))
+
+    for pelicula in film_catalogue['peliculas']:
+        if pelicula['categoria'] == categoria:
+            movie_list_result.append(pelicula)
+
+    return render_template('resultado_busqueda.html', title="Filtered Films",
+                           movie_list=movie_list_result,
+                           movies=film_catalogue['peliculas'],
+                           categorias=categorias,
                            logged_user=get_actual_user())
 
 
@@ -239,6 +268,7 @@ def anadir_cesta(id):
     session.modified = True
     return render_template('anadido_cesta.html', title="Basket Add",
                            movies=film_catalogue['peliculas'],
+                           categorias=categorias,
                            logged_user=get_actual_user())
 
 
@@ -247,6 +277,7 @@ def cesta():
     if not get_cesta_sesion():
         return render_template('cesta_vacia.html', title="Empty Basket",
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user())
     else:
         cesta = get_cesta_sesion()
@@ -257,6 +288,7 @@ def cesta():
             lista_cesta.append((movie, cesta[id]))
         return render_template('cesta.html', title="Basket", cesta=lista_cesta,
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user())
 
 
@@ -301,6 +333,7 @@ def historial_compra():
         return render_template('historial_compra.html', title="Basket",
                                shopping_list=shopping_list,
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user())
 
 
@@ -309,6 +342,7 @@ def comfirmar_cesta():
     if not get_cesta_sesion():
         return render_template('cesta_vacia.html', title="Empty Basket",
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user())
     else:
         if 'user' in session:
@@ -323,6 +357,7 @@ def comfirmar_cesta():
             return render_template('comfirmar_cesta.html', title="Buy Basket",
                                    cesta=lista_cesta,
                                    movies=film_catalogue['peliculas'],
+                                   categorias=categorias,
                                    logged_user=get_actual_user(), pago=pago)
         else:
             return redirect(url_for('login'))
@@ -377,11 +412,13 @@ def compra_finalizada(way):
         return render_template('compra_finalizada.html', title="Buy Basket",
                                cesta=lista_cesta,
                                movies=film_catalogue['peliculas'],
+                               categorias=categorias,
                                logged_user=get_actual_user(), pago=pago)
 
     return render_template('compra_fallida.html', title="Buy Basket",
                            cesta=lista_cesta,
                            movies=film_catalogue['peliculas'],
+                           categorias=categorias,
                            logged_user=get_actual_user(), way=way)
 
 
@@ -396,6 +433,7 @@ def eliminado_cesta(id):
     session.modified = True
     return render_template('eliminado_cesta.html', title="Basket Removed",
                            movies=film_catalogue['peliculas'],
+                           categorias=categorias,
                            logged_user=get_actual_user())
 
 
