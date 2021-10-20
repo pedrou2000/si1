@@ -18,6 +18,8 @@ from datetime import datetime
 film_catalogue = json.loads(open(os.path.join(
     app.root_path, 'catalogue/catalogue.json'), encoding="utf-8").read())
 
+users_directory = os.getcwd() + "/app/users/"
+
 
 def create_user(username, salt, password, email, credit_card,
                 direccion_envio, balance) -> None:
@@ -40,7 +42,7 @@ def create_user(username, salt, password, email, credit_card,
 
 
 def update_user_data(user):
-    directory = os.getcwd() + "/users/" + user['data']['username'] + "/"
+    directory = users_directory + user['data']['username'] + "/"
     if not os.path.exists(directory):
         return False
 
@@ -103,7 +105,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        directory = os.getcwd() + "/users/" + username + "/"
+        directory = users_directory + username + "/"
 
         if not os.path.exists(directory):
             return render_template('login.html', title="Sign In",
@@ -152,12 +154,12 @@ def register():
         user = create_user(username, salt, password, email,
                            credit_card, direccion_envio, balance)
 
-        directory = os.getcwd() + "/users/" + user['data']['username'] + "/"
+        directory = users_directory + user['data']['username'] + "/"
 
         if not os.path.exists(directory):
             # si el directorio users aun no esta creado lo creamos
-            if not os.path.exists(os.getcwd() + "/users"):
-                os.mkdir(os.getcwd() + "/users")
+            if not os.path.exists(users_directory):
+                os.mkdir(users_directory)
             os.mkdir(directory)
         else:
             return render_template('register.html', title="Register",
