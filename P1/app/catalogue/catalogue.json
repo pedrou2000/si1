@@ -1,0 +1,427 @@
+{ "peliculas":
+  [
+    {
+			"id": 1,
+			"titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        },
+        { "nombre": "Cesar Ramirez",
+          "personaje": "Guapo"
+        }
+      ]
+    },
+    {
+			"id": 2,
+			"titulo": "Titanic",
+      "poster": "/static/images/titanic.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Drama",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "titulo": "Avatar",
+      "poster": "/static/images/avatar.jpg",
+      "director": "James Cameron",
+      "precio": 10.99,
+      "categoria": "Ciencia Ficcion",
+      "año": 2009,
+      "actores":
+      [
+        { "nombre": "Sam Worthington",
+          "personaje": "Jake Sully"
+        }
+      ]
+    }
+  ]
+}

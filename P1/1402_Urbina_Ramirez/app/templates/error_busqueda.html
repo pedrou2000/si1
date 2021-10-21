@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+      {% block content %}
+      <div class="content">
+      <div id="return">
+        <br><br>
+        <form class="" action="{{ url_for('inicio') }}" method="get">
+          <button class = "button_cesar"> Volver </button>
+        </form>
+      </div>
+      <div id="info_message">
+         <p> <b> No hay resultado para su búsqueda. </b>
+         <p>
+      </div>
+    </div>
+{% endblock %}
