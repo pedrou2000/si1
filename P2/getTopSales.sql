@@ -20,6 +20,6 @@ FROM imdb_movies JOIN (SELECT imdb_movies.year AS year_2, MAX(imdb_movies.total_
                       GROUP BY imdb_movies.year) AS table2
 ON imdb_movies.total_sales = table2.max_total_sales AND imdb_movies.year = table2.year_2
 WHERE (CAST(imdb_movies.year AS int)) > 2000 AND (CAST(imdb_movies.year AS int)) < 2005
-ORDER BY imdb_movies.year;
+ORDER BY imdb_movies.total_sales DESC;
 
 ALTER TABLE imdb_movies DROP COLUMN total_sales;
