@@ -28,10 +28,11 @@ ALTER TABLE imdb_movies DROP COLUMN total_sales;
 
 
 
-CREATE OR REPLACE FUNCTION foo_1() 
+CREATE OR REPLACE FUNCTION foo_2() 
 RETURNS TABLE(
       id INT,
-      sales INT 
+      sales INT, 
+      yesr INT 
 )
 AS $$
 DECLARE
@@ -41,7 +42,8 @@ BEGIN
     LOOP
             RETURN QUERY
             SELECT cast(imdb_movies.movieid as integer) as id, 
-                  cast(SUM(orderdetail.quantity) as integer) as sales
+                  cast(SUM(orderdetail.quantity) as integer) as sales,
+                  i as year
             FROM orders, orderdetail, products, imdb_movies
             WHERE EXTRACT(year from orderdate) = i and 
                   orders.orderid = orderdetail.orderid and
@@ -55,4 +57,6 @@ BEGIN
 END $$
 LANGUAGE plpgsql;
 
-SELECT * FROM foo_1();
+SELECT * 
+FROM foo_2()
+ORDER BY sales DESC;
