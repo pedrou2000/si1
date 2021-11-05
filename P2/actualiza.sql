@@ -44,6 +44,14 @@ ALTER TABLE imdb_actormovies ADD CONSTRAINT FK_actormovie_actor FOREIGN KEY (act
 /* movie_id foreign key to actormovie table */
 ALTER TABLE imdb_actormovies ADD CONSTRAINT FK_actormovie_movie FOREIGN KEY (movieid) REFERENCES imdb_movies (movieid) ON DELETE CASCADE;
 
+/* double primary key in imdb_actormovies */
+ALTER TABLE imdb_actormovies ADD PRIMARY KEY (movieid, actorid);
+
+/* delete numpartitipation from primary key tuple */
+ALTER TABLE imdb_directormovies DROP CONSTRAINT imdb_directormovies_pkey;
+ALTER TABLE imdb_directormovies ADD PRIMARY KEY (directorid, movieid);
+
+
 /* alert table */
 CREATE TABLE alerts();
 ALTER TABLE alerts ADD prod_id int;
@@ -86,7 +94,7 @@ BEGIN
 	/* complete the 'totalamount' column */
 	UPDATE orders
 	SET totalamount=netamount+tax;
-	
+
 END $$;
 
 /* call the procedure */
