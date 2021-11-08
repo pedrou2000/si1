@@ -45,11 +45,11 @@ ALTER TABLE imdb_actormovies ADD CONSTRAINT FK_actormovie_actor FOREIGN KEY (act
 ALTER TABLE imdb_actormovies ADD CONSTRAINT FK_actormovie_movie FOREIGN KEY (movieid) REFERENCES imdb_movies (movieid) ON DELETE CASCADE;
 
 /* double primary key in imdb_actormovies */
-ALTER TABLE imdb_actormovies ADD PRIMARY KEY (movieid, actorid);
+ALTER TABLE imdb_actormovies ADD CONSTRAINT imdb_actormovies_pkey PRIMARY KEY (movieid, actorid);
 
 /* delete numpartitipation from primary key tuple */
 ALTER TABLE imdb_directormovies DROP CONSTRAINT imdb_directormovies_pkey;
-ALTER TABLE imdb_directormovies ADD PRIMARY KEY (directorid, movieid);
+ALTER TABLE imdb_directormovies ADD CONSTRAINT imdb_directormovies_pkey PRIMARY KEY (directorid, movieid);
 
 
 /* alert table */
@@ -99,3 +99,71 @@ END $$;
 
 /* call the procedure */
 CALL setOrderAmount();
+
+
+/* create imdb_countries, imdb_genres, imdb_languages tables */
+/* imdb_countrymovies */
+CREATE TABLE imdb_countries
+AS
+	SELECT country
+	FROM imdb_moviecountries
+	GROUP BY country
+	ORDER BY country;
+
+ALTER TABLE imdb_countries ADD COLUMN countryid SERIAL NOT NULL PRIMARY KEY;
+
+CREATE TABLE imdb_countrymovies();
+ALTER TABLE imdb_countrymovies ADD countryid int;
+ALTER TABLE imdb_countrymovies ADD movieid int;
+ALTER TABLE imdb_countrymovies ADD CONSTRAINT FK_countrymovies_country FOREIGN KEY (countryid) REFERENCES imdb_countries (countryid) ON DELETE CASCADE;
+ALTER TABLE imdb_countrymovies ADD CONSTRAINT FK_countrymovies_movie FOREIGN KEY (movieid) REFERENCES imdb_movies (movieid) ON DELETE CASCADE;
+ALTER TABLE imdb_countrymovies ADD CONSTRAINT imdb_countrymovies_pkey PRIMARY KEY (movieid, countryid);
+INSERT INTO imdb_countrymovies (movieid, countryid)
+SELECT imdb_movies.movieid, imdb_countries.countryid
+				FROM imdb_countries JOIN imdb_moviecountries ON imdb_countries.country = imdb_moviecountries.country
+														JOIN imdb_movies ON imdb_movies.movieid = imdb_moviecountries.movieid;
+DROP TABLE imdb_moviecountries;
+
+/* imdb_genremovies */
+CREATE TABLE imdb_genres
+AS
+	SELECT genre
+	FROM imdb_moviegenres
+	GROUP BY genre
+	ORDER BY genre;
+
+ALTER TABLE imdb_genres ADD COLUMN genreid SERIAL NOT NULL PRIMARY KEY;
+
+CREATE TABLE imdb_genremovies();
+ALTER TABLE imdb_genremovies ADD genreid int;
+ALTER TABLE imdb_genremovies ADD movieid int;
+ALTER TABLE imdb_genremovies ADD CONSTRAINT FK_genremovies_country FOREIGN KEY (genreid) REFERENCES imdb_genres (genreid) ON DELETE CASCADE;
+ALTER TABLE imdb_genremovies ADD CONSTRAINT FK_genremovies_movie FOREIGN KEY (movieid) REFERENCES imdb_movies (movieid) ON DELETE CASCADE;
+ALTER TABLE imdb_genremovies ADD CONSTRAINT imdb_genremovies_pkey PRIMARY KEY (movieid, genreid);
+INSERT INTO imdb_genremovies (movieid, genreid)
+SELECT imdb_movies.movieid, imdb_genres.genreid
+				FROM imdb_genres JOIN imdb_moviegenres ON imdb_genres.genre = imdb_moviegenres.genre
+												 JOIN imdb_movies ON imdb_movies.movieid = imdb_moviegenres.movieid;
+DROP TABLE imdb_moviegenres;
+
+/* imdb_languagemovies */
+CREATE TABLE imdb_languages
+AS
+	SELECT language, extrainformation
+	FROM imdb_movielanguages
+	GROUP BY (language, extrainformation)
+	ORDER BY language;
+
+ALTER TABLE imdb_languages ADD COLUMN languageid SERIAL NOT NULL PRIMARY KEY;
+
+CREATE TABLE imdb_languagemovies();
+ALTER TABLE imdb_languagemovies ADD languageid int;
+ALTER TABLE imdb_languagemovies ADD movieid int;
+ALTER TABLE imdb_languagemovies ADD CONSTRAINT FK_languagemovies_language FOREIGN KEY (languageid) REFERENCES imdb_languages (languageid) ON DELETE CASCADE;
+ALTER TABLE imdb_languagemovies ADD CONSTRAINT FK_languagemovies_movie FOREIGN KEY (movieid) REFERENCES imdb_movies (movieid) ON DELETE CASCADE;
+ALTER TABLE imdb_languagemovies ADD CONSTRAINT imdb_languagemovies_pkey PRIMARY KEY (movieid, languageid);
+INSERT INTO imdb_languagemovies (movieid, languageid)
+SELECT imdb_movies.movieid, imdb_languages.languageid
+				FROM imdb_languages JOIN imdb_movielanguages ON imdb_languages.language = imdb_movielanguages.language
+												 JOIN imdb_movies ON imdb_movies.movieid = imdb_movielanguages.movieid;
+DROP TABLE imdb_movielanguages;
