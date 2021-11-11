@@ -75,28 +75,6 @@ END $$;
 /* call the procedure with N = 100 */
 CALL setCustomersBalance(100);
 
-/* function setOrderAmount(); */
-CREATE PROCEDURE setOrderAmount ()
-LANGUAGE plpgsql
-as $$
-BEGIN
-	/* complete the 'netamount' column */
-	UPDATE orders
-	SET netamount = sub_q.sum_prices
-	FROM
-    (
-    SELECT SUM(price) AS sum_prices, orderdetail.orderid
-    FROM orderdetail
-    GROUP BY orderdetail.orderid
-    ) AS sub_q
-	WHERE sub_q.orderid = orders.orderid;
-
-	/* complete the 'totalamount' column */
-	UPDATE orders
-	SET totalamount=netamount+tax;
-
-END $$;
-
 /* call the procedure */
 CALL setOrderAmount();
 
