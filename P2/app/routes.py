@@ -15,8 +15,7 @@ from app import database
 
 
 # Global variable
-film_catalogue = json.loads(open(os.path.join(
-    app.root_path, 'catalogue/catalogue.json'), encoding="utf-8").read())
+product_catalog = database.db_load_products(10)
 
 users_directory = os.getcwd() + "/app/users/"
 
@@ -81,7 +80,7 @@ def get_cesta_sesion():
 
 
 def get_film_categories():
-    for pelicula in film_catalogue['peliculas']:
+    for pelicula in product_catalog:
         categorias.add(pelicula['categoria'])
     return
 
@@ -89,9 +88,9 @@ def get_film_categories():
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
-    get_film_categories()
+    #get_film_categories()
     return render_template('inicio.html', title="Home",
-                           movies=film_catalogue['peliculas'],
+                           products=product_catalog,
                            categorias=categorias,
                            logged_user=get_actual_user())
 
@@ -129,24 +128,6 @@ def login():
                 session['user'] = user
                 session.modified = True
                 return redirect(url_for('inicio'))
-
-
-
-            user = load_user(directory)
-            user_data = user['data']
-            salt = user_data['salt']
-            hasehed_password = hashlib.blake2b(
-                (salt + password).encode('utf-8')).hexdigest()
-
-            if hasehed_password == user_data['password']:
-                session['user'] = user
-                session.modified = True
-                return redirect(url_for('inicio'))
-            else:
-                return render_template('login.html', title="Sign In",
-                                       logged_user=get_actual_user(),
-                                       categorias=categorias,
-                                       incorrect_password=True)
 
     else:
         return render_template('login.html', title="Sign In",
@@ -208,11 +189,9 @@ def logout():
 
 @app.route('/film/<id>', methods=['GET'])
 def film(id):
-    """suponiendo que los ids de las pelis se dan en orden"""
-    position = int(id) - 1
-    movie = film_catalogue['peliculas'][position]
+    product = database.db_load_product_by_id(id)
 
-    return render_template('film.html', title="Film", movie=movie,
+    return render_template('film.html', title="Film", product=product,
                            categorias=categorias,
                            logged_user=get_actual_user())
 
@@ -228,7 +207,7 @@ def buscar():
                                logged_user=get_actual_user())
 
     movie_list_result = []
-    for pelicula in film_catalogue['peliculas']:
+    for pelicula in product_catalog:
         if busq.lower() in pelicula.get("titulo").lower():
             movie_list_result.append(pelicula)
 
@@ -251,7 +230,7 @@ def filtrar():
     if categoria == "Filtrar por categoría":
         return redirect(url_for('inicio'))
 
-    for pelicula in film_catalogue['peliculas']:
+    for pelicula in product_catalog:
         if pelicula['categoria'] == categoria:
             movie_list_result.append(pelicula)
 
@@ -291,7 +270,7 @@ def cesta():
         lista_cesta = []
         for id in cesta.keys():
             position = int(id) - 1
-            movie = film_catalogue['peliculas'][position]
+            movie = product_catalog[position]
             lista_cesta.append((movie, cesta[id]))
         return render_template('cesta.html', title="Basket", cesta=lista_cesta,
                                categorias=categorias,
@@ -328,7 +307,7 @@ def historial_compra():
                 dinero_pedido = 0
                 for id in pedido.keys():
                     position = int(id) - 1
-                    movie = film_catalogue['peliculas'][position]
+                    movie = product_catalog[position]
                     film_list.append((movie, pedido[id]))
                     dinero_pedido += (movie['precio'] * pedido[id])
 
@@ -355,7 +334,7 @@ def comfirmar_cesta():
             pago = 0
             for id in cesta.keys():
                 position = int(id) - 1
-                movie = film_catalogue['peliculas'][position]
+                movie = product_catalog[position]
                 pago += cesta[id] * movie['precio']
                 lista_cesta.append((movie, cesta[id]))
             return render_template('comfirmar_cesta.html', title="Buy Basket",
@@ -378,7 +357,7 @@ def compra_finalizada(way):
     pago = 0
     for id in cesta.keys():
         position = int(id) - 1
-        movie = film_catalogue['peliculas'][position]
+        movie = product_catalog[position]
         pago += cesta[id] * movie['precio']
         lista_cesta.append((movie, cesta[id]))
 

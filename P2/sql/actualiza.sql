@@ -90,9 +90,6 @@ AS
 
 ALTER TABLE imdb_countries ADD COLUMN countryid SERIAL NOT NULL PRIMARY KEY;
 
-/* Add a column for storing customer's points */
-ALTER TABLE customers ADD COLUMN points int NOT NULL DEFAULT(0);
-
 CREATE TABLE imdb_countrymovies();
 ALTER TABLE imdb_countrymovies ADD countryid int;
 ALTER TABLE imdb_countrymovies ADD movieid int;

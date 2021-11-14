@@ -1,54 +1,59 @@
 {% extends "base.html" %}
-      {% block content %}
-      <div id="content_for_film">
-      <div id="film_content">
-         <div id="film_title_cont">
-            <div id="return">
-                 <form action="{{ url_for('inicio') }}" method="post">
-                   <button class = "button_cesar"> Volver </button>
-                 </form>
+{% block content %}
+<div id="content_for_film">
+    <div id="film_content">
+        <div id="film_title_cont">
+        <div id="return">
+            <form action="{{ url_for('inicio') }}" method="post">
+                <button class = "button_cesar"> Volver </button>
+            </form>
+        </div>
+        <div id="film_title">
+            <h2> {{product.movietitle}} </h2>
+        </div>
+        <div class="fake_div">
+        </div>
+        </div>
+        <div id="film_picture">
+        <img alt="" class="image" src={{product.image}}>
+        </div>
+        <div id="film_info">
+        <div id="film_director">
+            <p>
+                <b>Director:</b> <br> {{product.director}}
+            </p>
+        </div>
+        <div id="film_actors">
+        <p><b>Actores:</b> <br></p>
+            {% for actor in product.actors %}
+            <div>
+                <p>
+                    <li><b>Nombre</b>: {{actor.actorname}}. <b>Personaje</b>: {{actor.character}}.</li>
+                </p>
             </div>
-            <div id="film_title">
-               <h2> {{movie.titulo}} </h2>
+            {% endfor %}
+        </div>
+        <div id="film_category">
+        <p><b>Generos:</b> <br></p>
+            {% for genre in product.genres %}
+            <div>
+                <p>
+                    <li>{{genre.genre}}</li>
+                </p>
             </div>
-            <div class="fake_div">
-            </div>
-         </div>
-         <div id="film_picture">
-            <img alt="" class="image" src={{movie.poster}}>
-         </div>
-         <div id="film_info">
-            <div id="film_director">
-               <p>
-                  <b>Director:</b> <br> {{movie.director}}
-               </p>
-            </div>
-            <div id="film_category">
-               <p>
-                  <b>Categoria:</b> <br> {{movie.categoria}}
-               </p>
-            </div>
-            <div id="film_actors">
-              <p><b>Actores:</b> <br></p>
-               {% for actor in movie.actores %}
-               <div>
-                  <p>
-                     <b>Nombre</b>: {{actor.nombre}}. <b>Personaje</b>: {{actor.personaje}}. <br>
-                  </p>
-               </div>
-               {% endfor %}
-            </div>
-         </div>
-         <div id="rent_price">
-            <div id="price">
-               <p> <b>Precio del alquiler</b>: {{movie.precio}} € </p>
-            </div>
-            <div id="rent">
-              <form action="{{ url_for('anadir_cesta', id=movie.id) }}" method="get">
-                <button class = "cesta_button"> Añadir a la cesta </button>
-              </form>
-            </div>
-         </div>
-      </div>
+            {% endfor %}
+        </div>
+        </div>
+        <div id="rent_price">
+        <div id="price">
+            <p> <b>Precio del alquiler</b>: {{product.price}} € </p>
+        </div>
+        <div id="rent">
+        <form action="{{ url_for('anadir_cesta', id=product.id) }}" method="get">
+            <button class = "cesta_button"> Añadir a la cesta </button>
+        </form>
+        </div>
+        </div>
     </div>
-      {% endblock %}
+</div>
+    {% endblock %}
