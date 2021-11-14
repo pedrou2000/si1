@@ -43,7 +43,7 @@
                     {% else %}
                         <p>
                             <b>{{product.description}}:</b> {{product.price}} € 
-                            <form action="{{ url_for('anadir_cesta', id=product.id) }}" method="get">
+                            <form action="{{ url_for('anadir_cesta', id=product.prod_id) }}" method="get">
                                 <button class = "cesta_button"> Añadir a la cesta </button>
                             </form>
                         </p>

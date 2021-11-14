@@ -262,6 +262,12 @@ def anadir_cesta(id):
         cesta[id] = 1
 
     session.modified = True
+
+    user = get_actual_user()
+    if user:
+        customerid = user['data']['customerid']
+        database.db_add_cart(customerid, id)
+
     return render_template('anadido_cesta.html', title="Basket Add",
                            categorias=categorias,
                            logged_user=get_actual_user())

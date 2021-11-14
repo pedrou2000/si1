@@ -6,7 +6,7 @@ import traceback
 from sqlalchemy import create_engine, and_
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
 from sqlalchemy.sql import select
-from sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func, table
 
 # configurar el motor de sqlalchemy
 db_engine = create_engine(
@@ -312,6 +312,7 @@ def db_login(username, password):
 
     user = dict()
     user['data'] = dict()
+    user['data']['customerid'] = db_result['customerid']
     user['data']['username'] = db_result['username']
     user['data']['password'] = db_result['password']
     user['data']['email'] = db_result['email']
@@ -349,6 +350,27 @@ def db_add_user(username, password, email, credit_card, direccion_envio, balance
                                                      balance=balance,
                                                      )
     db_conn.execute(user_insertion)
+
+    db_conn.close()
+    return True
+
+
+def db_add_cart(customerid, prod_id):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    query = select([table_orders]).where(
+        table_orders.c.customerid == customerid)
+    result = list(db_conn.execute(query))
+    """
+    if len(result) == 0:
+        orders_insertion = table_customers.insert().values()
+        db_conn.execute(orders_insertion)
+
+    else:
+        print('else')
+    """
 
     db_conn.close()
     return True
