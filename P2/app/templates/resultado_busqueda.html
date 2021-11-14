@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+      {% block content %}
+      <div class="content">
+         {% for item in movie_list %}
+         <div class="movie_container">
+            <div class="movie_picture">
+               <a href="{{ url_for('film', id=item.id) }}">
+               <img alt ="" class="image" src={{ item.poster }}>
+               </a>
+            </div>
+            <div class="movie_title">
+               <p> {{ item.titulo }} </p>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+{% endblock %}

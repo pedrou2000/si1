@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8" />
+    {% block title %}<title> Video Club </title>{% endblock %}
+   <link rel = "stylesheet" type = "text/css" href = "../static/css/estilo.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+
+<body>
+  <script src="../static/scripts/codigo.js"></script>
+   <!-- Header -->
+   <div id = "header">
+      <div class = "logo">
+         <a href = "{{ url_for('inicio') }}"> <img alt = "" src  = "../static/images/logo.jpg"> </a>
+      </div>
+      <div id = title_search>
+         <div id = "title">
+            <h1> Video Club César y Pedro</h1>
+         </div>
+         <div class="general_search">
+           <div class="search">
+            <form action="{{ url_for('buscar') }}" method="post">
+               <input type="text" name="busqueda" placeholder = "Buscar una pelicula...">
+               <input type="submit" value="Buscar">
+            </form>
+          </div>
+          <div class="filter_search">
+            <form action="{{ url_for('filtrar') }}" method="post">
+              <select name="filter">
+                <option selected> Filtrar por categoría </option>
+                {% for item in categorias %}
+               	<option>{{ item }} </option>
+                {% endfor %}
+             </select>
+               <input type="submit" value="Filtrar">
+            </form>
+        </div>
+      </div>
+      </div>
+      <div class="logo">
+         <a href="{{ url_for('inicio') }}"> <img alt = "" src  = "../static/images/logo.jpg"> </a>
+      </div>
+   </div>
+
+   <!-- Side Menu -->
+   <div id="menu">
+      <p> <b>MENÚ</b> </p>
+        <br><br>
+         <form action="{{ url_for('inicio') }}" method="get">
+           <button class="button_cesar" type="submit"> Inicio </button>
+         </form>
+         <br><br>
+        <form action="{{ url_for('register') }}" method="get">
+           <button class="button_cesar"> Registrar </button>
+        </form>
+        <br><br>
+        <form action="{{ url_for('login') }}" method="get">
+          <button class="button_cesar"> Iniciar Sesión </button>
+        </form>
+        <br><br>
+        <form action="{{ url_for('cesta') }}" method="get">
+          <button class="button_cesar"> Cesta </button>
+        </form>
+        <br><br>
+      <div id="users"> </div>
+      <br><br>
+      {% if logged_user %}
+           <form class="" action="{{ url_for('logout') }}" method="get">
+             <button class="button_cesar"> Logout </button>
+           </form>
+           <br><br>
+           <form class="" action="{{ url_for('historial_compra') }}" method="get">
+             <button class="button_cesar"> Historial de Compras </button>
+           </form>
+           <br><br>
+         <p>
+
+         {% if logged_user.data %}
+            {% for key, value in logged_user.data.items() %}
+               {% if key == 'username' %}
+                  Username: {{value}} <br>
+               {% endif %}
+               {% if key == 'balance' %}
+                  Balance: {{value}} € <br>
+               {% endif %}
+               {% if key == 'points' %}
+                  Points: {{value}} <br>
+               {% endif %}
+            {% endfor %}
+         {% endif %}
+         </p>
+      {% else %}
+         <p> Not logged in </p>
+      {% endif %}
+   </div>
+
+   <!-- Searcher -->
+   <div id = "searcher"></div>
+
+   <!-- Content -->
+   {% block content %}{% endblock %}
+
+   <!-- Footer -->
+   <footer> Copyright © Pedro Urbina & Cesar Ramirez </footer>
+ </body>
+</html>

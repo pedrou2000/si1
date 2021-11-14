@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+      {% block content %}
+      <div id="cesta_content">
+         <div id="info_message_exito">
+            <p><b> Felicidades! Ha realizado su compra de {{pago}}€ con éxito. </b></p>
+         </div>
+         {% for item in cesta %}
+         <div id="cesta_container">
+            <div id="cesta_picture">
+               <img class="image" src={{ item[0].poster }}>
+            </div>
+            <div id="cesta_info">
+               <p> <b>Título: </b>{{ item[0].titulo }} </p>
+               <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
+               <p> <b>Cantidad: </b>{{ item[1] }} </p>
+            </div>
+            <div id="cesta_price">
+               <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
+            </div>
+         </div>
+         {% endfor %}
+         <div id="return">
+           <br><br>
+              <form class="" action="{{ url_for('inicio') }}" method="get">
+                <button class = "button_cesar"> Continuar Comprando </button>
+              </form>
+         </div>
+      </div>
+{% endblock %}

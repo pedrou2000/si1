@@ -1,0 +1,33 @@
+   {% extends "base.html" %}
+      {% block content %}
+      <!-- Login Menu -->
+      <div id = "login_menu">
+        <form method="POST" id="login_form">
+           <div class = "campo_login">
+              <input name="username" id="user" class="textbox" type="text" placeholder=" Usuario" required>
+           </div>
+           <div class = "campo_login">
+              <input name="password" id="pass" class="textbox" type="password" placeholder=" Contraseña" required >
+           </div>
+         </form>
+           <div id = "campo_button">
+              <button class="button" onclick="login()">Log In</button>
+           </div>
+           <div>
+              <a href="{{ url_for('register') }}">Si aún no tiene cuenta, haga click aquí.</a>
+           </div>
+
+           {% if username_not_exists %}
+           <div>
+              <p> El nombre de usuario no existe, inténtelo de nuevo. </p>
+           </div>
+           {% endif %}
+
+           {% if incorrect_password %}
+           <div>
+              <p> Contraseña incorrecta, inténtelo de nuevo. </p>
+           </div>
+           {% endif %}
+
+      </div>
+      {% endblock %}
