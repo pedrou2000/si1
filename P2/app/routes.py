@@ -11,7 +11,7 @@ from random import *
 import random
 import hashlib
 import string
-from datetime import datetime
+from app import database
 
 
 # Global variable
@@ -22,13 +22,13 @@ users_directory = os.getcwd() + "/app/users/"
 
 categorias = set()
 
-def create_user(username, salt, password, email, credit_card,
+
+def create_user(username, password, email, credit_card,
                 direccion_envio, balance) -> None:
     user_dictionary = dict()
 
     data = dict()
     data['username'] = username
-    data['salt'] = salt
     data['password'] = password
     data['email'] = email
     data['credit_card'] = credit_card
@@ -43,18 +43,6 @@ def create_user(username, salt, password, email, credit_card,
 
 
 def update_user_data(user):
-    directory = users_directory + user['data']['username'] + "/"
-    if not os.path.exists(directory):
-        return False
-
-    file = open(directory + "data.dat", "w")  # erase its previous content
-    json.dump(user['data'], file)
-    file.close()
-
-    # erase its previous content
-    file = open(directory + "historial.json", "w")
-    json.dump(user['shopping_history'], file)
-    file.close()
 
     return True
 
@@ -91,6 +79,7 @@ def get_cesta_sesion():
 
     return session['cesta']
 
+
 def get_film_categories():
     for pelicula in film_catalogue['peliculas']:
         categorias.add(pelicula['categoria'])
@@ -107,20 +96,42 @@ def inicio():
                            logged_user=get_actual_user())
 
 
+@app.route('/list-of-movies')
+def listOfMovies():
+    movies_1949 = database.db_listOfMovies1949()
+    topActors = database.db_getTopActors('Drama', 10)
+    return render_template('list_movies.html',
+                           title="Movies from Postgres Database", 
+                           movies_1949=movies_1949, 
+                           topActors=topActors)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        directory = users_directory + username + "/"
 
-        if not os.path.exists(directory):
+        if not database.db_user_already_exists(username):
             return render_template('login.html', title="Sign In",
                                    logged_user=get_actual_user(),
                                    categorias=categorias,
                                    username_not_exists=True)
         else:
+            user = database.db_login(username, password)
+            if user is None:
+                return render_template('login.html', title="Sign In",
+                                       logged_user=get_actual_user(),
+                                       categorias=categorias,
+                                       incorrect_password=True)
+            else:
+                session['user'] = user
+                session.modified = True
+                return redirect(url_for('inicio'))
+
+
+
             user = load_user(directory)
             user_data = user['data']
             salt = user_data['salt']
@@ -148,30 +159,27 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        repeated_password = request.form['repeated_password']
         email = request.form['email']
         credit_card = request.form['credit_card']
         direccion_envio = request.form['direccion_envio']
-
-        # password hashed before stored
-        salt = get_random_string(32)
-        password = hashlib.blake2b(
-            (salt + password).encode('utf-8')).hexdigest()
 
         # the balance is a random number
         balance = random.random() * 100
         balance = round(balance, 2)
 
-        user = create_user(username, salt, password, email,
+        user = create_user(username, password, email,
                            credit_card, direccion_envio, balance)
 
         directory = users_directory + user['data']['username'] + "/"
 
-        if not os.path.exists(directory):
-            # si el directorio users aun no esta creado lo creamos
-            if not os.path.exists(users_directory):
-                os.mkdir(users_directory)
-            os.mkdir(directory)
+        if not database.db_user_already_exists(username):
+            database.db_add_user(username, password, email,
+                           credit_card, direccion_envio, balance)
+            
+            if database.db_user_already_exists(username):
+                print('User created successfully')
+            else:
+                print('User not created successfully')
         else:
             return render_template('register.html', title="Register",
                                    categorias=categorias,
@@ -235,11 +243,12 @@ def buscar():
                            categorias=categorias,
                            logged_user=get_actual_user())
 
+
 @app.route('/filtrado', methods=['GET', 'POST'])
 def filtrar():
     movie_list_result = []
     categoria = request.form['filter']
-    if categoria == "Filtrar por categoría" :
+    if categoria == "Filtrar por categoría":
         return redirect(url_for('inicio'))
 
     for pelicula in film_catalogue['peliculas']:

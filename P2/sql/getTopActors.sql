@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION getTopActors(genre char, OUT Actor varchar(128), OUT Num bigint, OUT Debut text, OUT Film varchar(255), OUT Director varchar(128))
+CREATE OR REPLACE FUNCTION getTopActors(genre char, OUT Actor varchar(128), OUT Num bigint, OUT Debut text, OUT Film varchar(255), OUT Id integer, OUT Director varchar(128))
 RETURNS SETOF RECORD AS
 $$
 BEGIN
@@ -16,7 +16,7 @@ RETURN QUERY
   							GROUP BY actorid
   							HAVING COUNT(*) >= 4
   							) AS actor_count ON actor_count.actorid = initial_data.actorid)
-  SELECT four_count_filter.actorname AS actor, four_count_filter.count AS Num, four_count_filter.year AS Debut, four_count_filter.movietitle AS Film, imdb_directors.directorname AS Director
+  SELECT four_count_filter.actorname AS actor, four_count_filter.count AS Num, four_count_filter.year AS Debut, four_count_filter.movietitle AS Film, four_count_filter.movieid AS Id, imdb_directors.directorname AS Director
   FROM four_count_filter JOIN (SELECT actorid, MIN(year) AS min_year
   									 FROM four_count_filter
   									 GROUP BY actorid) AS min_year_q
@@ -29,7 +29,7 @@ $$
 LANGUAGE 'plpgsql' STABLE;
 
 SELECT *
-FROM getTopActors('Fantasy');
+FROM getTopActors('Action');
 
 /*
 CREATE OR REPLACE FUNCTION getTopActors(film_genre char)
