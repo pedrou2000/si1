@@ -6,3 +6,5 @@ psql -U alumnodb si1 < setPrice.sql
 psql -U alumnodb si1 < actualiza.sql
 psql -U alumnodb si1 < getTopSales.sql
 psql -U alumnodb si1 < getTopActors.sql
+psql -U alumnodb si1 < updOrders.sql
+psql -U alumnodb si1 < updInventoryAndCustomer.sql
