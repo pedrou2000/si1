@@ -47,8 +47,6 @@ table_actormovies = Table(
     'imdb_actormovies', db_meta, autoload=True, autoload_with=db_engine)
 
 
-
-
 def db_connect():
     db_conn = None
     try:
@@ -63,20 +61,6 @@ def db_connect():
         traceback.print_exc(file=sys.stderr)
         print("-"*60)
         return None
-
-
-def db_listOfMovies1949():
-    db_conn = db_connect()
-    if db_conn is None:
-        return 'Something is broken'
-
-    # Seleccionar las peliculas del anno 1949
-    db_movies_1949 = select([table_movies]).where(text("year = '1949'"))
-    db_result = db_conn.execute(db_movies_1949)
-    #db_result = db_conn.execute("Select * from imdb_movies where year = '1949'")
-
-    db_conn.close()
-    return list(db_result)
 
 
 def db_getTopActors(genre, number_of_films):
@@ -94,26 +78,93 @@ def db_getTopActors(genre, number_of_films):
     return result_list
 
 
-def db_parse_product(db_conn, product_id):
-    product_dict = dict()
+def db_search_movies(string, max_movies):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
 
-    query = select([table_products]).where(
-        text("prod_id = " + str(product_id)))
+    look_for = '%{0}%'.format(string)
+
+    query = select([table_movies]).where(
+        table_movies.c.movietitle.contains(look_for)).limit(max_movies)
+    result = list(db_conn.execute(query))
+
+    result_list = []
+    for row in result:
+        movieid = row['movieid']
+        movied_dict = db_parse_movie(db_conn, movieid)
+        result_list.append(movied_dict)
+
+    db_conn.close()
+
+    return result_list
+
+
+def db_filter_movies(category, max_movies):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    query = select([table_genres]).where(
+        table_genres.c.genre == category)
     result = list(db_conn.execute(query))[0]
+    genre_id = result['genreid']
 
-    product_dict['prod_id'] = result['prod_id']
-    product_dict['movieid'] = result['movieid']
-    product_dict['price'] = result['price']
-    product_dict['description'] = result['description']
+    query = select([table_genremovies]).where(
+        table_genremovies.c.genreid == genre_id).limit(max_movies)
+    result = list(db_conn.execute(query))
 
-    movieid = str(product_dict['movieid'])
+    result_list = []
+    for row in result:
+        movieid = row['movieid']
+        movied_dict = db_parse_movie(db_conn, movieid)
+        result_list.append(movied_dict)
+
+    db_conn.close()
+
+    return result_list
+
+
+def db_get_genres():
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    query = select([table_genres])
+    result = list(db_conn.execute(query))
+
+    result_list = []
+    for row in result:
+        genre_name = row['genre']
+        result_list.append(genre_name)
+
+    db_conn.close()
+
+    return result_list
+
+
+def db_parse_movie(db_conn, movieid):
+    movie_dict = dict()
+    movieid = str(movieid)
+
+    # get the products associated to this film
+    query = select([table_products]).where(
+        text("movieid = " + movieid))
+    result = list(db_conn.execute(query))
+    movie_dict['products'] = []
+    for row in result:
+        product_id = row['prod_id']
+        product_dict = db_parse_product(db_conn, product_id)
+        movie_dict['products'].append(product_dict)
+
+    # get movie info
     query = select([table_movies]).where(
         text("movieid = " + movieid))
     row = list(db_conn.execute(query))[0]
 
-    product_dict['movietitle'] = row['movietitle']
-    product_dict['image'] = film_image
-
+    movie_dict['movieid'] = row['movieid']
+    movie_dict['movietitle'] = row['movietitle']
+    movie_dict['image'] = film_image
 
     # get director
     director_query = select([table_directormovies, table_directors]).where(
@@ -123,7 +174,7 @@ def db_parse_product(db_conn, product_id):
         )
     )
     db_result = list(db_conn.execute(director_query))[0]
-    product_dict['director'] = db_result['directorname']
+    movie_dict['director'] = db_result['directorname']
 
     # get actors
     actors_query = select([table_actormovies, table_actors]).where(
@@ -133,9 +184,9 @@ def db_parse_product(db_conn, product_id):
         )
     )
     db_result = list(db_conn.execute(actors_query))
-    product_dict['actors'] = []
+    movie_dict['actors'] = []
     for row in db_result:
-        product_dict['actors'].append({
+        movie_dict['actors'].append({
             # 'actorid': row['actorid'],
             'actorname': row['actorname'],
             'character': row['character'],
@@ -150,39 +201,77 @@ def db_parse_product(db_conn, product_id):
         )
     )
     db_result = list(db_conn.execute(genre_query))
-    product_dict['genres'] = []
+    movie_dict['genres'] = []
     for row in db_result:
-        product_dict['genres'].append({
+        movie_dict['genres'].append({
             # 'genreid': row['genreid'],
             'genre': row['genre'],
         })
 
+    return movie_dict
+
+
+def db_parse_product(db_conn, product_id):
+    product_dict = dict()
+
+    query = select([table_products]).where(
+        text("prod_id = " + str(product_id)))
+    result = list(db_conn.execute(query))[0]
+
+    product_dict['prod_id'] = result['prod_id']
+    product_dict['movieid'] = result['movieid']
+    product_dict['price'] = result['price']
+    product_dict['description'] = result['description']
+
+    # check stocks in inventory
+    query = select([table_inventory]).where(
+        text("prod_id = " + str(product_id)))
+    result = list(db_conn.execute(query))
+
+    if len(result) > 0:
+        product_dict['stock'] = result[0]['stock']
+        product_dict['sales'] = result[0]['sales']
+    else:
+        product_dict['stock'] = 0
+        product_dict['sales'] = 0
+
     return product_dict
 
 
-def db_load_products(num_films):
+def db_load_movies(num_films):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
 
-    query = select([table_inventory]).where(text("stock > 0")).limit(num_films)
+    query = select([table_movies]).limit(num_films)
     result = list(db_conn.execute(query))
 
-    product_list = []
+    movie_list = []
     for row in result:
-        product_id = row['prod_id']
-        product_dict = db_parse_product(db_conn, product_id)
-        product_list.append(product_dict)
+        movieid = row['movieid']
+        movie_dict = db_parse_movie(db_conn, movieid)
+        movie_list.append(movie_dict)
 
     db_conn.close()
-    return product_list
+    return movie_list
+
+
+def db_load_movie_by_id(movie_id):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    movie_dict = db_parse_movie(db_conn, movie_id)
+
+    db_conn.close()
+    return movie_dict
 
 
 def db_load_product_by_id(product_id):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
-    
+
     product_dict = db_parse_product(db_conn, product_id)
 
     db_conn.close()

@@ -15,11 +15,12 @@ from app import database
 
 
 # Global variable
-product_catalog = database.db_load_products(10)
+max_movies = 20
+movie_catalog = database.db_load_movies(max_movies)
 
 users_directory = os.getcwd() + "/app/users/"
 
-categorias = set()
+categorias = database.db_get_genres()
 
 
 def create_user(username, password, email, credit_card,
@@ -79,35 +80,45 @@ def get_cesta_sesion():
     return session['cesta']
 
 
-def get_film_categories():
-    for pelicula in product_catalog:
-        categorias.add(pelicula['categoria'])
-    return
-
 
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
-    #get_film_categories()
-    return render_template('inicio.html', title="Home",
-                           products=product_catalog,
-                           categorias=categorias,
-                           logged_user=get_actual_user())
+    if request.method == 'GET':
+        topActors = database.db_getTopActors('Action', 10)
+        return render_template('inicio.html', title="Home",
+                            movie_catalog=movie_catalog,
+                            categorias=categorias,
+                            logged_user=get_actual_user(),
+                            topActors=topActors)
+    else:
+        genre = 'Action'
+        num_movies = 10 
 
+        if request:
+            print('REQUEST FORM:')
+            print(request.form)
+            if 'filter_actors' in request.form.keys():
+                form_genre = request.form['filter_actors']
+                if form_genre and form_genre != "Filtrar por categoría":
+                    genre = form_genre
 
-@app.route('/list-of-movies')
-def listOfMovies():
-    movies_1949 = database.db_listOfMovies1949()
-    topActors = database.db_getTopActors('Drama', 10)
-    return render_template('list_movies.html',
-                           title="Movies from Postgres Database", 
-                           movies_1949=movies_1949, 
-                           topActors=topActors)
+            if 'number_movies' in request.form.keys():
+                form_num_movies = request.form['number_movies']
+                if form_num_movies and form_num_movies.isdigit():
+                    num_movies = form_num_movies
+
+        topActors = database.db_getTopActors(genre, num_movies)
+        return render_template('inicio.html', title="Home",
+                            movie_catalog=movie_catalog,
+                            categorias=categorias,
+                            logged_user=get_actual_user(),
+                            topActors=topActors)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -187,29 +198,22 @@ def logout():
     return redirect(url_for('inicio'))
 
 
-@app.route('/film/<id>', methods=['GET'])
-def film(id):
-    product = database.db_load_product_by_id(id)
+@app.route('/movie/<id>', methods=['GET'])
+def movie(id):
+    movie = database.db_load_movie_by_id(id)
 
-    return render_template('film.html', title="Film", product=product,
+    return render_template('movie_detail.html', title="movie", movie=movie,
                            categorias=categorias,
                            logged_user=get_actual_user())
 
 
 @app.route('/busqueda', methods=['GET', 'POST'])
 def buscar():
-    movie = None
     busq = request.form['busqueda']
     if not busq:
-        return render_template('error_busqueda.html',
-                               title="Error Searched Film",
-                               categorias=categorias,
-                               logged_user=get_actual_user())
-
-    movie_list_result = []
-    for pelicula in product_catalog:
-        if busq.lower() in pelicula.get("titulo").lower():
-            movie_list_result.append(pelicula)
+        return redirect(url_for('inicio'))
+    
+    movie_list_result = database.db_search_movies(busq, max_movies)
 
     if not movie_list_result:
         return render_template('error_busqueda.html',
@@ -230,9 +234,13 @@ def filtrar():
     if categoria == "Filtrar por categoría":
         return redirect(url_for('inicio'))
 
-    for pelicula in product_catalog:
+    movie_list_result = database.db_filter_movies(categoria, max_movies)
+
+    """
+    for pelicula in movie_catalog:
         if pelicula['categoria'] == categoria:
             movie_list_result.append(pelicula)
+    """
 
     return render_template('resultado_busqueda.html', title="Filtered Films",
                            movie_list=movie_list_result,
@@ -270,7 +278,7 @@ def cesta():
         lista_cesta = []
         for id in cesta.keys():
             position = int(id) - 1
-            movie = product_catalog[position]
+            movie = movie_catalog[position]
             lista_cesta.append((movie, cesta[id]))
         return render_template('cesta.html', title="Basket", cesta=lista_cesta,
                                categorias=categorias,
@@ -307,7 +315,7 @@ def historial_compra():
                 dinero_pedido = 0
                 for id in pedido.keys():
                     position = int(id) - 1
-                    movie = product_catalog[position]
+                    movie = movie_catalog[position]
                     film_list.append((movie, pedido[id]))
                     dinero_pedido += (movie['precio'] * pedido[id])
 
@@ -334,7 +342,7 @@ def comfirmar_cesta():
             pago = 0
             for id in cesta.keys():
                 position = int(id) - 1
-                movie = product_catalog[position]
+                movie = movie_catalog[position]
                 pago += cesta[id] * movie['precio']
                 lista_cesta.append((movie, cesta[id]))
             return render_template('comfirmar_cesta.html', title="Buy Basket",
@@ -357,7 +365,7 @@ def compra_finalizada(way):
     pago = 0
     for id in cesta.keys():
         position = int(id) - 1
-        movie = product_catalog[position]
+        movie = movie_catalog[position]
         pago += cesta[id] * movie['precio']
         lista_cesta.append((movie, cesta[id]))
 
