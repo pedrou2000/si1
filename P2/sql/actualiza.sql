@@ -2,6 +2,16 @@
 ALTER TABLE inventory ADD CONSTRAINT FK_inv_prod FOREIGN KEY (prod_id) REFERENCES products (prod_id) ON DELETE CASCADE;
 /*ALTER TABLE inventory ADD PRIMARY KEY (prod_id);*/
 
+/* make customer primary key serial */
+ALTER TABLE customers DROP CONSTRAINT customers_pkey;
+ALTER TABLE customers DROP COLUMN customerid;
+ALTER TABLE customers ADD COLUMN customerid SERIAL NOT NULL PRIMARY KEY;
+
+/* make orders primary key serial */
+ALTER TABLE orders DROP CONSTRAINT orders_pkey;
+ALTER TABLE orders DROP COLUMN orderid;
+ALTER TABLE orders ADD COLUMN orderid SERIAL NOT NULL PRIMARY KEY;
+
 /* customer_id foreign key to orders table */
 ALTER TABLE orders ADD CONSTRAINT FK_order_customer FOREIGN KEY (customerid) REFERENCES customers (customerid) ON DELETE CASCADE;
 
@@ -54,10 +64,10 @@ ALTER TABLE imdb_directormovies ADD CONSTRAINT imdb_directormovies_pkey PRIMARY 
 
 /* alert table */
 CREATE TABLE alerts();
-ALTER TABLE alerts ADD prod_id int;
-ALTER TABLE alerts ADD PRIMARY KEY (prod_id);
+/*ALTER TABLE alerts ADD prod_id int;*/
+ALTER TABLE alerts ADD COLUMN prod_id SERIAL NOT NULL PRIMARY KEY;
 ALTER TABLE alerts ADD CONSTRAINT FK_alert_inventory FOREIGN KEY (prod_id) REFERENCES inventory (prod_id) ON DELETE CASCADE;
-ALTER TABLE alerts ADD date timestamp;
+ALTER TABLE alerts ADD date date;
 
 /* Add ‘loyalty’ to ‘customers’ table, with 0 default value */
 ALTER TABLE customers ADD loyalty int NOT NULL CONSTRAINT loyalty_col DEFAULT (0);
