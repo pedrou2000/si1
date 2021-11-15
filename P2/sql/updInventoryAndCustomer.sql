@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION tr_updInventoryAndCustomerNewCustomer()
 RETURNS TRIGGER
 AS $tr_updInventoryAndCustomerNewCustomer$
 BEGIN
-  INSERT INTO orders
-  VALUES (CURRENT_DATE, NEW.customerid, 0, 0, 0, NULL);
+ INSERT INTO orders(orderdate, customerid, netamount, tax, totalamount, status)
+ VALUES (CURRENT_DATE, NEW.customerid, 0, 0, 0, NULL);
 RETURN NEW;
 END;
 $tr_updInventoryAndCustomerNewCustomer$

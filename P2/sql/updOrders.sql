@@ -5,8 +5,8 @@ RETURNS TRIGGER
 AS $tr_updOrdersInsert$
 BEGIN
 UPDATE orders
-	SET netamount = netamount + NEW.price,
-			totalamount = (netamount + NEW.price) + ROUND(((netamount + NEW.price) * tax)/100, 2)
+	SET netamount = netamount + (NEW.price * NEW.quantity),
+			totalamount = (netamount + (NEW.price * NEW.quantity)) + ROUND(((netamount + (NEW.price * NEW.quantity)) * tax)/100, 2)
 	WHERE orderid = NEW.orderid;
 RETURN NEW;
 END;
@@ -24,8 +24,8 @@ RETURNS TRIGGER
 AS $tr_updOrdersUpdate$
 BEGIN
 UPDATE orders
-	SET netamount = NEW.price + netamount - OLD.price,
-		totalamount = (NEW.price + netamount - OLD.price) + ROUND(((NEW.price + netamount - OLD.price) * tax)/100, 2)
+	SET netamount = (NEW.price * NEW.quantity) + netamount - (OLD.price * OLD.quantity),
+			totalamount = ((NEW.price * NEW.quantity) + netamount - (OLD.price * OLD.quantity)) + ROUND((((NEW.price * NEW.quantity) + netamount - (OLD.price * OLD.quantity)) * tax)/100, 2)
 	WHERE orderid = NEW.orderid;
 RETURN NEW;
 END;
@@ -43,8 +43,8 @@ RETURNS TRIGGER
 AS $tr_updOrdersDelete$
 BEGIN
 UPDATE orders
-	SET netamount = netamount - OLD.price,
-		totalamount = (netamount - OLD.price) + ROUND(((netamount - OLD.price) * tax)/100, 2)
+	SET netamount = netamount - (OLD.price * OLD.quantity),
+			totalamount = (netamount - (OLD.price * OLD.quantity)) + ROUND(((netamount - (OLD.price * OLD.quantity)) * tax)/100, 2)
 	WHERE orderid = OLD.orderid;
 RETURN NEW;
 END;
