@@ -432,6 +432,7 @@ def db_empty_cart(customerid):
     query = "select * from orderdetail where orderid="+str(orderid)+";"
     result = list(db_conn.execute(query))
 
+    db_conn.close()
     if len(result) == 0:
         return True
     return False
@@ -445,5 +446,53 @@ def db_replace_cart(cart, customerid):
     
     for prod_id in cart.keys():
         for i in range(cart[prod_id]):
-            print('adding '+str(prod_id))
             db_add_cart(customerid, prod_id)
+    db_conn.close()
+
+
+def db_product_get_info(prod_id):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+    
+    db_username = select([table_products]).where(prod_id==prod_id)
+    result = list(db_conn.execute(db_username))[0]
+    movieid = result['movieid']
+
+    product_dict = dict()
+    product_dict['movie'] = db_parse_movie(db_conn, movieid)
+    product_dict['movieid'] = movieid
+    product_dict['prod_id'] = prod_id
+    product_dict['price'] = result['price']
+    product_dict['description'] = result['description']
+    
+    db_conn.close()
+    return product_dict
+
+
+def db_get_user_cart(customerid):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+    
+    db_username = select([table_orders]).where(text('customerid='+str(customerid)))
+    result = list(db_conn.execute(db_username))[0]
+    orderid = result['orderid']
+
+    db_username = select([table_orderdetail]).where(text('orderid='+str(orderid)))
+    result = list(db_conn.execute(db_username))
+    print('RESULT ORDERDETAILS:')
+    print(result)
+
+    product_list = []
+    for row in result:
+        prod_id = row['prod_id']
+        print('prod_id: ', prod_id, ' ', len(product_list))
+        product_dict = dict()
+        product_dict = db_product_get_info(prod_id)
+        product_dict['quantity'] = row['quantity']
+        product_dict['total_price'] = product_dict['quantity'] * product_dict['price']
+        product_list.append(product_dict)
+    
+    db_conn.close()
+    return product_list

@@ -80,20 +80,19 @@ def get_cesta_sesion():
     return session['cesta']
 
 
-
 @app.route('/')
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
     if request.method == 'GET':
         topActors = database.db_getTopActors('Action', 10)
         return render_template('inicio.html', title="Home",
-                            movie_catalog=movie_catalog,
-                            categorias=categorias,
-                            logged_user=get_actual_user(),
-                            topActors=topActors)
+                               movie_catalog=movie_catalog,
+                               categorias=categorias,
+                               logged_user=get_actual_user(),
+                               topActors=topActors)
     else:
         genre = 'Action'
-        num_movies = 10 
+        num_movies = 10
 
         if request:
             print('REQUEST FORM:')
@@ -110,11 +109,10 @@ def inicio():
 
         topActors = database.db_getTopActors(genre, num_movies)
         return render_template('inicio.html', title="Home",
-                            movie_catalog=movie_catalog,
-                            categorias=categorias,
-                            logged_user=get_actual_user(),
-                            topActors=topActors)
-
+                               movie_catalog=movie_catalog,
+                               categorias=categorias,
+                               logged_user=get_actual_user(),
+                               topActors=topActors)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -169,8 +167,8 @@ def register():
 
         if not database.db_user_already_exists(username):
             database.db_add_user(username, password, email,
-                           credit_card, direccion_envio, balance)
-            
+                                 credit_card, direccion_envio, balance)
+
             if database.db_user_already_exists(username):
                 print('User created successfully')
             else:
@@ -215,7 +213,7 @@ def buscar():
     busq = request.form['busqueda']
     if not busq:
         return redirect(url_for('inicio'))
-    
+
     movie_list_result = database.db_search_movies(busq, max_movies)
 
     if not movie_list_result:
@@ -277,22 +275,29 @@ def anadir_cesta(id):
 @app.route('/cesta')
 def cesta():
     cesta = get_cesta_sesion()
-    if not cesta:
+    user = get_actual_user()
+    product_list = []
+
+    if (not cesta and not user) or (user and database.db_empty_cart(user['data']['customerid'])):
         return render_template('cesta_vacia.html', title="Empty Basket",
                                categorias=categorias,
                                logged_user=get_actual_user())
-    else:
-        lista_cesta = []
 
-        """
-        for id in cesta.keys():
-            position = int(id) - 1
-            movie = movie_catalog[position]
-            lista_cesta.append((movie, cesta[id]))
-        """
-        return render_template('cesta.html', title="Basket", cesta=lista_cesta,
-                               categorias=categorias,
-                               logged_user=get_actual_user())
+    elif cesta and not user:
+        print('cesta and not user')
+        for prod_id in cesta.keys():
+            product_info = database.db_product_get_info(prod_id)
+            product_info['quantity'] = cesta[prod_id]
+            product_info['total_price'] = product_info['quantity'] * product_info['price']
+            product_list.append(product_info)
+
+    elif user and not database.db_empty_cart(user['data']['customerid']):
+        print('user and not database.db_empty_cart()')
+        product_list = database.db_get_user_cart(user['data']['customerid'])
+        print(product_list)
+
+    return render_template('cesta.html', title="Basket", product_list=product_list,
+                           categorias=categorias, logged_user=get_actual_user())
 
 
 @app.route('/historial_compra', methods=['GET', 'POST'])
