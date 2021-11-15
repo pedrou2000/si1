@@ -117,13 +117,13 @@ AS $tr_updInventoryAndCustomerReduceBalance$
 BEGIN
   UPDATE customers
   SET balance = balance - NEW.totalamount
-  WHERE customers.customerid = NEW.customerid;
+  WHERE customers.customerid = NEW.customerid AND NEW.status = 'Paid';
 RETURN NEW;
 END;
 $tr_updInventoryAndCustomerReduceBalance$
 LANGUAGE 'plpgsql';
 
 CREATE TRIGGER updInventoryAndCustomerReduceBalance
-AFTER INSERT ON orders
+AFTER UPDATE ON orders
 FOR EACH ROW EXECUTE
 PROCEDURE tr_updInventoryAndCustomerReduceBalance();
