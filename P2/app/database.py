@@ -411,3 +411,39 @@ def db_add_cart(customerid, prod_id):
 
     db_conn.close()
     return True
+
+
+def db_empty_cart(customerid):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    query = select([table_orders]).where(
+        table_orders.c.customerid == customerid)
+    result = list(db_conn.execute(query))
+    if len(result) == 0:
+        print('Error, cutomer with customerid' + str(customerid) +
+              'does not have an associated order.')
+        db_conn.close()
+        return False
+
+    orderid = result[0]['orderid']
+
+    query = "select * from orderdetail where orderid="+str(orderid)+";"
+    result = list(db_conn.execute(query))
+
+    if len(result) == 0:
+        return True
+    return False
+
+
+def db_replace_cart(cart, customerid):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+    print('LOGGED USER WITH ANON CART. Products:')
+    
+    for prod_id in cart.keys():
+        for i in range(cart[prod_id]):
+            print('adding '+str(prod_id))
+            db_add_cart(customerid, prod_id)

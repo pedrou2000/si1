@@ -1,39 +1,42 @@
 {% extends "base.html" %}
-      {% block content %}
-      <div id="cesta_content">
-        <div id="return">
-          <br><br>
-          <form class="" action="{{ url_for('inicio') }}" method="get">
+{% block content %}
+<div id="cesta_content">
+    
+    <div id="return">
+        <br><br>
+        <form class="" action="{{ url_for('inicio') }}" method="get">
             <button class="button_cesar"> Volver </button>
-          </form>
-          <br>
+        </form>
+        <br>
+    </div>
+
+    {% for item in cesta %}
+    <div id="cesta_container">
+        <div id="cesta_picture">
+            <img alt="" class="image" src={{ item[0].poster }}>
         </div>
-         {% for item in cesta %}
-         <div id="cesta_container">
-            <div id="cesta_picture">
-               <img alt="" class="image" src={{ item[0].poster }}>
+        <div id="cesta_info">
+            <p> <b>Título: </b>{{ item[0].titulo }} </p>
+            <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
+            <p> <b>Cantidad: </b>{{ item[1] }} </p>
+        </div>
+        <div id="cesta_price">
+            <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
+            <form class="" action="{{ url_for('eliminado_cesta', id=item[0].id) }}" method="get">
+                <button class="button_cesar"> Eliminar </button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div id="pagar_div">
+        <div class="fake_div"></div>
+            <div class="fake_div">
+                <form class="" action="{{ url_for('comfirmar_cesta')}}" method="get">
+                    <button class="button_cesar"> Pagar </button>
+                </form>
             </div>
-            <div id="cesta_info">
-               <p> <b>Título: </b>{{ item[0].titulo }} </p>
-               <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
-               <p> <b>Cantidad: </b>{{ item[1] }} </p>
-            </div>
-            <div id="cesta_price">
-               <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
-               <form class="" action="{{ url_for('eliminado_cesta', id=item[0].id) }}" method="get">
-                 <button class="button_cesar"> Eliminar </button>
-               </form>
-            </div>
-         </div>
-         {% endfor %}
-         <div id="pagar_div">
-           <div class="fake_div"></div>
-           <div class="fake_div">
-             <form class="" action="{{ url_for('comfirmar_cesta')}}" method="get">
-               <button class="button_cesar"> Pagar </button>
-             </form>
-           </div>
-           <div class="fake_div"></div>
-         </div>
-      </div>
-      {% endblock %}
+        <div class="fake_div"></div>
+    </div>
+</div>
+{% endblock %}

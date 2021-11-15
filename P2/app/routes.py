@@ -136,6 +136,9 @@ def login():
                                        categorias=categorias,
                                        incorrect_password=True)
             else:
+                cesta = get_cesta_sesion()
+                if database.db_empty_cart(user['data']['customerid']) and cesta:
+                    database.db_replace_cart(cesta, user['data']['customerid'])
                 session['user'] = user
                 session.modified = True
                 return redirect(url_for('inicio'))
@@ -250,23 +253,21 @@ def filtrar():
 
 @app.route('/anadido_cesta/<id>', methods=['GET'])
 def anadir_cesta(id):
-    cesta = get_cesta_sesion()
-    if not cesta:
-        session['cesta'] = dict()
-        cesta = get_cesta_sesion()
-
-    if id in cesta.keys():
-        cesta[id] += 1
-
-    else:
-        cesta[id] = 1
-
-    session.modified = True
 
     user = get_actual_user()
     if user:
         customerid = user['data']['customerid']
         database.db_add_cart(customerid, id)
+    else:
+        cesta = get_cesta_sesion()
+        if not cesta:
+            session['cesta'] = dict()
+            cesta = get_cesta_sesion()
+        if id in cesta.keys():
+            cesta[id] += 1
+        else:
+            cesta[id] = 1
+        session.modified = True
 
     return render_template('anadido_cesta.html', title="Basket Add",
                            categorias=categorias,
@@ -275,17 +276,20 @@ def anadir_cesta(id):
 
 @app.route('/cesta')
 def cesta():
-    if not get_cesta_sesion():
+    cesta = get_cesta_sesion()
+    if not cesta:
         return render_template('cesta_vacia.html', title="Empty Basket",
                                categorias=categorias,
                                logged_user=get_actual_user())
     else:
-        cesta = get_cesta_sesion()
         lista_cesta = []
+
+        """
         for id in cesta.keys():
             position = int(id) - 1
             movie = movie_catalog[position]
             lista_cesta.append((movie, cesta[id]))
+        """
         return render_template('cesta.html', title="Basket", cesta=lista_cesta,
                                categorias=categorias,
                                logged_user=get_actual_user())
