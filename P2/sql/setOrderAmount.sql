@@ -8,7 +8,7 @@ BEGIN
 	SET netamount = sub_q.sum_prices
 	FROM
     (
-    SELECT SUM(price) AS sum_prices, orderdetail.orderid
+    SELECT SUM(price*quantity) AS sum_prices, orderdetail.orderid
     FROM orderdetail
     GROUP BY orderdetail.orderid
     ) AS sub_q

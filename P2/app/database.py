@@ -156,6 +156,7 @@ def db_parse_movie(db_conn, movieid):
         product_id = row['prod_id']
         product_dict = db_parse_product(db_conn, product_id)
         movie_dict['products'].append(product_dict)
+        #print(movie_dict['products'])
 
     # get movie info
     query = select([table_movies]).where(
@@ -321,6 +322,8 @@ def db_login(username, password):
     user['data']['balance'] = db_result['balance']
     user['data']['points'] = db_result['loyalty']
 
+    print('LOGGED USER WITH CUSTOMERID: '+str(user['data']['customerid']))
+
     return user
 
 
@@ -333,23 +336,16 @@ def db_add_user(username, password, email, credit_card, direccion_envio, balance
         "SELECT max(customerid) FROM customers"))[0][0]
     new_id += 1
 
-    user_insertion = table_customers.insert().values(customerid=new_id,
-                                                     firstname=username,
-                                                     lastname=username,
-                                                     address1=direccion_envio,
-                                                     city='Getafe',
-                                                     country='Spain',
-                                                     region='Madrid',
-                                                     email=email,
-                                                     creditcardtype='VISA',
-                                                     creditcard=credit_card,
-                                                     creditcardexpiration='8/2030',
-                                                     username=username,
-                                                     password=password,
-                                                     loyalty=0,
-                                                     balance=balance,
-                                                     )
-    db_conn.execute(user_insertion)
+    query = table_customers.insert().\
+        values(
+            customerid=new_id, firstname=username, lastname=username,
+            address1=direccion_envio, city='Getafe', country='Spain',
+            region='Madrid', email=email, creditcardtype='VISA',
+            creditcard=credit_card, creditcardexpiration='8/2030',
+            username=username, password=password,
+            loyalty=0, balance=balance
+    )
+    db_conn.execute(query)
 
     db_conn.close()
     return True
@@ -363,14 +359,55 @@ def db_add_cart(customerid, prod_id):
     query = select([table_orders]).where(
         table_orders.c.customerid == customerid)
     result = list(db_conn.execute(query))
-    """
     if len(result) == 0:
-        orders_insertion = table_customers.insert().values()
-        db_conn.execute(orders_insertion)
+        print('Error, cutomer with customerid' + str(customerid) +
+              'does not have an associated order.')
+        db_conn.close()
+        return False
 
-    else:
-        print('else')
-    """
+    orderid = result[0]['orderid']
+
+    query = "select * from orderdetail where orderid="+str(orderid)+" and prod_id="+str(prod_id)+";"
+    result = list(db_conn.execute(query))
+
+    if len(result) == 0:
+        # create new orderdetail
+        query = select([table_products]).where(
+            table_products.c.prod_id == prod_id)
+        result = list(db_conn.execute(query))
+        if len(result) == 0:
+            print('There is no product with id ' +
+                  str(prod_id) + ' in products table.')
+            db_conn.close()
+            return False
+        price = result[0]['price']
+
+        query = table_orderdetail.insert().\
+            values(
+                orderid=orderid, prod_id=prod_id, 
+                price = price, quantity=1,
+            )
+        db_conn.execute(query)
+
+        query = "select * from orderdetail where orderid="+str(orderid)+" and prod_id="+str(prod_id)+";"
+        result = list(db_conn.execute(query))
+        print('NO PREVIOUS ORDERDETAIL, NOW:')
+        print(result[0])
+
+    elif len(result) >= 1:
+        # update orderdetail
+        query = table_orderdetail.update()\
+            .where(table_orderdetail.c.prod_id == prod_id
+                   and table_orderdetail.c.orderid == orderid)\
+            .values(quantity=table_orderdetail.c.quantity + 1)
+
+        db_conn.execute(query)
+        print('PREVIOUS ORDERDETAIL:')
+        print(result[0])
+        query = "select * from orderdetail where orderid="+str(orderid)+" and prod_id="+str(prod_id)+";"
+        result = list(db_conn.execute(query))
+        print('NEW ORDERDETAIL:')
+        print(result[0])
 
     db_conn.close()
     return True
