@@ -357,7 +357,7 @@ def db_add_cart(customerid, prod_id):
         return 'Something is broken'
 
     query = select([table_orders]).where(
-        table_orders.c.customerid == customerid)
+        text('status is NULL and customerid = '+str(customerid)))
     result = list(db_conn.execute(query))
     if len(result) == 0:
         print('Error, cutomer with customerid' + str(customerid) +
@@ -419,7 +419,7 @@ def db_remove_cart(customerid, prod_id):
         return 'Something is broken'
 
     query = select([table_orders]).where(
-        table_orders.c.customerid == customerid)
+        text('status is NULL and customerid = '+str(customerid)))
     result = list(db_conn.execute(query))
     if len(result) == 0:
         print('Error, cutomer with customerid' + str(customerid) +
@@ -467,7 +467,7 @@ def db_empty_cart(customerid):
         return 'Something is broken'
 
     query = select([table_orders]).where(
-        table_orders.c.customerid == customerid)
+        text('status is NULL and customerid = '+str(customerid)))
     result = list(db_conn.execute(query))
     if len(result) == 0:
         print('Error, cutomer with customerid' + str(customerid) +
@@ -523,8 +523,9 @@ def db_get_user_cart(customerid):
     if db_conn is None:
         return 'Something is broken'
     
-    db_username = select([table_orders]).where(text('customerid='+str(customerid)))
-    result = list(db_conn.execute(db_username))[0]
+    query = select([table_orders]).where(
+        text('status is NULL and customerid = '+str(customerid)))
+    result = list(db_conn.execute(query))[0]
     orderid = result['orderid']
 
     db_username = select([table_orderdetail]).where(text('orderid='+str(orderid)))
@@ -551,6 +552,32 @@ def db_get_cart_payment(customerid):
     if db_conn is None:
         return 'Something is broken'
     
-    db_username = select([table_orders]).where(text('customerid='+str(customerid)))
-    result = list(db_conn.execute(db_username))[0]
+    query = select([table_orders]).where(
+        text('status is NULL and customerid = '+str(customerid)))
+    result = list(db_conn.execute(query))[0]
     return result['totalamount']
+
+
+def db_try_buy_cart(customerid, payment_method):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+    
+    query = select([table_orders]).where(
+        text('status is NULL and customerid = '+str(customerid)))
+    result = list(db_conn.execute(query))[0]
+    total_payment =  result['totalamount']
+    orderid = result['orderid']
+
+    # check if enough points or balance
+    # check there is enough amount of products
+
+    # update order status
+    query = table_orders.update()\
+        .where(text("orderid = " + str(orderid)))\
+        .values(status="Paid")
+    db_conn.execute(query)
+
+    # if paid with points restore balance substracted by trigger
+    
+

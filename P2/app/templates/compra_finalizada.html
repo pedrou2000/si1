@@ -1,29 +1,33 @@
 {% extends "base.html" %}
-      {% block content %}
-      <div id="cesta_content">
-         <div id="info_message_exito">
-            <p><b> Felicidades! Ha realizado su compra de {{pago}}€ con éxito. </b></p>
-         </div>
-         {% for item in cesta %}
-         <div id="cesta_container">
-            <div id="cesta_picture">
-               <img class="image" src={{ item[0].poster }}>
-            </div>
-            <div id="cesta_info">
-               <p> <b>Título: </b>{{ item[0].titulo }} </p>
-               <p> <b>Categoría: </b>{{ item[0].categoria }} </p>
-               <p> <b>Cantidad: </b>{{ item[1] }} </p>
-            </div>
-            <div id="cesta_price">
-               <p> <b>Precio: </b>{{ item[0].precio }}€ </p>
-            </div>
-         </div>
-         {% endfor %}
-         <div id="return">
-           <br><br>
-              <form class="" action="{{ url_for('inicio') }}" method="get">
-                <button class = "button_cesar"> Continuar Comprando </button>
-              </form>
-         </div>
-      </div>
+{% block content %}
+<div id="cesta_content">
+
+    <div id="info_message_exito">
+       <p><b> Felicidades! Ha realizado su compra de {{total_payment}}€ con éxito. </b></p>
+    </div>
+
+    {% for product in product_list %}
+    <div id="cesta_container">
+        <div id="cesta_picture">
+            <img alt="" class="image" src="{{ product.movie.image }}">
+        </div>
+        <div id="cesta_info">
+            <p> <b>Título: </b>{{ product.movie.movietitle }} </p>
+            <p> <b>Description: </b>{{ product.description }} </p>
+            <p> <b>Cantidad: </b>{{ product.quantity }} </p>
+        </div>
+        <div id="cesta_price">
+            <p> <b>Precio: </b>{{ product.total_price }}€ </p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div id="return">
+        <br><br>
+        <form class="" action="{{ url_for('inicio') }}" method="get">
+            <button class = "button_cesar"> Continuar Comprando </button>
+        </form>
+    </div>
+    
+</div>
 {% endblock %}

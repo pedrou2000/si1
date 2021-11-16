@@ -22,6 +22,7 @@ users_directory = os.getcwd() + "/app/users/"
 
 categorias = database.db_get_genres()
 product_list = []
+total_payment = 0
 
 
 def create_user(username, password, email, credit_card,
@@ -43,9 +44,12 @@ def create_user(username, password, email, credit_card,
     return user_dictionary
 
 
-def update_user_data(user):
-
-    return True
+def update_user_data():
+    if 'user' in session:
+        user_dict = session['user']['data']
+        session['user'] = database.db_login(user_dict['username'], user_dict['password'])
+    else:
+        print('Error, cannot update user because there is no user')
 
 
 def load_user(directory):
@@ -180,8 +184,6 @@ def register():
                                    logged_user=get_actual_user(),
                                    username_already_exists=True)
 
-        update_user_data(user)
-
         return redirect(url_for('login'))
 
     else:
@@ -302,7 +304,6 @@ def cesta():
 
     if (not cesta and not user) or (user and database.db_empty_cart(user['data']['customerid'])):
         return render_template('cesta_vacia.html', title="Empty Basket",
-                               categorias=categorias,
                                logged_user=get_actual_user())
 
     elif cesta and not user:
@@ -319,18 +320,17 @@ def cesta():
         print(product_list)
 
     return render_template('cesta.html', title="Basket", product_list=product_list,
-                           categorias=categorias, logged_user=get_actual_user())
+                           logged_user=get_actual_user())
 
 
 @app.route('/comfirmar_cesta')
 def comfirmar_cesta():
-    global product_list
+    global product_list, total_payment
     user = get_actual_user()
     if user is not None:
         total_payment = database.db_get_cart_payment(user['data']['customerid'])
         return render_template('comfirmar_cesta.html', title="Buy Basket",
                                 product_list=product_list,
-                                categorias=categorias,
                                 logged_user=get_actual_user(), 
                                 total_payment=total_payment)
     else:
@@ -339,11 +339,32 @@ def comfirmar_cesta():
 
 @app.route('/compra_finalizada/<way>', methods=['GET', 'POST'])
 def compra_finalizada(way):
+    global total_payment, product_list
+
     if way != 'points' and way != 'balance':
+        print('Error, not selected way of payment!')
         return
 
-    buy = False
+    user = session['user']['data']
 
+    if database.db_try_buy_cart(user['customerid'], way):
+        update_user_data()
+        return render_template('compra_finalizada.html', title="Buy Basket",
+                               product_list=product_list,
+                               logged_user=get_actual_user(), 
+                               total_payment=total_payment)
+    else:
+        return render_template('compra_fallida.html', title="Buy Basket",
+                            product_list=product_list,
+                            logged_user=get_actual_user(), way=way,
+                            total_payment=total_payment)
+
+    
+
+
+
+    buy = False
+    """
     cesta = get_cesta_sesion()
     lista_cesta = []
     pago = 0
@@ -352,19 +373,21 @@ def compra_finalizada(way):
         movie = movie_catalog[position]
         pago += cesta[id] * movie['precio']
         lista_cesta.append((movie, cesta[id]))
+    """
 
-    user = session['user']
-    user_data = user['data']
-    aux = (user_data['balance'] - pago)
+    user = session['user']['data']
 
     if way == 'balance':
-        if (user_data['balance'] - pago) >= 0:
-            user_data['balance'] -= pago
-            user_data['balance'] = round(user_data['balance'], 2)
+        if user['balance'] - total_payment >= 0:
+            database.
+            """
+            user['balance'] -= pago
+            user['balance'] = round(user_data['balance'], 2)
 
             points = (pago * 100) * 0.05
             points = round(points)
             user_data['points'] += points
+            """
             buy = True
 
     elif way == 'points':
@@ -387,11 +410,6 @@ def compra_finalizada(way):
                                cesta=lista_cesta,
                                categorias=categorias,
                                logged_user=get_actual_user(), pago=pago)
-
-    return render_template('compra_fallida.html', title="Buy Basket",
-                           cesta=lista_cesta,
-                           categorias=categorias,
-                           logged_user=get_actual_user(), way=way)
 
 
 @app.route('/historial_compra', methods=['GET', 'POST'])
