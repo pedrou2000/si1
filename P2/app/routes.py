@@ -347,7 +347,7 @@ def compra_finalizada(way):
 
     user = session['user']['data']
 
-    if database.db_try_buy_cart(user['customerid'], way):
+    if database.db_try_buy_cart(user['customerid'], way, user['balance'], user['points']):
         update_user_data()
         return render_template('compra_finalizada.html', title="Buy Basket",
                                product_list=product_list,
@@ -360,58 +360,6 @@ def compra_finalizada(way):
                             total_payment=total_payment)
 
     
-
-
-
-    buy = False
-    """
-    cesta = get_cesta_sesion()
-    lista_cesta = []
-    pago = 0
-    for id in cesta.keys():
-        position = int(id) - 1
-        movie = movie_catalog[position]
-        pago += cesta[id] * movie['precio']
-        lista_cesta.append((movie, cesta[id]))
-    """
-
-    user = session['user']['data']
-
-    if way == 'balance':
-        if user['balance'] - total_payment >= 0:
-            database.
-            """
-            user['balance'] -= pago
-            user['balance'] = round(user_data['balance'], 2)
-
-            points = (pago * 100) * 0.05
-            points = round(points)
-            user_data['points'] += points
-            """
-            buy = True
-
-    elif way == 'points':
-        pago_en_puntos = round(pago * 100)
-        if (user_data['points'] - pago_en_puntos) >= 0:
-            user_data['points'] -= pago_en_puntos
-            buy = True
-
-    if buy:
-        # actualizar historial de compras
-        shopping_history = user['shopping_history']
-        shopping_history.append(session['cesta'])
-
-        update_user_data(user)
-        session['cesta'] = dict()
-
-        session.modified = True
-
-        return render_template('compra_finalizada.html', title="Buy Basket",
-                               cesta=lista_cesta,
-                               categorias=categorias,
-                               logged_user=get_actual_user(), pago=pago)
-
-
 @app.route('/historial_compra', methods=['GET', 'POST'])
 def historial_compra():
     if request.method == 'POST':
