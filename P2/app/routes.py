@@ -251,7 +251,6 @@ def filtrar():
 
 @app.route('/anadido_cesta/<id>', methods=['GET'])
 def anadir_cesta(id):
-
     user = get_actual_user()
     if user:
         customerid = user['data']['customerid']
@@ -427,18 +426,23 @@ def compra_finalizada(way):
 
 @app.route('/eliminado_cesta/<id>', methods=['GET'])
 def eliminado_cesta(id):
-    cesta = get_cesta_sesion()
+
+    user = get_actual_user()
+    if user:
+        customerid = user['data']['customerid']
+        database.db_remove_cart(customerid, id)
+    else:
+        cesta = get_cesta_sesion()
+        if cesta[id]:
+            if cesta[id] == 1:
+                cesta.pop(id, 0)
+            else:
+                cesta[id] -= 1
+        session.modified = True
     
-    if cesta[id]:
-        if cesta[id] == 1:
-            cesta.pop(id, 0)
-        else:
-            cesta[id] -= 1
-    session.modified = True
     return render_template('eliminado_cesta.html', title="Basket Removed",
                            categorias=categorias,
                            logged_user=get_actual_user())
-
 
 @app.route('/online_users', methods=['GET'])
 def get_random_number_of_users():

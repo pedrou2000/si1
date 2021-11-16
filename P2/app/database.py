@@ -413,6 +413,45 @@ def db_add_cart(customerid, prod_id):
     return True
 
 
+
+def db_remove_cart(customerid, prod_id):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    query = select([table_orders]).where(
+        table_orders.c.customerid == customerid)
+    result = list(db_conn.execute(query))
+    if len(result) == 0:
+        print('Error, cutomer with customerid' + str(customerid) +
+              'does not have an associated order.')
+        db_conn.close()
+        return False
+
+    orderid = result[0]['orderid']
+
+    query = "select * from orderdetail where orderid="+str(orderid)+" and prod_id="+str(prod_id)+";"
+    result = list(db_conn.execute(query))
+
+    if len(result) >= 1:
+        # update orderdetail
+        query = table_orderdetail.update()\
+            .where(table_orderdetail.c.prod_id == prod_id
+                   and table_orderdetail.c.orderid == orderid)\
+            .values(quantity=table_orderdetail.c.quantity - 1)
+
+        db_conn.execute(query)
+        print('PREVIOUS ORDERDETAIL:')
+        print(result[0])
+        query = "select * from orderdetail where orderid="+str(orderid)+" and prod_id="+str(prod_id)+";"
+        result = list(db_conn.execute(query))
+        print('NEW ORDERDETAIL:')
+        print(result[0])
+
+    db_conn.close()
+    return True
+
+
 def db_empty_cart(customerid):
     db_conn = db_connect()
     if db_conn is None:
