@@ -77,19 +77,17 @@
            <br><br>
          <p>
 
-         {% if logged_user.data %}
-            {% for key, value in logged_user.data.items() %}
-               {% if key == 'username' %}
-                  Username: {{value}} <br>
-               {% endif %}
-               {% if key == 'balance' %}
-                  Balance: {{value}} € <br>
-               {% endif %}
-               {% if key == 'points' %}
-                  Points: {{value}} <br>
-               {% endif %}
-            {% endfor %}
-         {% endif %}
+         {% for key, value in logged_user.items() %}
+            {% if key == 'username' %}
+               Username: {{value}} <br>
+            {% endif %}
+            {% if key == 'balance' %}
+               Balance: {{value}} € <br>
+            {% endif %}
+            {% if key == 'points' %}
+               Points: {{value}} <br>
+            {% endif %}
+         {% endfor %}
          </p>
       {% else %}
          <p> Not logged in </p>

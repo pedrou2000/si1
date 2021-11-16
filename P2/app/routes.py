@@ -27,43 +27,25 @@ total_payment = 0
 
 def create_user(username, password, email, credit_card,
                 direccion_envio, balance) -> None:
-    user_dictionary = dict()
+    user_dict = dict()
 
-    data = dict()
-    data['username'] = username
-    data['password'] = password
-    data['email'] = email
-    data['credit_card'] = credit_card
-    data['direccion_envio'] = direccion_envio
-    data['balance'] = balance
-    data['points'] = 0
+    user_dict['username'] = username
+    user_dict['password'] = password
+    user_dict['email'] = email
+    user_dict['credit_card'] = credit_card
+    user_dict['direccion_envio'] = direccion_envio
+    user_dict['balance'] = balance
+    user_dict['points'] = 0
 
-    user_dictionary['data'] = data
-    user_dictionary['shopping_history'] = [dict()]
-
-    return user_dictionary
+    return user_dict
 
 
 def update_user_data():
     if 'user' in session:
-        user_dict = session['user']['data']
+        user_dict = session['user']
         session['user'] = database.db_login(user_dict['username'], user_dict['password'])
     else:
         print('Error, cannot update user because there is no user')
-
-
-def load_user(directory):
-    user = dict()
-
-    file = open(directory + 'data.dat')
-    user['data'] = json.load(file)
-    file.close()
-
-    file = open(directory + 'historial.json')
-    user['shopping_history'] = json.load(file)
-    file.close()
-
-    return user
 
 
 def get_random_string(length):
@@ -140,8 +122,8 @@ def login():
                                        incorrect_password=True)
             else:
                 cesta = get_cesta_sesion()
-                if database.db_empty_cart(user['data']['customerid']) and cesta:
-                    database.db_replace_cart(cesta, user['data']['customerid'])
+                if database.db_empty_cart(user['customerid']) and cesta:
+                    database.db_replace_cart(cesta, user['customerid'])
                 session['user'] = user
                 session.modified = True
                 return redirect(url_for('inicio'))
@@ -168,7 +150,7 @@ def register():
         user = create_user(username, password, email,
                            credit_card, direccion_envio, balance)
 
-        directory = users_directory + user['data']['username'] + "/"
+        directory = users_directory + user['username'] + "/"
 
         if not database.db_user_already_exists(username):
             database.db_add_user(username, password, email,
@@ -256,7 +238,7 @@ def filtrar():
 def anadir_cesta(id):
     user = get_actual_user()
     if user:
-        customerid = user['data']['customerid']
+        customerid = user['customerid']
         database.db_add_cart(customerid, id)
     else:
         cesta = get_cesta_sesion()
@@ -279,7 +261,7 @@ def eliminado_cesta(id):
 
     user = get_actual_user()
     if user:
-        customerid = user['data']['customerid']
+        customerid = user['customerid']
         database.db_remove_cart(customerid, id)
     else:
         cesta = get_cesta_sesion()
@@ -302,7 +284,7 @@ def cesta():
     global product_list
     product_list = []
 
-    if (not cesta and not user) or (user and database.db_empty_cart(user['data']['customerid'])):
+    if (not cesta and not user) or (user and database.db_empty_cart(user['customerid'])):
         return render_template('cesta_vacia.html', title="Empty Basket",
                                logged_user=get_actual_user())
 
@@ -314,9 +296,9 @@ def cesta():
             product_info['total_price'] = product_info['quantity'] * product_info['price']
             product_list.append(product_info)
 
-    elif user and not database.db_empty_cart(user['data']['customerid']):
+    elif user and not database.db_empty_cart(user['customerid']):
         print('user and not database.db_empty_cart()')
-        product_list = database.db_get_user_cart(user['data']['customerid'])
+        product_list = database.db_get_user_cart(user['customerid'])
         print(product_list)
 
     return render_template('cesta.html', title="Basket", product_list=product_list,
@@ -328,7 +310,7 @@ def comfirmar_cesta():
     global product_list, total_payment
     user = get_actual_user()
     if user is not None:
-        total_payment = database.db_get_cart_payment(user['data']['customerid'])
+        total_payment = database.db_get_cart_payment(user['customerid'])
         return render_template('comfirmar_cesta.html', title="Buy Basket",
                                 product_list=product_list,
                                 logged_user=get_actual_user(), 
@@ -345,26 +327,29 @@ def compra_finalizada(way):
         print('Error, not selected way of payment!')
         return
 
-    user = session['user']['data']
+    user = session['user']
 
-    if database.db_try_buy_cart(user['customerid'], way, user['balance'], user['points']):
+    attempt_result = database.db_try_buy_cart(user['customerid'], way, user['balance'], user['points'])
+    if attempt_result == 'success':
         update_user_data()
         return render_template('compra_finalizada.html', title="Buy Basket",
                                product_list=product_list,
                                logged_user=get_actual_user(), 
                                total_payment=total_payment)
+
     else:
         return render_template('compra_fallida.html', title="Buy Basket",
                             product_list=product_list,
-                            logged_user=get_actual_user(), way=way,
+                            logged_user=get_actual_user(), 
+                            attempt_result=attempt_result,
                             total_payment=total_payment)
 
     
 @app.route('/historial_compra', methods=['GET', 'POST'])
 def historial_compra():
+    user = session['user']
     if request.method == 'POST':
         extra_money = request.form['saldo']
-        user_data = session['user']['data']
 
         try:
             extra_money = float(extra_money)
@@ -374,13 +359,16 @@ def historial_compra():
         if extra_money < 0:
             return redirect(url_for('historial_compra'))
 
-        user_data['balance'] += float(extra_money)
-        user_data['balance'] = round(user_data['balance'], 2)
-        update_user_data(session['user'])
-        session.modified = True
+        database.db_add_balance(user, extra_money)        
+        update_user_data()
         return redirect(url_for('historial_compra'))
 
     else:
+        order_list = database.db_get_orders(user['customerid'])
+
+
+
+        """
         shopping_history = session['user']['shopping_history']
         shopping_list = []
         counter = 1
@@ -397,10 +385,10 @@ def historial_compra():
                 shopping_list.append((str(counter), film_list, dinero_pedido))
                 print(shopping_list)
                 counter += 1
+        """
 
-        return render_template('historial_compra.html', title="Basket",
-                               shopping_list=shopping_list,
-                               categorias=categorias,
+        return render_template('historial_compra.html', title="Historial",
+                               order_list=order_list,
                                logged_user=get_actual_user())
 
 

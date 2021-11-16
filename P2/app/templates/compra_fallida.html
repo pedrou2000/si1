@@ -2,11 +2,13 @@
 {% block content %}
 <div id="cesta_content">
     <div id="info_message_error">
-    {% if way == 'points' %}
+    {% if attempt_result == 'no_points' %}
         <p><b> No dispone de puntos suficientes para realizar esta compra. </b></p>
-        {% else %}
+    {% elif attempt_result == 'no_balance' %}
         <p><b> No dispone de balance suficiente para realizar esta compra. </b></p>
-        {% endif %}
+    {% else %}
+        <p><b> No hay stock suficiente de uno de los productos solicitados. </b></p>
+    {% endif %}
     </div>
 
 
