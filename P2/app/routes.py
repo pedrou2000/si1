@@ -428,6 +428,7 @@ def compra_finalizada(way):
 @app.route('/eliminado_cesta/<id>', methods=['GET'])
 def eliminado_cesta(id):
     cesta = get_cesta_sesion()
+    
     if cesta[id]:
         if cesta[id] == 1:
             cesta.pop(id, 0)
