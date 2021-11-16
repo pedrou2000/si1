@@ -413,7 +413,6 @@ def db_add_cart(customerid, prod_id):
     return True
 
 
-
 def db_remove_cart(customerid, prod_id):
     db_conn = db_connect()
     if db_conn is None:
@@ -441,12 +440,22 @@ def db_remove_cart(customerid, prod_id):
             .values(quantity=table_orderdetail.c.quantity - 1)
 
         db_conn.execute(query)
-        print('PREVIOUS ORDERDETAIL:')
-        print(result[0])
-        query = "select * from orderdetail where orderid="+str(orderid)+" and prod_id="+str(prod_id)+";"
-        result = list(db_conn.execute(query))
-        print('NEW ORDERDETAIL:')
-        print(result[0])
+
+
+
+        query = select([table_orderdetail])\
+            .where(table_orderdetail.c.prod_id == prod_id
+                   and table_orderdetail.c.orderid == orderid)
+        result = list(db_conn.execute(query))[0]['quantity']
+        print('RESULT QUANTITY')
+        print(result)
+        if result == 0:
+            # delete order detail
+            query = table_orderdetail.delete()\
+            .where(table_orderdetail.c.prod_id == prod_id
+                   and table_orderdetail.c.orderid == orderid)
+            db_conn.execute(query)
+
 
     db_conn.close()
     return True
@@ -494,7 +503,7 @@ def db_product_get_info(prod_id):
     if db_conn is None:
         return 'Something is broken'
     
-    db_username = select([table_products]).where(prod_id==prod_id)
+    db_username = select([table_products]).where(text('prod_id='+str(prod_id)))
     result = list(db_conn.execute(db_username))[0]
     movieid = result['movieid']
 
@@ -535,3 +544,13 @@ def db_get_user_cart(customerid):
     
     db_conn.close()
     return product_list
+
+
+def db_get_cart_payment(customerid):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+    
+    db_username = select([table_orders]).where(text('customerid='+str(customerid)))
+    result = list(db_conn.execute(db_username))[0]
+    return result['totalamount']

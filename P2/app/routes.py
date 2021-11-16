@@ -21,6 +21,7 @@ movie_catalog = database.db_load_movies(max_movies)
 users_directory = os.getcwd() + "/app/users/"
 
 categorias = database.db_get_genres()
+product_list = []
 
 
 def create_user(username, password, email, credit_card,
@@ -271,10 +272,32 @@ def anadir_cesta(id):
                            logged_user=get_actual_user())
 
 
+@app.route('/eliminado_cesta/<id>', methods=['GET'])
+def eliminado_cesta(id):
+
+    user = get_actual_user()
+    if user:
+        customerid = user['data']['customerid']
+        database.db_remove_cart(customerid, id)
+    else:
+        cesta = get_cesta_sesion()
+        if cesta[id]:
+            if cesta[id] == 1:
+                cesta.pop(id, 0)
+            else:
+                cesta[id] -= 1
+        session.modified = True
+    
+    return render_template('eliminado_cesta.html', title="Basket Removed",
+                           categorias=categorias,
+                           logged_user=get_actual_user())
+
+
 @app.route('/cesta')
 def cesta():
     cesta = get_cesta_sesion()
     user = get_actual_user()
+    global product_list
     product_list = []
 
     if (not cesta and not user) or (user and database.db_empty_cart(user['data']['customerid'])):
@@ -299,72 +322,19 @@ def cesta():
                            categorias=categorias, logged_user=get_actual_user())
 
 
-@app.route('/historial_compra', methods=['GET', 'POST'])
-def historial_compra():
-    if request.method == 'POST':
-        extra_money = request.form['saldo']
-        user_data = session['user']['data']
-
-        try:
-            extra_money = float(extra_money)
-        except ValueError:
-            return redirect(url_for('historial_compra'))
-
-        if extra_money < 0:
-            return redirect(url_for('historial_compra'))
-
-        user_data['balance'] += float(extra_money)
-        user_data['balance'] = round(user_data['balance'], 2)
-        update_user_data(session['user'])
-        session.modified = True
-        return redirect(url_for('historial_compra'))
-
-    else:
-        shopping_history = session['user']['shopping_history']
-        shopping_list = []
-        counter = 1
-        for pedido in shopping_history:
-            if pedido:
-                film_list = []
-                dinero_pedido = 0
-                for id in pedido.keys():
-                    position = int(id) - 1
-                    movie = movie_catalog[position]
-                    film_list.append((movie, pedido[id]))
-                    dinero_pedido += (movie['precio'] * pedido[id])
-
-                shopping_list.append((str(counter), film_list, dinero_pedido))
-                print(shopping_list)
-                counter += 1
-
-        return render_template('historial_compra.html', title="Basket",
-                               shopping_list=shopping_list,
-                               categorias=categorias,
-                               logged_user=get_actual_user())
-
-
 @app.route('/comfirmar_cesta')
 def comfirmar_cesta():
-    if not get_cesta_sesion():
-        return render_template('cesta_vacia.html', title="Empty Basket",
-                               categorias=categorias,
-                               logged_user=get_actual_user())
+    global product_list
+    user = get_actual_user()
+    if user is not None:
+        total_payment = database.db_get_cart_payment(user['data']['customerid'])
+        return render_template('comfirmar_cesta.html', title="Buy Basket",
+                                product_list=product_list,
+                                categorias=categorias,
+                                logged_user=get_actual_user(), 
+                                total_payment=total_payment)
     else:
-        if 'user' in session:
-            cesta = get_cesta_sesion()
-            lista_cesta = []
-            pago = 0
-            for id in cesta.keys():
-                position = int(id) - 1
-                movie = movie_catalog[position]
-                pago += cesta[id] * movie['precio']
-                lista_cesta.append((movie, cesta[id]))
-            return render_template('comfirmar_cesta.html', title="Buy Basket",
-                                   cesta=lista_cesta,
-                                   categorias=categorias,
-                                   logged_user=get_actual_user(), pago=pago)
-        else:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
 
 
 @app.route('/compra_finalizada/<way>', methods=['GET', 'POST'])
@@ -424,25 +394,49 @@ def compra_finalizada(way):
                            logged_user=get_actual_user(), way=way)
 
 
-@app.route('/eliminado_cesta/<id>', methods=['GET'])
-def eliminado_cesta(id):
+@app.route('/historial_compra', methods=['GET', 'POST'])
+def historial_compra():
+    if request.method == 'POST':
+        extra_money = request.form['saldo']
+        user_data = session['user']['data']
 
-    user = get_actual_user()
-    if user:
-        customerid = user['data']['customerid']
-        database.db_remove_cart(customerid, id)
-    else:
-        cesta = get_cesta_sesion()
-        if cesta[id]:
-            if cesta[id] == 1:
-                cesta.pop(id, 0)
-            else:
-                cesta[id] -= 1
+        try:
+            extra_money = float(extra_money)
+        except ValueError:
+            return redirect(url_for('historial_compra'))
+
+        if extra_money < 0:
+            return redirect(url_for('historial_compra'))
+
+        user_data['balance'] += float(extra_money)
+        user_data['balance'] = round(user_data['balance'], 2)
+        update_user_data(session['user'])
         session.modified = True
-    
-    return render_template('eliminado_cesta.html', title="Basket Removed",
-                           categorias=categorias,
-                           logged_user=get_actual_user())
+        return redirect(url_for('historial_compra'))
+
+    else:
+        shopping_history = session['user']['shopping_history']
+        shopping_list = []
+        counter = 1
+        for pedido in shopping_history:
+            if pedido:
+                film_list = []
+                dinero_pedido = 0
+                for id in pedido.keys():
+                    position = int(id) - 1
+                    movie = movie_catalog[position]
+                    film_list.append((movie, pedido[id]))
+                    dinero_pedido += (movie['precio'] * pedido[id])
+
+                shopping_list.append((str(counter), film_list, dinero_pedido))
+                print(shopping_list)
+                counter += 1
+
+        return render_template('historial_compra.html', title="Basket",
+                               shopping_list=shopping_list,
+                               categorias=categorias,
+                               logged_user=get_actual_user())
+
 
 @app.route('/online_users', methods=['GET'])
 def get_random_number_of_users():
