@@ -98,15 +98,15 @@ RETURNS TRIGGER
 AS $tr_updInventoryAndCustomerFidelity$
 BEGIN
   UPDATE customers
-  SET loyalty = loyalty + (NEW.totalamount * 0.05)
-  WHERE customers.customerid = NEW.customerid;
+  SET loyalty = loyalty + (NEW.totalamount * 5)
+  WHERE customers.customerid = NEW.customerid AND NEW.status = 'Paid';
 RETURN NEW;
 END;
 $tr_updInventoryAndCustomerFidelity$
 LANGUAGE 'plpgsql';
 
 CREATE TRIGGER updInventoryAndCustomerFidelity
-AFTER INSERT ON orders
+AFTER UPDATE ON orders
 FOR EACH ROW EXECUTE
 PROCEDURE tr_updInventoryAndCustomerFidelity();
 

@@ -7,6 +7,8 @@ from sqlalchemy import create_engine, and_
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
 from sqlalchemy.sql import select
 from sqlalchemy.sql.expression import func, table
+from datetime import datetime, timezone
+
 
 # configurar el motor de sqlalchemy
 db_engine = create_engine(
@@ -558,7 +560,7 @@ def db_get_cart_payment(customerid):
     return result['totalamount']
 
 
-def db_try_buy_cart(customerid, payment_method):
+def db_try_buy_cart(customerid, payment_method, balance, points):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
@@ -570,13 +572,54 @@ def db_try_buy_cart(customerid, payment_method):
     orderid = result['orderid']
 
     # check if enough points or balance
-    # check there is enough amount of products
+    if payment_method == 'balance':
+        # update order status
+        if total_payment > balance:
+            return False
 
-    # update order status
-    query = table_orders.update()\
-        .where(text("orderid = " + str(orderid)))\
-        .values(status="Paid")
-    db_conn.execute(query)
+        query = table_orders.update()\
+            .where(text("orderid = " + str(orderid)))\
+            .values(status="Paid")
+        db_conn.execute(query)
+
+        dt = datetime.now(timezone.utc)
+        query = 'INSERT INTO orders(orderdate, customerid, netamount, tax, totalamount, status)\
+                VALUES (CURRENT_DATE, '+str(customerid)+', 0, 0, 0, NULL);'
+        db_conn.execute(query)
+
+        return True
+    elif payment_method == 'points':
+        payment_in_points = total_payment * 5
+        if points < payment_in_points:
+            return False 
+        
+
+        # update customer's points and balance
+        query = table_customers.update()\
+            .where(text('customerid = ', customerid))\
+            .values(loyalty=table_customers.c.loyalty - points, 
+            balance=table_customers.c.balance + total_payment)
+        db_conn.execute(query)
+
+
+        query = table_orders.update()\
+            .where(text("orderid = " + str(orderid)))\
+            .values(status="Paid")
+        db_conn.execute(query)
+
+        dt = datetime.now(timezone.utc)
+        query = 'INSERT INTO orders(orderdate, customerid, netamount, tax, totalamount, status)\
+                VALUES (CURRENT_DATE, '+str(customerid)+', 0, 0, 0, NULL);'
+        db_conn.execute(query)
+
+        return True
+
+
+    else:
+        return False 
+
+
+    # check there is enough amount of products
 
     # if paid with points restore balance substracted by trigger
     
