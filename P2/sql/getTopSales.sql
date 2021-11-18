@@ -28,22 +28,19 @@ ALTER TABLE imdb_movies DROP COLUMN total_sales;
 
 
 
-CREATE OR REPLACE FUNCTION foo_2() 
-RETURNS TABLE(
-      id INT,
-      sales INT, 
-      yesr INT 
-)
+CREATE OR REPLACE FUNCTION getTopSales(year1 INT, year2 INT, OUT Year INT, OUT Film varchar(255), OUT sales bigint) 
+RETURNS SETOF RECORD
 AS $$
 DECLARE
     i integer;
 BEGIN
-    FOR i IN 2015..2018
+    FOR i IN year1..year2
     LOOP
             RETURN QUERY
-            SELECT cast(imdb_movies.movieid as integer) as id, 
-                  cast(SUM(orderdetail.quantity) as integer) as sales,
-                  i as year
+            SELECT 
+                  cast(i as INT) as Year,
+                  cast(imdb_movies.movietitle as varchar(255)) as Film, 
+                  cast(SUM(orderdetail.quantity) as bigint) as sales
             FROM orders, orderdetail, products, imdb_movies
             WHERE EXTRACT(year from orderdate) = i and 
                   orders.orderid = orderdetail.orderid and
@@ -58,5 +55,5 @@ END $$
 LANGUAGE plpgsql;
 
 SELECT * 
-FROM foo_2()
+FROM getTopSales(2017, 2020)
 ORDER BY sales DESC;
