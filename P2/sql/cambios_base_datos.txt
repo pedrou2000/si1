@@ -1,6 +1,0 @@
-1. (1 to N) order to orderDetail
-2. (1 to N) inventory to products
-3. (1 to N) imdbactors to imdb_actormovies
-4. (1 to N) imdbmovies to imdb_actormovies
-5. (1 to N) customer to order
-6. (1 to N) product to orderDetail
