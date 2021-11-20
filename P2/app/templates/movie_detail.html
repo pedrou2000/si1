@@ -16,19 +16,22 @@
         <div id="film_picture">
             <img alt="" class="image" src="{{movie.image}}">
         </div>
+        <br>
         <div id="film_info">
             <div id="film_director">
-                <p><b>DIRECTOR:</b></p>
+                <p><b>Director:</b></p>
                 <p> {{movie.director}}</p>
             </div>
             <div id="film_actors">
-            <p><b>ACTORES:</b> <br></p>
+            <p><b>Actores:</b>
                 {% for actor in movie.actors %}
-                    <p><b>Nombre</b>: {{actor.actorname}}. <b>Personaje</b>: {{actor.character}}.</p>
+                  <div id="actor_container">
+                      <p><b>Nombre</b>: {{actor.actorname}}.<br> <b>Personaje</b>: {{actor.character}}.</p>
+                  </div>
                 {% endfor %}
             </div>
-            <div id="film_category">
-                <p><b>GENEROS:</b> <br></p>
+            <div class="film_category">
+                <p><b>Géneros:</b> <br></p>
                 {% for genre in movie.genres %}
                 <div>
                     <li>{{genre.genre}}</li>
@@ -36,15 +39,15 @@
                 {% endfor %}
             </div>
 
-            <div id="film_category">
-                <p><b>PRODUCTS:</b> <br></p>
+            <div class="film_category">
+                <p><b>Productos:</b> <br></p>
                 {% for product in movie.products %}
                     {% if product.stock == 0 %}
                     {% else %}
                         <p>
-                            <b>{{product.description}}:</b> {{product.price}} € 
+                            <b>{{product.description}}:</b> {{product.price}} €
                             <form action="{{ url_for('anadir_cesta', id=product.prod_id) }}" method="get">
-                                <button class = "cesta_button"> Añadir a la cesta {{product.prod_id}}</button>
+                                <button class = "cesta_button"> Añadir a la cesta </button>
                             </form>
                         </p>
                     {% endif %}

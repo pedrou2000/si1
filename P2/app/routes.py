@@ -71,19 +71,23 @@ def get_cesta_sesion():
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
     if request.method == 'GET':
-        topActors = database.db_getTopActors('Action', 10)
+        session['genre'] = 'Action'
+        genre = session['genre']
+        session['num'] = 10
+        num_movies = session['num']
+        topActors = database.db_getTopActors(genre, num_movies)
         return render_template('inicio.html', title="Home",
                                movie_catalog=movie_catalog,
                                categorias=categorias,
+                               selected_category=genre,
                                logged_user=get_actual_user(),
                                topActors=topActors)
-    else:
-        genre = 'Action'
-        num_movies = 10
 
+    else:
+        genre = session['genre']
+        num_movies = session['num']
+        
         if request:
-            print('REQUEST FORM:')
-            print(request.form)
             if 'filter_actors' in request.form.keys():
                 form_genre = request.form['filter_actors']
                 if form_genre and form_genre != "Filtrar por categoría":
@@ -95,9 +99,13 @@ def inicio():
                     num_movies = form_num_movies
 
         topActors = database.db_getTopActors(genre, num_movies)
+        session['genre'] = genre
+        session['num'] = num_movies
+
         return render_template('inicio.html', title="Home",
                                movie_catalog=movie_catalog,
                                categorias=categorias,
+                               selected_category=genre,
                                logged_user=get_actual_user(),
                                topActors=topActors)
 
@@ -271,7 +279,7 @@ def eliminado_cesta(id):
             else:
                 cesta[id] -= 1
         session.modified = True
-    
+
     return render_template('eliminado_cesta.html', title="Basket Removed",
                            categorias=categorias,
                            logged_user=get_actual_user())
@@ -313,7 +321,7 @@ def comfirmar_cesta():
         total_payment = database.db_get_cart_payment(user['customerid'])
         return render_template('comfirmar_cesta.html', title="Buy Basket",
                                 product_list=product_list,
-                                logged_user=get_actual_user(), 
+                                logged_user=get_actual_user(),
                                 total_payment=total_payment)
     else:
         return redirect(url_for('login'))
@@ -334,17 +342,17 @@ def compra_finalizada(way):
         update_user_data()
         return render_template('compra_finalizada.html', title="Buy Basket",
                                product_list=product_list,
-                               logged_user=get_actual_user(), 
+                               logged_user=get_actual_user(),
                                total_payment=total_payment)
 
     else:
         return render_template('compra_fallida.html', title="Buy Basket",
                             product_list=product_list,
-                            logged_user=get_actual_user(), 
+                            logged_user=get_actual_user(),
                             attempt_result=attempt_result,
                             total_payment=total_payment)
 
-    
+
 @app.route('/historial_compra', methods=['GET', 'POST'])
 def historial_compra():
     user = session['user']
@@ -359,33 +367,12 @@ def historial_compra():
         if extra_money < 0:
             return redirect(url_for('historial_compra'))
 
-        database.db_add_balance(user, extra_money)        
+        database.db_add_balance(user, extra_money)
         update_user_data()
         return redirect(url_for('historial_compra'))
 
     else:
         order_list = database.db_get_orders(user['customerid'])
-
-
-
-        """
-        shopping_history = session['user']['shopping_history']
-        shopping_list = []
-        counter = 1
-        for pedido in shopping_history:
-            if pedido:
-                film_list = []
-                dinero_pedido = 0
-                for id in pedido.keys():
-                    position = int(id) - 1
-                    movie = movie_catalog[position]
-                    film_list.append((movie, pedido[id]))
-                    dinero_pedido += (movie['precio'] * pedido[id])
-
-                shopping_list.append((str(counter), film_list, dinero_pedido))
-                print(shopping_list)
-                counter += 1
-        """
 
         return render_template('historial_compra.html', title="Historial",
                                order_list=order_list,

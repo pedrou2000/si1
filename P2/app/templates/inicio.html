@@ -1,65 +1,64 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="content">
-
-    <!-- Top Actors -->
-    <div class="top_actors">
-        <h2><b> BEST ACTORS </b></h2>
-
-        <div class="top_actors_2">
+   <!-- Top Actors -->
+   <div class="top_actors">
+      <h2><b> Mejores actores ({{ selected_category }})</b></h2>
+      <div class="top_actors_2">
+         <div class="campo_search_3">
             <form action="{{ url_for('inicio') }}" method="post">
-                <div class = "campo_search_2">
-                    <select name="filter_actors">
-                        <option selected> Filtrar por categoría </option>
-                        {% for item in categorias %}
-                            <option>{{ item }} </option>
-                        {% endfor %}
-                    </select>
-                        <div class="campo_search_3">
-                            <input name="number_movies" class="textbox" type="text" placeholder="Numero de peliculas">
-                        </div>
-                    <input type="submit" value="Cambiar">
-                </div>
+               <select name="filter_actors">
+                  <option selected> Filtrar mejores actores por categoría </option>
+                  {% for item in categorias %}
+                  <option>{{ item }} </option>
+                  {% endfor %}
+               </select>
+               <input type="submit" value="Filtrar">
             </form>
-        </div>
-
-        <div class="top_actors_3">
-            <table>
-                <tr>
-                    <th>Actor</th>
-                    <th>Numero de peliculas</th>
-                    <th>Año debut</th>
-                    <th>Pelicula debut</th>
-                    <th>Director pelicula debut</th>
-                </tr>
-
-                {% for item in topActors %}
-                <tr>
-                    <td>{{ item.actor }} </td>
-                    <td>{{ item.num }} </td>
-                    <td>{{ item.debut }} </td>
-                    <td><a href="{{ url_for('movie', id=item.id) }}">{{ item.film }}</a> </td>
-                    <td>{{ item.director }} </td>
-                </tr>
-                {% endfor %}
-                </tr>
-            </table>
-        </div>
-    </div>
-
-
-    <!-- Movies -->
-    {% for movie in movie_catalog %}
-    <div class="movie_container">
-        <div class="movie_picture">
-            <a href="{{ url_for('movie', id=movie.movieid) }}">
-                <img alt="" class="image" src={{ movie.image }}>
-            </a>
-        </div>
-        <div class="movie_title">
-            <p> {{ movie.movietitle }} </p>
-        </div>
-    </div>
-    {% endfor %}
+         </div>
+         <div class="campo_search_3">
+            <form action="{{ url_for('inicio') }}" method="post">
+               <input name="number_movies" id="search_textbox" type="text" placeholder="Número de peliculas a mostrar">
+               <input type="submit" value="Mostrar">
+            </form>
+         </div>
+      </div>
+      <br>
+      <br>
+      <div class="top_actors_3">
+         <table>
+            <tr>
+               <th>Actor</th>
+               <th>Número de peliculas</th>
+               <th>Año de debut</th>
+               <th>Película debut</th>
+               <th>Director de la película de debut</th>
+            </tr>
+            {% for item in topActors %}
+            <tr>
+               <td>{{ item.actor }} </td>
+               <td>{{ item.num }} </td>
+               <td>{{ item.debut }} </td>
+               <td><a href="{{ url_for('movie', id=item.id) }}">{{ item.film }}</a> </td>
+               <td>{{ item.director }} </td>
+            </tr>
+            {% endfor %}
+            </tr>
+         </table>
+      </div>
+   </div>
+   <!-- Movies -->
+   {% for movie in movie_catalog %}
+   <div class="movie_container">
+      <div class="movie_picture">
+         <a href="{{ url_for('movie', id=movie.movieid) }}">
+         <img alt="" class="image" src={{ movie.image }}>
+         </a>
+      </div>
+      <div class="movie_title">
+         <p> {{ movie.movietitle }} </p>
+      </div>
+   </div>
+   {% endfor %}
 </div>
 {% endblock %}
