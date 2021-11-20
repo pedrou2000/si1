@@ -16,29 +16,26 @@ AFTER INSERT ON customers
 FOR EACH ROW EXECUTE
 PROCEDURE tr_updInventoryAndCustomerNewCustomer();
 
-/* UPDATE inventory table. When an orderdetail is added/deleted/modified in
-   the database, the inventory must be modified. */
-
-/* INSERT */
-CREATE OR REPLACE FUNCTION tr_updInventoryAndCustomerInventoryInsert()
+/* UPDATE inventory table. When an order is completed, the inventory must be modified. */
+CREATE OR REPLACE FUNCTION tr_updInventoryAndCustomerInventoryUpdate()
 RETURNS TRIGGER
-AS $tr_updInventoryAndCustomerInventoryInsert$
+AS $tr_updInventoryAndCustomerInventoryUpdate$
 BEGIN
 	UPDATE inventory
 	SET stock = stock - orderdetail.quantity
 	FROM orderdetail
-	WHERE NEW.status = 'Paid' AND inventory.prod_id = orderdetail.prod_id 
+	WHERE NEW.status = 'Paid' AND inventory.prod_id = orderdetail.prod_id
 		AND orderdetail.orderid = NEW.orderid;
 
 RETURN NEW;
 END;
-$tr_updInventoryAndCustomerInventoryInsert$
+$tr_updInventoryAndCustomerInventoryUpdate$
 LANGUAGE 'plpgsql';
 
-CREATE TRIGGER updInventoryAndCustomerInventoryInsert
+CREATE TRIGGER updInventoryAndCustomerInventoryUpdate
 AFTER UPDATE ON orders
 FOR EACH ROW EXECUTE
-PROCEDURE tr_updInventoryAndCustomerInventoryInsert();
+PROCEDURE tr_updInventoryAndCustomerInventoryUpdate();
 
 /* CREATE ALERT when stock is 0 */
 CREATE OR REPLACE FUNCTION tr_updInventoryAndCustomerAlerts()
