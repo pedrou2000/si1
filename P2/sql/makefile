@@ -2,7 +2,6 @@ export PGDATABASE := si1
 export PGPASSWORD = 'alumnodb'
 export DUMPFILE := dump_v1.4.sql.gz
 PSQL = psql
-CMD = python3 manage.py
 
 all: reset_db triggers_db getTopSales getTopActors
 
