@@ -86,7 +86,7 @@ def inicio():
     else:
         genre = session['genre']
         num_movies = session['num']
-        
+
         if request:
             if 'filter_actors' in request.form.keys():
                 form_genre = request.form['filter_actors']
@@ -208,17 +208,16 @@ def buscar():
         return redirect(url_for('inicio'))
 
     movie_list_result = database.db_search_movies(busq, max_movies)
-
     if not movie_list_result:
         return render_template('error_busqueda.html',
                                title="Error Searched Film",
                                categorias=categorias,
                                logged_user=get_actual_user())
-
-    return render_template('resultado_busqueda.html', title="Searched Film",
-                           movie_list=movie_list_result,
-                           categorias=categorias,
-                           logged_user=get_actual_user())
+    else:
+        return render_template('resultado_busqueda.html', title="Searched Film",
+                               movie_list=movie_list_result,
+                               categorias=categorias,
+                               logged_user=get_actual_user())
 
 
 @app.route('/filtrado', methods=['GET', 'POST'])

@@ -385,7 +385,7 @@ def db_add_cart(customerid, prod_id):
 
         query = table_orderdetail.insert().\
             values(
-                orderid=orderid, prod_id=prod_id, 
+                orderid=orderid, prod_id=prod_id,
                 price = price, quantity=1,
             )
         db_conn.execute(query)
@@ -492,7 +492,7 @@ def db_replace_cart(cart, customerid):
     if db_conn is None:
         return 'Something is broken'
     print('LOGGED USER WITH ANON CART. Products:')
-    
+
     for prod_id in cart.keys():
         for i in range(cart[prod_id]):
             db_add_cart(customerid, prod_id)
@@ -503,7 +503,7 @@ def db_product_get_info(prod_id):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
-    
+
     db_username = select([table_products]).where(text('prod_id='+str(prod_id)))
     result = list(db_conn.execute(db_username))[0]
     movieid = result['movieid']
@@ -514,7 +514,7 @@ def db_product_get_info(prod_id):
     product_dict['prod_id'] = prod_id
     product_dict['price'] = result['price']
     product_dict['description'] = result['description']
-    
+
     db_conn.close()
     return product_dict
 
@@ -523,7 +523,7 @@ def db_get_user_cart(customerid):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
-    
+
     query = select([table_orders]).where(
         text('status is NULL and customerid = '+str(customerid)))
     result = list(db_conn.execute(query))[0]
@@ -539,7 +539,7 @@ def db_get_user_cart(customerid):
         product_dict['quantity'] = row['quantity']
         product_dict['total_price'] = product_dict['quantity'] * product_dict['price']
         product_list.append(product_dict)
-    
+
     db_conn.close()
     return product_list
 
@@ -548,7 +548,7 @@ def db_get_cart_payment(customerid):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
-    
+
     query = select([table_orders]).where(
         text('status is NULL and customerid = '+str(customerid)))
     result = list(db_conn.execute(query))[0]
@@ -559,7 +559,7 @@ def db_check_enough_stock(orderid):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
-    
+
     query = select([table_orderdetail]).where(
         text('orderid = '+str(orderid)))
     result = list(db_conn.execute(query))
@@ -567,13 +567,13 @@ def db_check_enough_stock(orderid):
     for row in result:
         prod_id = row['prod_id']
         quantity = row['quantity']
-    
+
         query = select([table_inventory]).where(
             text('prod_id = '+str(prod_id)))
         result = list(db_conn.execute(query))
         if len(result) == 0:
             return False
-        
+
         if quantity > result[0]['stock']:
             return False
     return True
@@ -583,7 +583,7 @@ def db_try_buy_cart(customerid, payment_method, balance, points):
     db_conn = db_connect()
     if db_conn is None:
         return 'Something is broken'
-    
+
     query = select([table_orders]).where(
         text('status is NULL and customerid = '+str(customerid)))
     result = list(db_conn.execute(query))[0]
@@ -596,7 +596,7 @@ def db_try_buy_cart(customerid, payment_method, balance, points):
         if total_payment > balance:
             return 'no_balance'
 
-        # check there is enough amount of products 
+        # check there is enough amount of products
         if not db_check_enough_stock(orderid):
             return 'no_stock'
 
@@ -613,19 +613,19 @@ def db_try_buy_cart(customerid, payment_method, balance, points):
         return 'success'
 
     elif payment_method == 'points':
-        
+
         payment_in_points = total_payment * 5
         if points < payment_in_points:
-            return 'no_points' 
-    
-        # check there is enough amount of products 
+            return 'no_points'
+
+        # check there is enough amount of products
         if not db_check_enough_stock(orderid):
             return 'no_stock'
 
         # update customer's points and restore balance substracted by trigger
         query = table_customers.update()\
             .where(text('customerid = '+ str(customerid)))\
-            .values(loyalty=table_customers.c.loyalty - points, 
+            .values(loyalty=table_customers.c.loyalty - points,
             balance=table_customers.c.balance + total_payment)
         db_conn.execute(query)
 
@@ -643,8 +643,8 @@ def db_try_buy_cart(customerid, payment_method, balance, points):
 
 
     else:
-        return 'fail' 
-  
+        return 'fail'
+
 
 def db_add_balance(user, extra_money):
     db_conn = db_connect()
@@ -695,13 +695,37 @@ def db_get_orders(customerid):
             product_dict['quantity'] = row['quantity']
             product_dict['total_price'] = product_dict['quantity'] * product_dict['price']
             product_list.append(product_dict)
-        
+
         order['product_list'] = product_list
 
         order_list.append(order)
         order_number += 1
-    
-    return order_list
-
 
     db_conn.close()
+    return order_list
+
+def db_search_movies(title, max_movies):
+    db_conn = db_connect()
+    if db_conn is None:
+        return 'Something is broken'
+
+    query = "select * from imdb_movies"
+    query_result = list(db_conn.execute(query))
+
+    db_conn.close()
+
+    result_list = list(query_result)
+
+    result = []
+    counter = 0
+
+    for movie in result_list:
+        movie_dict = dict()
+        if title.lower() in movie['movietitle'].lower() and counter < 20:
+            movie_dict['movieid'] = movie['movieid']
+            movie_dict['movietitle'] = movie['movietitle']
+            movie_dict['image'] = film_image
+            result.append(movie_dict)
+            counter += 1
+
+    return result
