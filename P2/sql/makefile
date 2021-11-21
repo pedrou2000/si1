@@ -27,7 +27,11 @@ update_db:
 	@echo Creating the triggers
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < updOrders.sql
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < updInventoryAndCustomer.sql
-
+	@echo Executing getTopSales function
+	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < getTopSales.sql
+	@echo Executing getTopActors function
+	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < getTopActors.sql
+	
 getTopSales:
 	@echo Executing getTopSales function
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < getTopSales.sql
