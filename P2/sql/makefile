@@ -3,10 +3,9 @@ export PGPASSWORD = 'alumnodb'
 export DUMPFILE := dump_v1.4.sql.gz
 PSQL = psql
 
-all: reset_db triggers_db getTopSales getTopActors
+all: reset_db getTopSales getTopActors
 
-reset_db: drop_db create_db populate update_db triggers_db
-
+reset_db: drop_db create_db populate update_db
 
 drop_db:
 	@echo Deleting Database
@@ -25,8 +24,6 @@ update_db:
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < setOrderAmount.sql
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < setPrice.sql
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < actualiza.sql
-
-triggers_db:
 	@echo Creating the triggers
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < updOrders.sql
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < updInventoryAndCustomer.sql
