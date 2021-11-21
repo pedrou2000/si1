@@ -321,7 +321,8 @@ def comfirmar_cesta():
         return render_template('comfirmar_cesta.html', title="Buy Basket",
                                 product_list=product_list,
                                 logged_user=get_actual_user(),
-                                total_payment=total_payment)
+                                total_payment=total_payment,
+                                points=int(total_payment*100))
     else:
         return redirect(url_for('login'))
 

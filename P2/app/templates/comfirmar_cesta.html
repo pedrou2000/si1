@@ -34,11 +34,11 @@
             <div class="fake_div"></div>
                 <div class="fake_div">
                     <form class="" action="{{ url_for('compra_finalizada', way='balance')}}" method="get">
-                        <button class = "button_cesar">Pagar {{total_payment}}€ </button>
+                        <button class = "button_cesar">{{total_payment}}€ </button>
                     </form>
                 </div>
             <div class="fake_div">
-                    <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada', way='points')}}"> Usar puntos </a> </button>
+                    <button class = "button_cesar"><a class="link" href="{{ url_for('compra_finalizada', way='points')}}"> {{points}} puntos </a> </button>
             </div>
             <div class="fake_div"></div>
         </div>
