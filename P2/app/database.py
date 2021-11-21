@@ -614,7 +614,7 @@ def db_try_buy_cart(customerid, payment_method, balance, points):
 
     elif payment_method == 'points':
 
-        payment_in_points = total_payment * 5
+        payment_in_points = total_payment * 100
         if points < payment_in_points:
             return 'no_points'
 
@@ -625,7 +625,7 @@ def db_try_buy_cart(customerid, payment_method, balance, points):
         # update customer's points and restore balance substracted by trigger
         query = table_customers.update()\
             .where(text('customerid = '+ str(customerid)))\
-            .values(loyalty=table_customers.c.loyalty - points,
+            .values(loyalty=table_customers.c.loyalty - payment_in_points - (total_payment * 5),
             balance=table_customers.c.balance + total_payment)
         db_conn.execute(query)
 

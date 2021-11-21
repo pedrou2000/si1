@@ -274,7 +274,7 @@ def eliminado_cesta(id):
         cesta = get_cesta_sesion()
         if cesta[id]:
             if cesta[id] == 1:
-                cesta.pop(id, 0)
+                cesta.pop(id)
             else:
                 cesta[id] -= 1
         session.modified = True
