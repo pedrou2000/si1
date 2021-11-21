@@ -3,9 +3,7 @@ export PGPASSWORD = 'alumnodb'
 export DUMPFILE := dump_v1.4.sql.gz
 PSQL = psql
 
-all: reset_db getTopSales getTopActors
-
-reset_db: drop_db create_db populate update_db
+all: drop_db create_db populate update_db
 
 drop_db:
 	@echo Deleting Database
