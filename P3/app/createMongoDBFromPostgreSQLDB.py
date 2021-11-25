@@ -70,7 +70,7 @@ def get_top_UK_postgres():
 
     db_conn = db_connect()
 
-    query = 'select movieid, substr(movietitle, 1, length(movietitle) - 6) as title, year '\
+    query = 'select movieid, regexp_replace(movietitle, \'\(.*\)\', \'\') as title, year '\
             'from imdb_movies natural inner join '\
 	        '(select movieid from imdb_moviecountries where country = \'UK\') uk_movies '\
             'order by year desc limit ' + str(number_movies)
@@ -132,49 +132,55 @@ def get_movie_actors(db_conn, movieid):
     return result_list
 
 
-def get_movie_most_related_movies(db_conn, movieid, movies_dict):
+def get_movie_related_movies(movieid, movies_dict, total_genres):
     movie_list = []
     searched_genres = set(movies_dict[movieid]['genres'])
-    total_genres = len(searched_genres)
 
     for id in movies_dict.keys():
         if id != movieid:
             current_genres = movies_dict[id]['genres']
             same_genres = 0
             for genre in current_genres:
-                if genre not in searched_genres:
+                if genre in searched_genres:
                     same_genres += 1
-            if same_genres == total_genres:
-                added_dict = {}
-                added_dict['title'] = movies_dict[id]['title']
-                added_dict['year'] = movies_dict[id]['year']
-                movie_list.append(added_dict)
+            
+            # si el numero de generos es igual insertamos 
+            if same_genres == total_genres:# and len(current_genres) == len(searched_genres):
+                if len(movie_list) == 0:
+                    oldest_film_index = 0
+                    added_dict = {}
+                    added_dict['title'] = movies_dict[id]['title']
+                    added_dict['year'] = movies_dict[id]['year']
+                    #added_dict['genres'] = movies_dict[id]['genres']
+                    movie_list.append(added_dict)
+                
+                # si la lista esta llena ya
+                elif len(movie_list) == 10:
+                    if int(movie_list[oldest_film_index]['year']) < int(movies_dict[id]['year']):
+                        added_dict = {}
+                        added_dict['title'] = movies_dict[id]['title']
+                        added_dict['year'] = movies_dict[id]['year']
+                        #added_dict['genres'] = movies_dict[id]['genres']
+                        movie_list.append(added_dict)
+                        movie_list[oldest_film_index] = added_dict
+                        # actualizamos el index de la pelicula mas antigua de la lista
+                        oldest_film_index = 0
+                        for i in range(9):
+                            if int(movie_list[oldest_film_index]['year']) > int(movie_list[i]['year']):
+                                oldest_film_index = i
 
+                # si todavia hay espacio en la lista de 10 elementos
+                else:
+                    added_dict = {}
+                    added_dict['title'] = movies_dict[id]['title']
+                    added_dict['year'] = movies_dict[id]['year']
+                    #added_dict['genres'] = movies_dict[id]['genres']
+                    movie_list.append(added_dict)
+                    # guardamos el indice de la lista de la pelicula mas antigua
+                    if int(movie_list[oldest_film_index]['year']) > int(movies_dict[id]['year']):
+                        oldest_film_index = len(movie_list) - 1
 
     return movie_list
-
-
-def get_movie_related_movies(db_conn, movieid, movies_dict):
-    movie_list = []
-    searched_genres = set(movies_dict[movieid]['genres'])
-    total_genres = math.ceil(len(searched_genres)/2)
-
-    for id in movies_dict.keys():
-        if id != movieid:
-            current_genres = movies_dict[id]['genres']
-            same_genres = 0
-            for genre in current_genres:
-                if genre not in searched_genres:
-                    same_genres += 1
-            if same_genres == total_genres:
-                added_dict = {}
-                added_dict['title'] = movies_dict[id]['title']
-                added_dict['year'] = movies_dict[id]['year']
-                movie_list.append(added_dict)
-
-
-    return movie_list
-
 
 
 def insert_top_UK_mongo(movies_dict):
@@ -187,8 +193,9 @@ def insert_top_UK_mongo(movies_dict):
         movies_dict[movieid]['actors'] = get_movie_actors(db_conn, movieid)
     
     for movieid in movies_dict.keys():
-        movies_dict[movieid]['most_related_movies'] = get_movie_most_related_movies(db_conn, movieid, movies_dict)
-        movies_dict[movieid]['related_movies'] = get_movie_related_movies(db_conn, movieid, movies_dict)
+        movies_dict[movieid]['most_related_movies'] = get_movie_related_movies(movieid, movies_dict, len(movies_dict[movieid]['genres']))
+        if len(movies_dict[movieid]['genres']) > 1:
+            movies_dict[movieid]['related_movies'] = get_movie_related_movies(movieid, movies_dict, math.ceil(len(movies_dict[movieid]['genres'])/2))
 
     db_conn.close()
 

@@ -3,7 +3,9 @@ export PGPASSWORD = alumnodb
 export DUMPFILE := dump_v1.5-P3.sql.gz
 PSQL = psql
 
-all: drop_db create_db populate createMongo
+restart: drop_db create_db populate mongo
+run:
+	python3 -m app
 
 export_pass:
 	export PGPASSWORD='alumnodb'
@@ -20,5 +22,5 @@ populate:
 	@echo Populating database
 	gunzip -c $(DUMPFILE) | $(PSQL)  -U $(PGPASSWORD) $(PGDATABASE)
 
-createMongo:
+mongo:
 	python3 app/createMongoDBFromPostgreSQLDB.py

@@ -1,22 +1,75 @@
 <!DOCTYPE HTML> 
 <!--
- Ejemplo de MongoDB
+Ejemplo de MongoDB
 -->
 <HTML> 
-  <HEAD> 
-	  <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8"> 
-	  <TITLE>Ejemplo de MongoDB</TITLE>
-  </HEAD> 
+<HEAD> 
+    <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8"> 
+    <TITLE>Ejemplo de MongoDB</TITLE>
+</HEAD> 
 
-  <BODY>
- 
+<BODY>
+
     <h2> Ejemplo de MongoDB</h2>
 
-    <!-- TODO: tabla de películas SciFi -->
 
-    <!-- TODO: tabla de películas Drama -->
+    {% for movie_list in movies %}
 
-    <!-- TODO: tabla de películas JR y AB -->
+        <!-- TODO: tabla de películas SciFi -->
+        <!-- TODO: tabla de películas Drama -->
+        <!-- TODO: tabla de películas JR y AB -->
 
-  </BODY>
+        <table>
+
+            <tr>
+                <th><b>TITLE</b></th>
+                <th><b>GENRES</b></th>
+                <th><b>YEAR</b></th>
+                <th><b>DIRECTORS</b></th>
+                <th><b>ACTORS</b></th>
+                <th><b>MOST RELATED MOVIES</b></th>
+                <th><b>RELATED MOVIES</b></th>
+            </tr>
+
+        
+            {% for movie in movie_list %}
+                <tr>
+                    <th>{{movie.title}}</th>
+                    <th>
+                        {% for genre in movie.genres %}
+                            {{genre}};
+                        {% endfor %}
+                    </th>
+                    <th>{{movie.year}}</th>
+                    <th>
+                        {% for director in movie.directors %}
+                            {{director}};
+                        {% endfor %}
+                    </th>
+                    <th>
+                        {% for actor in movie.actors %}
+                            {{actor}};
+                        {% endfor %}
+                    </th>
+                    <th>
+                        {% for rel_movie in movie.most_related_movies %}
+                            {{rel_movie}};
+                        {% endfor %}
+                    </th>
+                    <th>
+                        {% for rel_movie in movie.related_movies %}
+                            {{rel_movie}};
+                        {% endfor %}
+                    </th>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <br>
+        <br>
+        <br>
+
+    {% endfor %}
+
+</BODY>
 </HTML>
