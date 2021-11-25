@@ -7,6 +7,7 @@ from flask import render_template, request, url_for
 import os
 import sys
 import time
+from pymongo import MongoClient
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/index', methods=['POST','GET'])
@@ -31,5 +32,21 @@ def borraCiudad():
 @app.route('/topUK', methods=['POST','GET'])
 def topUK():
     # TODO: consultas a MongoDB ...
-    movies=[[],[],[]]
+
+    
+    # mongo insertion    
+    mongoClient = MongoClient("localhost", 27017)
+    db = mongoClient["si1"]
+    collist = db.list_collection_names()
+    if "topUK" not in collist:
+        return None
+
+    collection = db["topUK"]
+
+    query = {"genres": { "$elemMatch": {"$in": ["Sci-Fi"]}}, "year": {"$gte": "1994", "$lte": "2200", } }
+    movies_scifi = list(collection.find(query))
+    
+    print(len(movies_scifi))
+    
+    movies=[movies_scifi,[],[]]
     return render_template('topUK.html', movies=movies)

@@ -66,7 +66,7 @@ def db_connect():
         return None
 
 def get_top_UK_postgres():
-    number_movies = 10
+    number_movies = 400
 
     db_conn = db_connect()
 
@@ -190,17 +190,7 @@ def insert_top_UK_mongo(movies_dict):
         movies_dict[movieid]['most_related_movies'] = get_movie_most_related_movies(db_conn, movieid, movies_dict)
         movies_dict[movieid]['related_movies'] = get_movie_related_movies(db_conn, movieid, movies_dict)
 
-
     db_conn.close()
-
-    """
-    print()
-    print()
-    print()
-    for id in movies_dict.keys():
-        print()
-        print(movies_dict[id])
-    """
 
     # mongo insertion    
     mongoClient = MongoClient("localhost", 27017)
@@ -212,58 +202,15 @@ def insert_top_UK_mongo(movies_dict):
     collection = db["topUK"]
     for movie_dict in movies_dict.values():
         collection.insert_one(movie_dict)
+        #print()
+        #print(movie_dict)
     
     return movies_dict
 
-""""
-from pymongo import MongoClient
-def main():
-    
-    mongoClient = MongoClient("localhost", 27017)
-    db = mongoClient.mi_base_de_datos
-    collection = db.inventario
-    cursor = collection.find({"status":"D"})
-    for elemento in cursor:
-        print ("%s" %(elemento['item']))
-    mongoClient.close()
-    
-    mongoClient = MongoClient("localhost", 27017)
-    db = mongoClient["si1"]
-    collection = db["topUK"]
-    for dict in movies_dict.values():
-        collection.insert_one(dict)
-
-if __name__ == '__main__':
-    main()
 
 
-"""
 movies_dict = get_top_UK_postgres()
 insert_top_UK_mongo(movies_dict)
 
 
 
-
-
-
-"""
-SELECT row_to_json(t) FROM 
-
-(
-select movieid, 
-	substr(movietitle, 1, length(movietitle) - 6) as title, 
-	year
-from imdb_movies natural inner join 
-	(select movieid from imdb_moviecountries where country = 'UK') uk_movies
-order by year desc
-limit 400) t
-
-
-select movieid, 
-	substr(movietitle, 1, length(movietitle) - 6) as title, 
-	year
-from imdb_movies
-where movieid in (select movieid from imdb_moviecountries where country = 'UK')
-order by year desc
-limit 400
-"""
