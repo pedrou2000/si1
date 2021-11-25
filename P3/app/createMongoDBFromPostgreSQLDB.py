@@ -69,23 +69,55 @@ def get_top_UK_postgres():
     db_conn = db_connect()
 
     query = 'select movieid, substr(movietitle, 1, length(movietitle) - 6) as title, year '\
-        'from imdb_movies ' \
-        'where movieid in (select movieid from imdb_moviecountries where country = \'UK\') ' \
+        'from imdb_movies natural inner join '\
+	    '(select movieid from imdb_moviecountries where country = \'UK\') uk_movies '\
         'order by year desc limit ' + str(number_movies)
 
     db_result = db_conn.execute(query)
 
-    db_conn.close()
 
     result_list = list(db_result)
-    print(result_list)
+    movies_dict = {}
+    for item in result_list:
+        movie_dict = {}
+        movie_dict['title'] = item[1]
+        movie_dict['year'] = item[2]
+        movies_dict[item[0]] = movie_dict
 
-def insert_top_UK_mongo(top_UK):
-    return top_UK
+    print(movies_dict)
+
+    db_conn.close()
+
+    return movies_dict
 
 
-top_UK = get_top_UK_postgres()
-insert_top_UK_mongo(top_UK)
+
+def insert_top_UK_mongo(movies_dict):
+
+
+    for movieid in movies_dict.keys():
+        
+
+    return movies_dict
+
+
+from pymongo import MongoClient
+def main():
+    mongoClient = MongoClient("localhost", 27017)
+    db = mongoClient.mi_base_de_datos
+    collection = db.inventario
+    cursor = collection.find({"status":"D"})
+    for elemento in cursor:
+        print ("%s" %(elemento['item']))
+    mongoClient.close()
+
+if __name__ == '__main__':
+    main()
+
+
+
+movies_dict = get_top_UK_postgres()
+insert_top_UK_mongo(movies_dict)
 
 
 
