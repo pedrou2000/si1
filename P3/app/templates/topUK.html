@@ -10,11 +10,17 @@ Ejemplo de MongoDB
 
 <BODY>
 
-    <h2> Ejemplo de MongoDB</h2>
+    <h1> Ejemplo de MongoDB</h1>
 
 
     {% for movie_list in movies %}
-
+        {%if loop.index == 1 %}
+            <h2><b>Science fiction films (1994-1998)</b></h2>
+        {% elif loop.index == 2 %}
+            <h2><b>Drama films (1998) starting with "The"</b></h2>
+        {% else %}
+            <h2><b>Alec Baldwin and Julia Roberts collaborations</b></h2>
+        {% endif %}
         <!-- TODO: tabla de películas SciFi -->
         <!-- TODO: tabla de películas Drama -->
         <!-- TODO: tabla de películas JR y AB -->
@@ -22,13 +28,13 @@ Ejemplo de MongoDB
         <table>
 
             <tr>
-                <th><b>TITLE</b></th>
-                <th><b>GENRES</b></th>
-                <th><b>YEAR</b></th>
-                <th><b>DIRECTORS</b></th>
-                <th><b>ACTORS</b></th>
-                <th><b>MOST RELATED MOVIES</b></th>
-                <th><b>RELATED MOVIES</b></th>
+                <th><h3><b>Title</b></h3></th>
+                <th><h3><b>Genres</b></h3></th>
+                <th><h3><b>Year</b></h3></th>
+                <th><h3><b>Directors</b></h3></th>
+                <th><h3><b></b>Actors</b></h3></th>
+                <th><h3><b>Most related movies</b></h3></th>
+                <th><h3><b>Related movies</b></h3></th>
             </tr>
 
         
@@ -37,13 +43,13 @@ Ejemplo de MongoDB
                     <th>{{movie.title}}</th>
                     <th>
                         {% for genre in movie.genres %}
-                            {{genre}};
+                            {{genre}}<br>
                         {% endfor %}
                     </th>
                     <th>{{movie.year}}</th>
                     <th>
                         {% for director in movie.directors %}
-                            {{director}};
+                            {{director}}<br>
                         {% endfor %}
                     </th>
                     <th>
@@ -53,12 +59,12 @@ Ejemplo de MongoDB
                     </th>
                     <th>
                         {% for rel_movie in movie.most_related_movies %}
-                            {{rel_movie}};
+                            {{rel_movie.title}};
                         {% endfor %}
                     </th>
                     <th>
                         {% for rel_movie in movie.related_movies %}
-                            {{rel_movie}};
+                            {{rel_movie.title}};
                         {% endfor %}
                     </th>
                 </tr>
