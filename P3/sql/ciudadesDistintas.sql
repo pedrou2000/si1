@@ -16,3 +16,14 @@ LANGUAGE 'plpgsql' STABLE;
 
 SELECT *
 FROM getCiudadesDistintas('202102');
+
+/*Before touching the database, the query takes approx. 65-100 ms.
+  After the following instructions (in which we delete the index "customers_pkey" in customers) 
+  it takes 400-500 ms.
+
+    ALTER TABLE orders
+    DROP CONSTRAINT orders_customerid_fkey;
+
+    ALTER TABLE customers
+    DROP CONSTRAINT customers_pkey;
+*/
