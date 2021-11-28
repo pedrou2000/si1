@@ -22,5 +22,9 @@ populate:
 	@echo Populating database
 	gunzip -c $(DUMPFILE) | $(PSQL)  -U $(PGPASSWORD) $(PGDATABASE)
 
+distinct_cities:
+	@echo Creating function
+	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < sql/ciudadesDistintas.sql
+
 mongo:
 	python3 app/createMongoDBFromPostgreSQLDB.py
