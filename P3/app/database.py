@@ -29,7 +29,7 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
     
     # Array de trazas a mostrar en la página
     dbr=[]
-
+    db_conn = dbConnect()
     # TODO: Ejecutar consultas de borrado
     # - ordenar consultas según se desee provocar un error (bFallo True) o no
     # - ejecutar commit intermedio si bCommit es True
@@ -39,6 +39,19 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
     
     try:
         # TODO: ejecutar consultas
+        customerid_list = get_customers_from_city(db_conn, city)
+        orderid_list =get_orders_from_customer(db_conn, customerid_list)
+
+        if bFallo:
+            delete_customers(customerid_list)
+            delete_orders(orderid_list)
+            delete_orderdetails(orderid_list)
+
+        else:
+            delete_orderdetails(customerid_list)
+            delete_orders(orderid_list)
+            delete_customers(orderid_list)
+        
         pass
     except Exception as e:
         # TODO: deshacer en caso de error
@@ -49,3 +62,39 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
         
     return dbr
 
+def get_customers_from_city(db_conn, city):
+
+    query = 'select customers.customerid '\
+            'from customers '\
+            'where customers.city = ' + str(city)
+    
+    return list(db_conn.execute(query)) 
+
+def get_orders_from_customer(db_conn, customerid_list):
+
+    query = 'select orders.orderid '\
+            'from orders '\
+            'where orders.customerid in {}'.format(tuple(customerid_list))
+
+    return list(db_conn.execute(query))
+
+def delete_customers(db_conn, customerid_list):
+
+    query = 'delete from customers '\
+            'where customerid in {}'.format(tuple(customerid_list))
+    
+    db_conn.execute(query)
+
+def delete_orders(db_conn, orderid_list):
+
+    query = 'delete from orders '\
+            'where orderid in {}'.format(tuple(orderid_list))
+    
+    db_conn.execute(query)
+
+def delete_orderdetails(db_conn, orderid_list):
+
+    query = 'delete from orderdetail '\
+            'where orderid in {}'.format(tuple(orderid_list))
+    
+    db_conn.execute(query)

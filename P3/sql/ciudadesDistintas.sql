@@ -18,7 +18,7 @@ SELECT *
 FROM getCiudadesDistintas('202102');
 
 /*Before touching the database, the query takes approx. 65-100 ms.
-  After the following instructions (in which we delete the index "customers_pkey" in customers) 
+  -After the following instructions (in which we delete the index "customers_pkey" in customers) 
   it takes 400-500 ms.
 
     ALTER TABLE orders
@@ -26,4 +26,14 @@ FROM getCiudadesDistintas('202102');
 
     ALTER TABLE customers
     DROP CONSTRAINT customers_pkey;
+
+  -Dropping the index "orders_pkey" of the table orders (with the following commands):
+
+    ALTER TABLE orderdetail
+    DROP CONSTRAINT orderdetail_orderid_fkey;
+
+    ALTER TABLE orders
+    DROP CONSTRAINT orders_pkey;
+  
+  it does not affect the efficiency of the query.
 */
