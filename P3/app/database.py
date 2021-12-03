@@ -60,10 +60,10 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
             if bFallo:
                 dbr = delete_customers(db_conn, customerid_list, dbr, city)
                 dbr = delete_orders(db_conn, orderid_list, dbr, city)
-                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city)
+                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city, duerme)
 
             else:
-                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city)
+                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city, duerme)
                 dbr = delete_orders(db_conn, orderid_list, dbr, city)
                 dbr = delete_customers(db_conn, customerid_list, dbr, city)
             
@@ -80,7 +80,7 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
         db_conn.close()
     
     else:
-        # SQLAlhemy transaction
+        # SQLAlchemy transaction
         dbr.append("The transaction is going to be managed by SQLAlchemy")
         session = Session(db_engine)
         dbr.append("Begin")
@@ -105,10 +105,10 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
             if bFallo:
                 dbr = delete_customers_sqlalchemy(session, customerid_list, dbr, city)
                 dbr = delete_orders_sqlalchemy(session, orderid_list, dbr, city)
-                dbr = delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city)
+                dbr = delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city, duerme)
 
             else:
-                dbr = delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city)
+                dbr = delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city, duerme)
                 dbr = delete_orders_sqlalchemy(session, orderid_list, dbr, city)
                 dbr = delete_customers_sqlalchemy(session, customerid_list, dbr, city)
         
@@ -170,7 +170,7 @@ def delete_customers(db_conn, customerid_list, dbr, city):
     
     query = 'delete from customers '\
             'where customerid in {}'.format(aux_tuple)
-
+    
     db_conn.execute(query)
     dbr.append("Customers that live in " + city + " DELETED")
 
@@ -189,10 +189,10 @@ def delete_orders(db_conn, orderid_list, dbr, city):
     
     db_conn.execute(query)
     dbr.append("Orders associated with the customers that live in " + city + " DELETED")
-    
+
     return dbr
 
-def delete_orderdetails(db_conn, orderid_list, dbr, city):
+def delete_orderdetails(db_conn, orderid_list, dbr, city, duerme):
     dbr.append("Trying to delete the order details associated with the order of the customers that live in " + city)
     if len(orderid_list) == 1:
         aux_tuple = "(" + str(orderid_list[0]) + ")"
@@ -203,6 +203,11 @@ def delete_orderdetails(db_conn, orderid_list, dbr, city):
     query = 'delete from orderdetail '\
             'where orderid in {}'.format(aux_tuple)
     
+    dbr.append("Sleeping for " + str(duerme) + " seconds")
+    wait_query = 'select pg_sleep(' + str(duerme) + ')'
+    # Hasta que no se despierte sql, los orders no podran ser borrados,
+    # porque los orderdetails asociados no son borrados hasta que pasen duerme segundos
+    db_conn.execute(wait_query)
     db_conn.execute(query)
     dbr.append("Order details associated with the order of the customers that live in " + city + " DELETED")
 
@@ -272,7 +277,7 @@ def delete_orders_sqlalchemy(session, orderid_list, dbr, city):
     
     return dbr
 
-def delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city):
+def delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city, duerme):
     dbr.append("Trying to delete the order details associated with the order of the customers that live in " + city)
     if len(orderid_list) == 1:
         aux_tuple = "(" + str(orderid_list[0]) + ")"
@@ -283,6 +288,11 @@ def delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city):
     query = 'delete from orderdetail '\
             'where orderid in {}'.format(aux_tuple)
     
+    dbr.append("Sleeping for " + str(duerme) + " seconds")
+    wait_query = 'select pg_sleep(' + str(duerme) + ')'
+    # Hasta que no se despierte sql, los orders no podran ser borrados,
+    # porque los orderdetails asociados no son borrados hasta que pasen duerme segundos
+    session.execute(wait_query)
     session.execute(query)
     dbr.append("Order details associated with the order of the customers that live in " + city + " DELETED")
 
