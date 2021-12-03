@@ -212,7 +212,7 @@ def delete_orders(db_conn, orderid_list, dbr, city):
     return dbr
 
 def delete_orderdetails(db_conn, orderid_list, dbr, city, duerme):
-    dbr.append("- Trying to delete the order details associated with the order of the customers that live in " + city)
+    dbr.append("- Trying to delete the order details associated with the orders of the customers that live in " + city)
     if len(orderid_list) == 1:
         aux_tuple = "(" + str(orderid_list[0]) + ")"
     
@@ -229,7 +229,7 @@ def delete_orderdetails(db_conn, orderid_list, dbr, city, duerme):
         # porque los orderdetails asociados no son borrados hasta que pasen duerme segundos
         db_conn.execute(wait_query)
     db_conn.execute(query)
-    dbr.append("- Order details associated with the order of the customers that live in " + city + " DELETED")
+    dbr.append("- Order details associated with the orders of the customers that live in " + city + " DELETED")
 
     return dbr
 
@@ -355,7 +355,7 @@ def delete_orders_sqlalchemy(session, orderid_list, dbr, city):
     return dbr
 
 def delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city, duerme):
-    dbr.append("- Trying to delete the order details associated with the order of the customers that live in " + city)
+    dbr.append("- Trying to delete the order details associated with the orders of the customers that live in " + city)
     if len(orderid_list) == 1:
         aux_tuple = "(" + str(orderid_list[0]) + ")"
     
@@ -372,7 +372,7 @@ def delete_orderdetails_sqlalchemy(session, orderid_list, dbr, city, duerme):
         # porque los orderdetails asociados no son borrados hasta que pasen duerme segundos
         session.execute(wait_query)
     session.execute(query)
-    dbr.append("- Order details associated with the order of the customers that live in " + city + " DELETED")
+    dbr.append("- Order details associated with the orders of the customers that live in " + city + " DELETED")
 
     return dbr
 
