@@ -1,5 +1,5 @@
 export PGDATABASE := si1
-export PGPASSWORD = 'alumnodb'
+export PGPASSWORD = alumnodb
 export DUMPFILE := dump_v1.4.sql.gz
 PSQL = psql
 

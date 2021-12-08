@@ -26,5 +26,13 @@ distinct_cities:
 	@echo Creating function
 	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < sql/ciudadesDistintas.sql
 
+updPromo:
+	@echo Creating function
+	$(PSQL) -U $(PGPASSWORD) $(PGDATABASE) < sql/updPromo.sql
+
+autocommitFalse:
+	@echo Creating function
+	\set AUTOCOMMIT off | $(PSQL) -U $(PGPASSWORD) $(PGDATABASE)
+
 mongo:
 	python3 app/createMongoDBFromPostgreSQLDB.py
