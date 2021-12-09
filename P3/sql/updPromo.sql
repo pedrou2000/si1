@@ -25,6 +25,12 @@ BEGIN
     /* Actualizo cada uno de ellos */
     FOREACH orderidd IN ARRAY orderids
     LOOP 
+        /* Para producir el deadlock hacemos un UPDATE artificial */     
+        UPDATE orders
+        SET netamount = netamount;
+
+        PERFORM pg_sleep(30);
+
         /* Obtengo los ids de los productos asociados al order con orderid orderidd */
         prod_ids := array(
             SELECT prod_id FROM orderdetail 
@@ -44,8 +50,6 @@ BEGIN
             SET price = pricee * (1.0 - NEW.promo/100.0)
             WHERE orderid = orderidd and prod_id = prod_idd;
         END LOOP;
-
-        PERFORM pg_sleep(30);
 
         /* Actualizo el precio del carrito total, tabla orders */
         pricee := (

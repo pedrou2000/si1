@@ -75,8 +75,8 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
 
             else:
                 dbr = delete_orderdetails(db_conn, orderid_list, dbr, city, duerme)
-                dbr = delete_orders(db_conn, orderid_list, dbr, city)
                 dbr = sleep(db_conn, dbr, duerme)
+                dbr = delete_orders(db_conn, orderid_list, dbr, city)
                 dbr = delete_customers(db_conn, customerid_list, dbr, city)
             
             #pass
