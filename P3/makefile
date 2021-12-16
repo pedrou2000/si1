@@ -3,7 +3,7 @@ export PGPASSWORD = alumnodb
 export DUMPFILE := dump_v1.5-P3.sql.gz
 PSQL = psql
 
-restart: drop_db create_db populate mongo
+restart: drop_db create_db populate mongo updPromo
 run:
 	python3 -m app
 
