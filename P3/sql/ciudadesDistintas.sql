@@ -1,3 +1,28 @@
+/* Para crear nuestros propios índices primero eliminamos los existentes por defecto en la BD */
+/* 1. Eliminamos el índice sobre la clave primaria de customers */
+ALTER TABLE orders
+DROP CONSTRAINT orders_customerid_fkey;
+
+ALTER TABLE customers
+DROP CONSTRAINT customers_pkey;
+
+/* 2. Eliminamos el índice sobre la clave primaria de orders */
+ALTER TABLE orderdetail
+DROP CONSTRAINT orderdetail_orderid_fkey;
+
+ALTER TABLE orders
+DROP CONSTRAINT orders_pkey;
+
+/* 3. Creamos nuestros propios índices */
+
+CREATE INDEX order_index
+ON orders (extract(year FROM orderdate), extract(month FROM orderdate));
+
+CREATE INDEX customer_index
+ON customers (creditcardtype);
+
+
+/* FUNCTION */
 CREATE OR REPLACE FUNCTION getCiudadesDistintas(yearMonth varchar(6))
 RETURNS TABLE (total_distinct_cities bigint)
 AS
