@@ -72,7 +72,7 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 return dbr
             
             if bFallo:
-                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city, duerme)
+                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city)
                 if bCommit:
                     # Si se hace el commit intermedio, los orderdetails estaran borrados
                     # incluso despues de hacer rollback
@@ -83,7 +83,7 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
                 dbr = delete_orders(db_conn, orderid_list, dbr, city)
 
             else:
-                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city, duerme)
+                dbr = delete_orderdetails(db_conn, orderid_list, dbr, city)
                 dbr = sleep(db_conn, dbr, duerme)
                 dbr = delete_orders(db_conn, orderid_list, dbr, city)
                 dbr = delete_customers(db_conn, customerid_list, dbr, city)

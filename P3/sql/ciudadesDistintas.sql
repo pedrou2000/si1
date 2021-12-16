@@ -53,4 +53,20 @@ FROM getCiudadesDistintas('202102');
       ON orders (extract(year FROM orderdate), extract(month FROM orderdate));
 
       Now the function takes between 45-50 ms to complete
+  
+   4. CREATE INDEX order_index_1
+      ON orders (extract(year FROM orderdate));
+	  
+	    CREATE INDEX order_index_2
+      ON orders (extract(month FROM orderdate));
+
+      Now the function takes between 45-50 ms to complete
+
+   5. CREATE INDEX order_index
+      ON orders (extract(year FROM orderdate), extract(month FROM orderdate));
+	  
+	    CREATE INDEX customer_index
+      ON customers (creditcardtype);
+
+      Now the function takes between 40-45 ms to complete
 */
