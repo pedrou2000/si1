@@ -1,5 +1,7 @@
 CREATE INDEX idx_orders_status ON orders(status);
 
+ANALYZE VERBOSE orders;
+
 EXPLAIN
 select count(*)
 from orders
@@ -10,10 +12,12 @@ select count(*)
 from orders
 where status ='Shipped';
 
+EXPLAIN
 select count(*)
 from orders
 where status ='Paid';
 
+EXPLAIN
 select count(*)
 from orders
 where status ='Processed';
