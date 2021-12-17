@@ -4,6 +4,7 @@ PRÁCTICA 3 SI1
 Autores:
 -Pareja 5 (grupo 1402): Pedro Urbina Rodríguez y César Ramírez Martínez
 
+
 Organización del material entregado:
 
 -Directorio "app": (almacena todos los archivos relacionados con la página web)
@@ -45,6 +46,8 @@ Organización del material entregado:
 	-make updPromo: comando para crear el trigger solicitado en el apartado.
 
 	-make mongo: comando para ejecutar el archivo que crea la base de datos documental.
+
+-Memoria Práctica 3.pdf: (archivo que contiene todas las discusiones sobre los ejercicios y decisiones tomadas para la realización de la práctica)
 
 
 INSTRUCCIONES PARA EJECUTAR LA PRÁCTICA:

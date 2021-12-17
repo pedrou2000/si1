@@ -17,8 +17,6 @@ db_engine = create_engine(
     "postgresql://alumnodb:alumnodb@localhost/si1_p3", echo=False)
 db_meta = MetaData(bind=db_engine)
 
-film_image = "/static/images/avatar.jpg"
-
 # TABLAS
 table_customers = Table(
     'customers', db_meta, autoload=True, autoload_with=db_engine)
