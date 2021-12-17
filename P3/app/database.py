@@ -92,7 +92,6 @@ def delCity(city, bFallo, bSQL, duerme, bCommit):
         except Exception as e:
             # TODO: deshacer en caso de error
             #pass
-            print(e)
             dbr = rollback(db_conn, dbr)
             # Ver si los orderdetails se han borrado (en el caso de bCommit deberian haberse borrado
             # incluso con el rollback. En el caso de no bCommit no deberian haberse borrado)
