@@ -209,8 +209,6 @@ def insert_top_UK_mongo(movies_dict):
     collection = db["topUK"]
     for movie_dict in movies_dict.values():
         collection.insert_one(movie_dict)
-        #print()
-        #print(movie_dict)
     
     return movies_dict
 
